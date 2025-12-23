@@ -24,16 +24,16 @@ const courseRoutingPlugin = () => {
                     return next();
                 }
 
-                if (!url.includes('.')) {
-                    console.log(`[Middleware] Request: ${url}`);
-                }
+                // if (!url.includes('.')) {
+                //      console.log(`[Middleware] Request: ${url}`);
+                // }
 
                 if (url.startsWith('/curso/') ||
                     url.startsWith('/graduacao/') ||
                     url.startsWith('/pos-graduacao/') ||
                     url.startsWith('/livres/')) {
 
-                    console.log(`[Middleware] *** SERVING CURSO.HTML FOR: ${url} ***`);
+                    // console.log(`[Middleware] *** SERVING CURSO.HTML FOR: ${url} ***`);
 
                     try {
                         const template = fs.readFileSync(resolve(__dirname, 'curso.html'), 'utf-8');

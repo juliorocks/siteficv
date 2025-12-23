@@ -1,0 +1,60 @@
+{
+    "rewrites": [
+        {
+            "source": "/admin",
+            "destination": "/admin/index.html"
+        },
+        {
+            "source": "/news/:slug*",
+            "destination": "/news.html"
+        },
+        {
+            "source": "/noticias/:slug*",
+            "destination": "/news.html"
+        },
+        {
+            "source": "/curso/:slug*",
+            "destination": "/curso.html"
+        },
+        {
+            "source": "/graduacao/:slug*",
+            "destination": "/curso.html"
+        },
+        {
+            "source": "/pos-graduacao/:slug*",
+            "destination": "/curso.html"
+        },
+        {
+            "source": "/livres/:slug*",
+            "destination": "/curso.html"
+        },
+        {
+            "source": "/quem-somos",
+            "destination": "/quem-somos.html"
+        },
+        {
+            "source": "/noticias",
+            "destination": "/noticias.html"
+        },
+        {
+            "source": "/npj",
+            "destination": "/npj.html"
+        },
+        {
+            "source": "/fale-conosco",
+            "destination": "/fale-conosco.html"
+        },
+        {
+            "source": "/estrutura",
+            "destination": "/estrutura.html"
+        },
+        {
+            "source": "/cursos",
+            "destination": "/cursos.html"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
