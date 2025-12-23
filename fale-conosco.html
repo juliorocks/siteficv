@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fale Conosco | FICV</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        /* Page Hero */
+        .page-hero {
+            height: 350px;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://cursos.ficv.edu.br/wp-content/uploads/2025/11/FICV-Joao-Pessoa.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            color: white;
+            font-weight: 300;
+        }
+
+        .page-hero h1 span {
+            font-weight: 800;
+            color: var(--color-secondary);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 0;
+            background: var(--color-bg-dark);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        /* Info Card */
+        .contact-info-card {
+            background: #111;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .info-item i {
+            color: var(--color-secondary);
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
+
+        .info-item h3 {
+            color: #fff;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .info-item p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* Form */
+        .contact-form-wrapper {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ccc;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--color-secondary);
+            outline: none;
+            background: #151515;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--color-secondary);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            background: #fff;
+        }
+
+        .submit-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 900px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container header-container">
+            <div class="logo-wrapper">
+                <a href="/" class="logo">
+                    <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo">
+                </a>
+            </div>
+
+            <div class="header-right">
+                <div class="header-buttons">
+                    <div class="dropdown-container">
+                        <a href="#" class="btn btn-outline" style="font-size: 0.8rem; padding: 6px 12px;"><i
+                                class="fas fa-graduation-cap"></i> Já sou Aluno</a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-menu-content">
+                                <a href="#" class="dropdown-item" data-cms-href="header_student_ava_url"
+                                    target="_blank">Ambiente Virtual</a>
+                                <a href="#" class="dropdown-item" data-cms-href="header_student_portal_url"
+                                    target="_blank">Portal do Aluno</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="menu-trigger" aria-label="Abrir menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas-menu">
+        <button class="close-menu">&times;</button>
+        <div class="offcanvas-content">
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Nossos</span>
+                    <h2 class="large-title">Cursos</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/cursos?type=graduacao">Graduação</a></li>
+                        <li><a href="/cursos?type=graduacao-ead">Graduação EAD</a></li>
+                        <li><a href="/cursos?type=pos-graduacao">Pós-Graduação</a></li>
+                        <li><a href="/cursos?type=livres">Cursos Livres</a></li>
+                        <li><a href="/cursos">Ver Todos</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Sobre nós</span>
+                    <h2 class="large-title">Institucional</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/quem-somos">Quem somos</a></li>
+                        <li><a href="/estrutura">Estrutura</a></li>
+                        <li><a href="https://ficv.i10bibliotecas.com.br/" target="_blank"
+                                data-cms-href="nav_biblioteca_url">Biblioteca</a></li>
+                        <li><a href="https://ficv.i10bibliotecas.com.br/ri" target="_blank"
+                                data-cms-href="nav_repositorio_url">Repositório Institucional</a></li>
+                        <li><a href="/npj">Núcleo de Prática Jurídica</a></li>
+                        <li><a href="/noticias">Notícias</a></li>
+                        <li><a href="https://diplomas.somosb4.com.br/validar" target="_blank"
+                                data-cms-href="nav_validacao_diploma_url">Validação de Diploma</a></li>
+                        <li><a href="/fale-conosco">Fale conosco</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Revista Acadêmica</span>
+                    <h2 class="large-title">Summae Sapientiae</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="https://periodicos.ficv.edu.br/summaesapientiae" target="_blank"
+                                data-cms-href="nav_revista_url">Acesse nossa Revista</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Siga-nos nas</span>
+                    <h2 class="large-title">Redes Sociais</h2>
+                </div>
+                <div class="offcanvas-socials">
+                    <a href="#" class="social-icon" data-cms-href="social_instagram" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_facebook" target="_blank"><i
+                            class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_youtube" target="_blank"><i
+                            class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_linkedin" target="_blank"><i
+                            class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <main>
+        <!-- Hero -->
+        <section class="page-hero">
+            <div class="container">
+                <h1>Fale <span>Conosco</span></h1>
+            </div>
+        </section>
+
+        <!-- Content -->
+        <section class="contact-section">
+            <div class="container contact-grid">
+
+                <!-- Info Side -->
+                <div class="contact-info-card">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>Endereço</h3>
+                            <p>R. Luzia Simões Bartolini, 100 - Aeroclube<br>João Pessoa - PB, 58036-630</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h3>Telefone</h3>
+                            <p>(83) 3041-7471</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h3>E-mail</h3>
+                            <p>faculdade@cidadeviva.org</p>
+                            <p>contato@ficv.edu.br</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3>Horário de Atendimento</h3>
+                            <p>Segunda a Sexta: 08:00 - 21:00</p>
+                        </div>
+                    </div>
+
+                    <!-- Map Embed -->
+                    <div style="margin-top:20px; border-radius:8px; overflow:hidden;">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.576839352934!2d-34.84547962416183!3d-7.058866369168916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7acce61a2928827%3A0xf62a6d71b3e7f41a!2sFaculdade%20Internacional%20Cidade%20Viva!5e0!3m2!1spt-BR!2sbr!4v1689283724835!5m2!1spt-BR!2sbr"
+                            width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                </div>
+
+                <!-- Form Side -->
+                <div class="contact-form-wrapper">
+                    <h2 style="color:#fff; margin-bottom:20px;">Envie uma mensagem</h2>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Nome Completo</label>
+                            <input type="text" id="name" class="form-control" required placeholder="Seu nome">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" class="form-control" required placeholder="seu@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Telefone / WhatsApp</label>
+                            <input type="tel" id="phone" class="form-control" placeholder="(83) 99999-9999">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Assunto</label>
+                            <select id="subject" class="form-control">
+                                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
+                                <option value="Secretaria">Secretaria</option>
+                                <option value="Financeiro">Financeiro</option>
+                                <option value="Parcerias">Parcerias</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Mensagem</label>
+                            <textarea id="message" class="form-control" rows="5" required
+                                placeholder="Como podemos ajudar?"></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Enviar Mensagem</button>
+                    </form>
+                    <div id="formFeedback" style="display:none; margin-top:15px; padding:15px; border-radius:6px;">
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="contato">
+        <div class="container footer-social-row"
+            style="padding-bottom: 30px; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #fff; font-size: 1.1rem; font-weight: 500;">Siga-nos nas redes:</span>
+            <a href="#" id="social-instagram" data-cms-href="social_instagram" target="_blank" class="social-icon"><i
+                    class="fab fa-instagram"></i></a>
+            <a href="#" id="social-facebook" data-cms-href="social_facebook" target="_blank" class="social-icon"><i
+                    class="fab fa-facebook"></i></a>
+            <a href="#" id="social-youtube" data-cms-href="social_youtube" target="_blank" class="social-icon"><i
+                    class="fab fa-youtube"></i></a>
+            <a href="#" id="social-linkedin" data-cms-href="social_linkedin" target="_blank" class="social-icon"><i
+                    class="fab fa-linkedin"></i></a>
+        </div>
+
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo Footer"
+                    style="filter: brightness(0) invert(1); opacity: 0.7; width: 150px; margin-bottom: 20px;">
+                <p id="footer-desc" data-cms-key="footer_desc">Faculdade Internacional Cidade Viva. Transformando vidas
+                    através da educação de excelência com
+                    princípios cristãos.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li><a href="/cursos">Cursos</a></li>
+                    <li><a href="/noticias">Notícias</a></li>
+                    <li><a href="/fale-conosco">Fale conosco</a></li>
+                    <li><a href="#">Portal do Aluno</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contato</h3>
+                <p><i class="fas fa-phone"></i> <span id="footer-phone" data-cms-key="contact_phone">(83)
+                        3041-7471</span></p>
+                <p><i class="fas fa-envelope"></i> <span id="footer-email"
+                        data-cms-key="contact_email">contato@ficv.edu.br</span></p>
+                <p><i class="fas fa-map-marker-alt"></i> <span id="footer-address" data-cms-key="contact_address">João
+                        Pessoa - PB</span></p>
+            </div>
+            <div class="footer-col"
+                style="display: flex; flex-direction: column; align-items: flex-end; text-align: right;">
+                <a href="https://emec.mec.gov.br/emec/consulta-cadastro/detalhamento/d96957f455f6405d14c6542552b0f6eb/MjEyMjQ="
+                    target="_blank" id="footer-emec-link" data-cms-href="footer_emec_url">
+                    <img src="images/emec-qrcode.png" alt="Consulta e-MEC" style="width: 100px; border-radius: 8px;"
+                        id="footer-emec-img" data-cms-key="footer_emec_img">
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom center">
+            <p id="footer-copyright" data-cms-key="footer_copyright">&copy; 2025 FICV - Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script type="module" src="/main.js"></script>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const SUPABASE_URL = 'https://zvfotmlfwglwysqbximn.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2Zm90bWxmd2dsd3lzcWJ4aW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5NzA2MjEsImV4cCI6MjA4MTU0NjYyMX0.vUTtOAi8bXmDv5t-T0v7Nm1GLPdk1yozLZW-YLn8nG8';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const form = document.getElementById('contactForm');
+        const feedback = document.getElementById('formFeedback');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Enviando...';
+            btn.disabled = true;
+
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                // Insert into Supabase
+                const { error } = await supabase.from('contact_messages').insert([data]);
+
+                if (error) throw error;
+
+                // Feedback Success
+                feedback.style.display = 'block';
+                feedback.style.background = '#d4edda';
+                feedback.style.color = '#155724';
+                feedback.innerHTML = '<strong>Mensagem enviada com sucesso!</strong><br>Entraremos em contato em breve.';
+
+                form.reset();
+
+                // Optional: Fallback mailto if strictly needed client-side (usually annoying for user, so we skip unless requested as fallback)
+                // But user asked to go to email. Since we can't guarantee backend email, we rely on Admin check.
+
+            } catch (err) {
+                console.error("Error sending message:", err);
+                feedback.style.display = 'block';
+                feedback.style.background = '#f8d7da';
+                feedback.style.color = '#721c24';
+                feedback.innerText = 'Erro ao enviar mensagem. Por favor, tente novamente ou contate-nos por telefone.';
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Núcleo de Prática Jurídica | FICV</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        /* Specific Styles for NPJ */
+        .page-hero {
+            height: 400px;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1470&auto=format&fit=crop') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            color: white;
+            font-weight: 300;
+        }
+
+        .page-hero h1 span {
+            font-weight: 800;
+            color: var(--color-secondary);
+        }
+
+        .npj-section {
+            padding: 80px 0;
+            background: #070707;
+            color: #ccc;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .npj-block {
+            margin-bottom: 50px;
+        }
+
+        .npj-block h2 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--color-secondary);
+            padding-left: 15px;
+        }
+
+        .npj-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .npj-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .npj-list li i {
+            color: var(--color-secondary);
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .contact-card {
+            background: #111;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #222;
+            margin-top: 30px;
+        }
+
+        .contact-card h3 {
+            color: var(--color-secondary);
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media(max-width: 768px) {
+            .page-hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container header-container">
+            <div class="logo-wrapper">
+                <a href="/" class="logo">
+                    <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo">
+                </a>
+            </div>
+
+            <div class="header-right">
+                <div class="header-buttons">
+                    <div class="dropdown-container">
+                        <a href="#" class="btn btn-outline" style="font-size: 0.8rem; padding: 6px 12px;"><i
+                                class="fas fa-graduation-cap"></i> Já sou Aluno</a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-menu-content">
+                                <a href="#" class="dropdown-item" data-cms-href="header_student_ava_url"
+                                    target="_blank">Ambiente Virtual</a>
+                                <a href="#" class="dropdown-item" data-cms-href="header_student_portal_url"
+                                    target="_blank">Portal do Aluno</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="menu-trigger" aria-label="Abrir menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas-menu">
+        <button class="close-menu">&times;</button>
+        <div class="offcanvas-content">
+            <!-- Section: Cursos -->
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Nossos</span>
+                    <h2 class="large-title">Cursos</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/cursos?type=graduacao">Graduação</a></li>
+                        <li><a href="/cursos?type=graduacao-ead">Graduação EAD</a></li>
+                        <li><a href="/cursos?type=pos-graduacao">Pós-Graduação</a></li>
+                        <li><a href="/cursos?type=livres">Cursos Livres</a></li>
+                        <li><a href="/cursos">Ver Todos</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Sobre nós</span>
+                    <h2 class="large-title">Institucional</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/quem-somos">Quem somos</a></li>
+                        <li><a href="/estrutura">Estrutura</a></li>
+                        <li><a href="https://ficv.i10bibliotecas.com.br/" target="_blank"
+                                data-cms-href="nav_biblioteca_url">Biblioteca</a></li>
+                        <li><a href="https://ficv.i10bibliotecas.com.br/ri" target="_blank"
+                                data-cms-href="nav_repositorio_url">Repositório Institucional</a></li>
+                        <li><a href="/npj">Núcleo de Prática Jurídica</a></li>
+                        <li><a href="/noticias">Notícias</a></li>
+
+                        <li><a href="https://diplomas.somosb4.com.br/validar" target="_blank"
+                                data-cms-href="nav_validacao_diploma_url">Validação de Diploma</a></li>
+                        <li><a href="/fale-conosco">Fale conosco</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Section: Revista -->
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Revista Acadêmica</span>
+                    <h2 class="large-title">Summae Sapientiae</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="https://periodicos.ficv.edu.br/summaesapientiae" target="_blank"
+                                data-cms-href="nav_revista_url">Acesse nossa Revista</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Siga-nos nas</span>
+                    <h2 class="large-title">Redes Sociais</h2>
+                </div>
+                <div class="offcanvas-socials">
+                    <a href="#" class="social-icon" data-cms-href="social_instagram" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_facebook" target="_blank"><i
+                            class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_youtube" target="_blank"><i
+                            class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_linkedin" target="_blank"><i
+                            class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero -->
+        <section class="page-hero">
+            <div class="container">
+                <h1>Núcleo de <span>Prática Jurídica</span></h1>
+            </div>
+        </section>
+
+        <section class="npj-section">
+            <div class="container reveal fade-up">
+
+                <!-- Intro -->
+                <p style="margin-bottom: 40px; font-size: 1.2rem; color: #fff;">
+                    O Núcleo de Prática Jurídica (NPJ) da FICV é um ambiente essencial para a formação prática dos
+                    nossos alunos de Direito,
+                    proporcionando atendimento jurídico gratuito à comunidade e garantindo acesso à justiça para quem
+                    mais precisa.
+                </p>
+
+                <!-- Áreas de Atuação -->
+                <div class="npj-block">
+                    <h2>Áreas de Atuação</h2>
+                    <ul class="npj-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Auxílio de interpretação de documentos judiciais ou com conteúdo e termos jurídicos
+                                (processos, intimações, citações).</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Elaboração de documentos legais extrajudiciais, como Procuração e Notificação.</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Auxílio na procedência de situação de pessoas e empresas (due dilligence).</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Consultoria em Direito Civil, especificamente direito da família (pensão alimentícia e
+                                guarda), com apoio de mediação.</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Consultoria e apoio processual em Direito do Consumidor.</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Consultoria e apoio extrajudicial em Direito Digital, especificamente envolvendo
+                                perfil em redes sociais.</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Consultoria e apoio processual em Direito Empresarial, especificamente Propriedade
+                                Intelectual (marca, patente, software).</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Consultoria em Proteção de Dados (LGPD) para pessoas jurídicas e físicas.</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Consultoria e apoio extrajudicial em Direitos Humanos, especificamente políticas
+                                migratórias (refugiados e apátridas).</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Requisitos -->
+                <div class="npj-block">
+                    <h2>Requisitos para Atendimento</h2>
+                    <ul class="npj-list">
+                        <li>
+                            <i class="fas fa-user"></i>
+                            <span><strong>Pessoa Física:</strong> Não possuir rendimentos superiores a 2 salários
+                                mínimos nacionais mensais.</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-building"></i>
+                            <span><strong>Pessoa Jurídica:</strong> Até 90 mil reais de faturamento nos últimos 12
+                                meses.</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-globe"></i>
+                            <span><strong>Estrangeiro:</strong> Informar a nacionalidade e a situação migratória ou
+                                vulnerabilidade social.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Procedimento e Contato -->
+                <div class="npj-block">
+                    <h2>Procedimento e Contato</h2>
+                    <p>Para ser atendido, solicite o agendamento presencial ou remoto:</p>
+
+                    <div class="contact-card">
+                        <h3>Informações de Contato</h3>
+                        <div class="contact-info">
+                            <p>
+                                <i class="fas fa-map-marker-alt text-primary"></i>
+                                Rua Luzia Simões Bertoline, nº 50, Aeroclube, João Pessoa/PB (1º andar)
+                            </p>
+                            <p>
+                                <i class="fab fa-whatsapp text-primary"></i>
+                                +55 83 98190-5398
+                            </p>
+                            <p>
+                                <i class="fas fa-envelope text-primary"></i>
+                                npj@ficv.edu.br
+                            </p>
+                        </div>
+                        <div style="margin-top: 25px;">
+                            <a href="https://wa.me/5583981905398" target="_blank" class="btn btn-primary">
+                                <i class="fab fa-whatsapp"></i> Agendar Atendimento
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="contato">
+        <div class="container footer-social-row"
+            style="padding-bottom: 30px; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #fff; font-size: 1.1rem; font-weight: 500;">Siga-nos nas redes:</span>
+            <a href="#" id="social-instagram" data-cms-href="social_instagram" target="_blank" class="social-icon"><i
+                    class="fab fa-instagram"></i></a>
+            <a href="#" id="social-facebook" data-cms-href="social_facebook" target="_blank" class="social-icon"><i
+                    class="fab fa-facebook"></i></a>
+            <a href="#" id="social-youtube" data-cms-href="social_youtube" target="_blank" class="social-icon"><i
+                    class="fab fa-youtube"></i></a>
+            <a href="#" id="social-linkedin" data-cms-href="social_linkedin" target="_blank" class="social-icon"><i
+                    class="fab fa-linkedin"></i></a>
+        </div>
+
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo Footer"
+                    style="filter: brightness(0) invert(1); opacity: 0.7; width: 150px; margin-bottom: 20px;">
+                <p id="footer-desc" data-cms-key="footer_desc">Faculdade Internacional Cidade Viva. Transformando vidas
+                    através da educação de excelência com
+                    princípios cristãos.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="/">Início</a></li>
+                    <li><a href="/cursos">Cursos</a></li>
+                    <li><a href="#">Vestibular</a></li>
+                    <li><a href="#">Portal do Aluno</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contato</h3>
+                <p><i class="fas fa-phone"></i> <span id="footer-phone" data-cms-key="contact_phone">(83)
+                        3041-7471</span></p>
+                <p><i class="fas fa-envelope"></i> <span id="footer-email"
+                        data-cms-key="contact_email">contato@ficv.edu.br</span></p>
+                <p><i class="fas fa-map-marker-alt"></i> <span id="footer-address" data-cms-key="contact_address">João
+                        Pessoa - PB</span></p>
+            </div>
+            <div class="footer-col"
+                style="display: flex; flex-direction: column; align-items: flex-end; text-align: right;">
+                <a href="https://emec.mec.gov.br/emec/consulta-cadastro/detalhamento/d96957f455f6405d14c6542552b0f6eb/MjEyMjQ="
+                    target="_blank" id="footer-emec-link" data-cms-href="footer_emec_url">
+                    <img src="images/emec-qrcode.png" alt="Consulta e-MEC" style="width: 100px; border-radius: 8px;"
+                        id="footer-emec-img" data-cms-key="footer_emec_img">
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom center">
+            <p id="footer-copyright" data-cms-key="footer_copyright">&copy; 2025 FICV - Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                })
+            }, { threshold: 0.1 });
+            reveals.forEach(r => observer.observe(r));
+        });
+    </script>
+</body>
+
+</html>

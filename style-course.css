@@ -1,0 +1,435 @@
+/* Course Page Specific Styles */
+
+/* --- Hero Section --- */
+.course-hero {
+    position: relative;
+    height: 75vh;
+    min-height: 650px;
+    display: flex;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    margin-top: 80px;
+    padding: 60px 0;
+    /* Extra padding for internal spacing */
+}
+
+.course-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #070707 40%, rgba(7, 7, 7, 0.6) 100%);
+    z-index: 1;
+}
+
+.course-hero .container {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+    width: 100%;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 60px;
+    align-items: center;
+}
+
+@media (max-width: 992px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding-top: 20px;
+    }
+}
+
+.course-badge {
+    display: inline-block;
+    background: var(--color-secondary);
+    color: #000;
+    padding: 4px 10px;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-bottom: 25px;
+    margin-top: 40px;
+    /* More margin to clear the header area */
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+}
+
+/* Rotating Badge */
+.rotating-badge-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 30px;
+    /* Space from title */
+    flex-shrink: 0;
+}
+
+.rotating-badge-text {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: rotateText 20s linear infinite;
+    transform-origin: center;
+}
+
+.rotating-badge-text svg {
+    width: 100%;
+    height: 100%;
+    fill: #fff;
+    font-weight: 600;
+    /* Slightly bolder for readability at small size */
+    font-size: 8px;
+    letter-spacing: 4.5px;
+    text-transform: uppercase;
+}
+
+.rotating-badge-center-img {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 50%;
+    /* Optional, if logo is circular */
+    z-index: 2;
+}
+
+@keyframes rotateText {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media(max-width: 768px) {
+    .rotating-badge-container {
+        display: none !important;
+        /* Hide on mobile to save space */
+    }
+}
+
+.course-hero h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 0;
+    max-width: 800px;
+}
+
+.course-hero h1 span {
+    color: var(--color-secondary);
+}
+
+.course-hero .lead {
+    font-size: 1.2rem;
+    color: #ddd;
+    max-width: 600px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+#hero-cta-container {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure Brevo internal spacing if possible */
+#hero-cta-container iframe {
+    margin-bottom: 0 !important;
+}
+
+/* --- Info Bar --- */
+.course-info-bar {
+    background: #111;
+    border-bottom: 1px solid #222;
+    padding: 40px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    align-items: center;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.info-item i {
+    font-size: 2rem;
+    color: var(--color-secondary);
+}
+
+.info-text strong {
+    display: block;
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.info-text span {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* --- Course Content / About --- */
+.course-about-section {
+    padding: 80px 0;
+    background: #070707;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+.about-content p {
+    color: #ccc;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.course-sidebar {
+    background: #111;
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid #222;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 100px;
+    z-index: 900;
+    align-self: start;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.sidebar-widget h4 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--color-secondary);
+    padding-left: 15px;
+}
+
+.coordinator-card {
+    text-align: center;
+    padding: 20px;
+    padding: 20px;
+    background: #1a1a1a;
+    border-radius: 8px;
+}
+
+.coordinator-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 15px;
+    border: 2px solid var(--color-secondary);
+}
+
+.coordinator-card h5 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.coordinator-card span {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* --- Curriculum / Matrices --- */
+.curriculum-section {
+    padding: 80px 0;
+    background: #0d0d0d;
+}
+
+.curriculum-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.module-card {
+    background: #161616;
+    border-radius: 8px;
+    padding: 25px;
+    transition: transform 0.3s;
+    border: 1px solid #222;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-secondary);
+}
+
+.module-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.module-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(240, 187, 80, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-secondary);
+    font-size: 1.5rem;
+}
+
+.module-title h3 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.discipline-list {
+    list-style: none;
+    padding: 0;
+}
+
+.discipline-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #222;
+    color: #bbb;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: flex-start;
+}
+
+.discipline-list li::before {
+    content: '•';
+    color: var(--color-secondary);
+    margin-right: 10px;
+}
+
+.discipline-list li:last-child {
+    border-bottom: none;
+}
+
+/* --- Benefits Section --- */
+.benefits-section {
+    padding: 80px 0;
+    background: url('/images/pattern-bg.png') repeat, #070707;
+    /* Fallback if no image */
+}
+
+.benefit-box {
+    text-align: center;
+    padding: 40px 20px;
+    background: #111;
+    border-radius: 8px;
+    border: 1px solid #222;
+    height: 100%;
+}
+
+.benefit-icon {
+    font-size: 3rem;
+    color: var(--color-secondary);
+    margin-bottom: 20px;
+}
+
+.benefit-box h3 {
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.benefit-box p {
+    color: #888;
+}
+
+/* --- CTA Section --- */
+.course-cta-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #111 0%, #000 100%);
+    text-align: center;
+}
+
+.course-cta-box {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.course-cta-box h2 {
+    font-size: 3rem;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.course-cta-box p {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 40px;
+}
+
+/* Responsive */
+@media(max-width: 1024px) {
+    .course-hero {
+        height: auto;
+        padding: 60px 0;
+    }
+
+    .course-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .course-sidebar {
+        position: static;
+        width: 100%;
+        max-height: none;
+        margin-top: 30px;
+    }
+
+    .curriculum-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Fix for Brevo form visibility (ensuring text isn't white on white background) */
+.sib-form input,
+.sib-form select,
+.sib-sms-select__calling-code {
+    color: #333 !important;
+}

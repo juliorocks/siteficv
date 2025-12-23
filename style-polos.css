@@ -1,0 +1,418 @@
+/* Polos Section Styles */
+.polos-section {
+    padding: 100px 0;
+    background-color: #050505;
+}
+
+.polos-card {
+    background-color: #000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    min-height: 500px;
+    /* Reduced min-height based on image ratio */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.polos-image-person {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 2;
+}
+
+.polos-image-person img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: bottom center;
+    mask-image: none;
+}
+
+.polos-content {
+    flex: 1.2;
+    z-index: 3;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    /* Left aligned as per image */
+}
+
+/* .polos-content h2 {
+    font-size: 3.5rem;
+    line-height: 1.1;
+    color: var(--color-secondary);
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.polos-content h2 span {
+    color: #fff;
+    font-weight: 400;
+    font-size: 2.5rem;
+} */
+
+.polos-content p {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 35px;
+    max-width: 400px;
+}
+
+.polos-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 350px;
+}
+
+.polos-buttons .btn {
+    width: 100%;
+    justify-content: center;
+    text-transform: none;
+    /* Keep text case as is or uppercase? user image shows mixed? 'Ver Polos' 'Quero ser' */
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 16px 30px;
+}
+
+.btn-dark-blue {
+    background-color: #1A2E3B;
+    /* Dark blue from generic */
+    color: #fff;
+    border: 1px solid transparent;
+}
+
+.btn-dark-blue:hover {
+    background-color: var(--color-secondary);
+    color: #000;
+}
+
+/* Map Styles */
+.polos-image-map {
+    flex: 1.5;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+}
+
+/* SVG Map Styling */
+.polos-image-map svg {
+    width: 100%;
+    height: 100%;
+    max-height: 480px;
+}
+
+.polos-image-map path {
+    fill: #333;
+    /* Dark grey default */
+    stroke: #000;
+    stroke-width: 1px;
+    transition: fill 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.polos-image-map path:hover {
+    fill: var(--color-secondary);
+    /* Yellow on hover */
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 10px rgba(240, 187, 80, 0.5));
+}
+
+/* Tooltip */
+.map-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border: 1px solid var(--color-secondary);
+    z-index: 1000;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+    margin-top: -10px;
+}
+
+.map-tooltip.active {
+    opacity: 1;
+}
+
+/* Responsive */
+@media(max-width: 1100px) {
+    .polos-card {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 40px;
+        min-height: auto;
+    }
+
+    .polos-image-person {
+        display: none;
+        /* Hide person on mobile stack to save space or move to bottom if critical */
+    }
+
+    .polos-content {
+        align-items: center;
+        order: 1;
+        padding-bottom: 20px;
+        flex: auto;
+    }
+
+    .polos-content h2 {
+        font-size: 2.5rem;
+    }
+
+    .polos-content h2 span {
+        font-size: 1.8rem;
+    }
+
+    .polos-image-map {
+        order: 2;
+        width: 100%;
+        padding: 20px;
+        margin-top: 0;
+        flex: auto;
+        min-height: 300px;
+    }
+
+    .polos-image-map svg {
+        max-height: 300px;
+    }
+}
+
+/* Polos Modal */
+.polos-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.polos-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.polos-modal {
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.polos-modal-overlay.active .polos-modal {
+    transform: translateY(0);
+}
+
+.modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #151515;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--color-secondary);
+    font-size: 1.5rem;
+}
+
+.close-modal {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: var(--color-secondary);
+}
+
+.modal-search {
+    padding: 15px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modal-search input {
+    width: 100%;
+    padding: 12px 15px;
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: var(--font-main);
+    outline: none;
+}
+
+.modal-search input:focus {
+    border-color: var(--color-secondary);
+}
+
+.modal-body {
+    padding: 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.polo-list-state-msg {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+}
+
+.city-group {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.city-header {
+    background: #1a1a1a;
+    padding: 12px 25px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    position: sticky;
+    top: 0;
+}
+
+.polo-item {
+    padding: 15px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    transition: background 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.polo-item:hover {
+    background: #1f1f1f;
+}
+
+.polo-info strong {
+    display: block;
+    color: #ddd;
+    margin-bottom: 4px;
+}
+
+.polo-info span {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.polo-actions .btn-small {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    background: transparent;
+    border: 1px solid var(--color-secondary);
+    color: var(--color-secondary);
+    border-radius: 4px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.polo-actions .btn-small:hover {
+    background: var(--color-secondary);
+    color: #000;
+}
+
+/* Scrollbar */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #111;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+/* Expanded Details inside Modal */
+.polo-details-content {
+    display: none;
+    width: 100%;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: #ccc;
+    font-size: 0.95rem;
+}
+
+.polo-item {
+    flex-wrap: wrap;
+    /* Allow wrapping for details */
+}
+
+.polo-item.expanded .polo-details-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+.polo-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.polo-detail-row i {
+    color: var(--color-secondary);
+    width: 20px;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

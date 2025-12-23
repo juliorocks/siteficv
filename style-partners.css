@@ -1,0 +1,84 @@
+/* Partners Section */
+.partners-section {
+    background: #000;
+    padding: 60px 0;
+    overflow: hidden;
+    position: relative;
+    border-top: 1px solid #111;
+}
+
+.partners-section .container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.partners-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee-partners 30s linear infinite;
+    align-items: center;
+}
+
+.partners-marquee:hover {
+    animation-play-state: paused;
+}
+
+.partner-item {
+    flex-shrink: 0;
+    width: 200px;
+    /* Adjust based on logo needs */
+    height: 100px;
+    margin: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.partner-item:hover {
+    opacity: 1;
+}
+
+.partner-item img {
+    max-width: 100%;
+    max-height: 60px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    /* Ensure white if not already */
+}
+
+/* Custom CSS Logos for Placeholders (if images fail or for better performance) */
+.partner-logo-custom {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+}
+
+.partner-logo-custom i,
+.partner-logo-custom svg {
+    font-size: 2rem;
+    height: 40px;
+    width: auto;
+}
+
+@keyframes marquee-partners {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@media(max-width: 768px) {
+    .partner-item {
+        width: 150px;
+        margin: 0 20px;
+    }
+}

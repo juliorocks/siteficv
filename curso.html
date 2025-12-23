@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Curso | FICV</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/style-course.css">
+</head>
+
+<body>
+
+    <!-- Header (Shared) -->
+    <header id="main-header">
+        <div class="container header-container">
+            <div class="logo-wrapper">
+                <a href="/" class="logo">
+                    <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo">
+                </a>
+            </div>
+
+            <div class="header-right">
+                <!-- Action Buttons -->
+                <div class="header-buttons">
+                    <div class="dropdown-container">
+                        <a href="#" class="btn btn-outline" style="font-size: 0.8rem; padding: 6px 12px;"><i
+                                class="fas fa-graduation-cap"></i> Já sou Aluno</a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-menu-content">
+                                <a href="#" class="dropdown-item" data-cms-href="header_student_ava_url"
+                                    target="_blank">Ambiente Virtual</a>
+                                <a href="#" class="dropdown-item" data-cms-href="header_student_portal_url"
+                                    target="_blank">Portal do Aluno</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Icon Trigger -->
+                <button class="menu-trigger" aria-label="Abrir menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu (Shared) -->
+    <div class="offcanvas-menu">
+        <button class="close-menu">&times;</button>
+
+        <div class="offcanvas-content">
+            <!-- Section: Cursos -->
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Nossos</span>
+                    <h2 class="large-title">Cursos</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/cursos?type=graduacao">Graduação</a></li>
+                        <li><a href="/cursos?type=graduacao-ead">Graduação EAD</a></li>
+                        <li><a href="/cursos?type=pos-graduacao">Pós-Graduação</a></li>
+                        <li><a href="/cursos?type=livres">Cursos Livres</a></li>
+                        <li><a href="/cursos">Ver Todos</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Section: Institucional -->
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Sobre nós</span>
+                    <h2 class="large-title">Institucional</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="/quem-somos">Quem somos</a></li>
+                        <li><a href="/estrutura">Estrutura</a></li>
+                        <li><a href="https://ficv.i10bibliotecas.com.br/" target="_blank"
+                                data-cms-href="nav_biblioteca_url">Biblioteca</a></li>
+                        <li><a href="https://ficv.i10bibliotecas.com.br/ri" target="_blank"
+                                data-cms-href="nav_repositorio_url">Repositório Institucional</a></li>
+                        <li><a href="/npj">Núcleo de Prática Jurídica</a></li>
+                        <li><a href="/noticias">Notícias</a></li>
+
+                        <li><a href="https://diplomas.somosb4.com.br/validar" target="_blank"
+                                data-cms-href="nav_validacao_diploma_url">Validação de Diploma</a></li>
+                        <li><a href="/fale-conosco">Fale conosco</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Section: Revista -->
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Revista Acadêmica</span>
+                    <h2 class="large-title">Summae Sapientiae</h2>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="https://periodicos.ficv.edu.br/summaesapientiae" target="_blank"
+                                data-cms-href="nav_revista_url">Acesse nossa Revista</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Section: Redes Sociais -->
+            <div class="offcanvas-section">
+                <div class="offcanvas-header">
+                    <span class="small-title">Siga-nos nas</span>
+                    <h2 class="large-title">Redes Sociais</h2>
+                </div>
+                <div class="offcanvas-socials">
+                    <a href="#" class="social-icon" data-cms-href="social_instagram" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_facebook" target="_blank"><i
+                            class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_youtube" target="_blank"><i
+                            class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon" data-cms-href="social_linkedin" target="_blank"><i
+                            class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="page-loader"
+        style="position:fixed; top:0; left:0; width:100%; height:100vh; background:#000; z-index:9999; display:flex; justify-content:center; align-items:center;">
+        <i class="fas fa-spinner fa-spin fa-3x" style="color:var(--color-primary);"></i>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden until loaded) -->
+    <div id="course-content" style="display:none;">
+
+        <!-- Hero Section -->
+        <section class="course-hero" id="hero-section">
+            <div class="container hero-grid">
+                <div class="hero-left">
+                    <!-- 1. Pós-graduação (Level) -->
+                    <span class="course-badge" id="hero-badge">Pós-Graduação</span>
+
+                    <!-- 2. Nome do Curso + Rotating Badge -->
+                    <div class="title-with-badge" style="position: relative; display: inline-block; margin-top: 15px;">
+                        <h1 id="hero-title" style="margin:0; display: inline-block; vertical-align: middle;">Nome do
+                            Curso</h1>
+
+                        <!-- Floating Badge positioned to the right of title text -->
+                        <div id="rotating-badge-container" class="rotating-badge-container"
+                            style="display:none; position: absolute; left: 100%; top: 10%; transform: translateY(-50%); margin-left: -10px; z-index: 5;">
+                            <img id="rotating-badge-img" src="" class="rotating-badge-center-img" alt="Logo">
+                            <div class="rotating-badge-text">
+                                <svg viewBox="0 0 100 100">
+                                    <path id="curve" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+                                        fill="transparent" />
+                                    <text>
+                                        <textPath xlink:href="#curve" id="rotating-badge-text-val">
+                                            Texto Giratório Aqui *
+                                        </textPath>
+                                    </text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Descrição -->
+                    <p class="lead" id="hero-desc" style="margin-top: 25px;">Descrição do curso.</p>
+                </div>
+                <div class="hero-right">
+                    <div id="hero-cta-container">
+                        <a href="#matricula" class="btn btn-primary" id="hero-btn">Quero me Matricular</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Info Bar -->
+        <div class="course-info-bar">
+            <div class="container">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-laptop-house"></i>
+                        <div class="info-text">
+                            <strong>Modalidade</strong>
+                            <span id="info-modality">-</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="far fa-clock"></i>
+                        <div class="info-text">
+                            <strong>Carga Horária</strong>
+                            <span id="info-workload">-</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="far fa-calendar-alt"></i>
+                        <div class="info-text">
+                            <strong>Duração</strong>
+                            <span id="info-duration">-</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <div class="info-text">
+                            <strong>Área</strong>
+                            <span id="info-area">-</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-book-open"></i>
+                        <div class="info-text">
+                            <strong>Disciplinas</strong>
+                            <span id="info-disciplines">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <section class="course-about-section">
+            <div class="container">
+                <div class="about-grid">
+                    <!-- Content (Intro + Full Body) -->
+                    <div class="about-content">
+                        <div class="section-header-wrapper">
+                            <div>
+                                <h2 class="standard-section-title" style="margin-bottom:0">Sobre o <span>Curso</span>
+                                </h2>
+                            </div>
+                            <p class="section-header-text" id="about-intro">Resumo introdutório.</p>
+                        </div>
+
+                        <!-- Full Content Moved Here -->
+                        <div class="course-full-content">
+                            <div id="about-body">
+                                <!-- Injected HTML -->
+                            </div>
+
+                            <div id="reasons-container" style="display:none;">
+                                <h3 style="color:#fff; margin-top:40px; margin-bottom:20px;">Por que escolher este
+                                    curso?</h3>
+                                <ul class="feature-list-simple" style="display:block;" id="reasons-list">
+                                    <!-- Dynamic List -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <aside class="course-sidebar">
+                        <div class="sidebar-widget" id="coord-widget" style="display:none;">
+                            <h4>Coordenação</h4>
+                            <div class="coordinator-card">
+                                <img src="" alt="Coordenador" class="coordinator-img" id="coord-img"
+                                    onerror="this.src='https://via.placeholder.com/150'">
+                                <h5 id="coord-name">Nome</h5>
+                                <span id="coord-role">Coordenador</span>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-widget" style="margin-top:40px;">
+                            <h4>Investimento</h4>
+                            <div style="text-align:center; padding:20px 0;">
+                                <span style="color:#888; text-decoration:line-through;" id="price-full"></span>
+                                <div style="font-size:2.5rem; color:var(--color-secondary); font-weight:800; line-height:1; margin-top:5px;"
+                                    id="price-monthly-container">
+                                    <span style="font-size:1.2rem; font-weight:400;">R$</span> <span
+                                        id="price-val">000</span>,00
+                                </div>
+                                <p style="color:#aaa; font-size:0.9rem; margin-top:5px;">Mensais</p>
+                                <div id="sidebar-cta-container" style="margin-top:15px;">
+                                    <a href="#matricula" class="btn btn-primary" id="sidebar-btn"
+                                        style="width:100%; justify-content:center;">Matricule-se Agora</a>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- Curriculum Section -->
+        <section class="curriculum-section" id="curriculum-section" style="display:none;">
+            <div class="container">
+                <div class="section-header-wrapper">
+                    <div>
+                        <h2 class="standard-section-title" style="margin-bottom:0">Matriz <span>Curricular</span></h2>
+                    </div>
+                    <div class="section-header-divider"></div>
+                    <p class="section-header-text">Uma jornada completa pelos fundamentos.</p>
+                </div>
+
+                <div class="curriculum-grid" id="curriculum-grid">
+                    <!-- Modules injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Professors Section -->
+        <section class="professors-section" id="course-professors-section" style="display:none; padding-top: 80px;">
+            <div class="container">
+                <div class="section-header-wrapper">
+                    <div>
+                        <h2 class="standard-section-title" style="margin-bottom:0">Corpo <span>Docente</span></h2>
+                    </div>
+                    <div class="section-header-divider"></div>
+                    <p class="section-header-text">Conheça alguns dos mestres que farão parte da sua jornada.</p>
+                </div>
+            </div>
+
+            <div class="professors-marquee" id="course-professors-list">
+                <!-- Content loaded via JS -->
+            </div>
+        </section>
+
+        <!-- CTA Final -->
+        <section class="course-cta-section" id="matricula">
+            <div class="container course-cta-box">
+                <h2 data-cms-key="cta_enroll_title">Garanta sua vaga com condição especial!</h2>
+                <p data-cms-key="cta_enroll_desc">Junte-se a uma comunidade de líderes educadores e transforme sua visão
+                    pedagógica.</p>
+                <div id="final-cta-container" style="margin-top:30px;">
+                    <a href="#" class="btn btn-primary" id="final-btn" style="padding: 20px 50px; font-size: 1.2rem;"
+                        data-cms-key="cta_enroll_btn_text" data-cms-href="cta_enroll_btn_link">QUERO ME MATRICULAR!</a>
+                </div>
+                <p style="margin-top:20px; font-size:0.9rem; color:#888;" data-cms-key="cta_enroll_disclaimer">*Vagas
+                    limitadas. Condição promocional por tempo determinado.</p>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="course-faq-section" id="faq-section"
+            style="display:none; padding: 80px 0; background: #070707;">
+            <div class="container">
+                <div class="section-header-wrapper"
+                    style="justify-content:center; text-align:center; margin-bottom:60px;">
+                    <div>
+                        <h2 class="standard-section-title" style="margin-bottom:0">Perguntas <span>Frequentes</span>
+                        </h2>
+                    </div>
+                </div>
+                <div class="faq-accordion" id="faq-list" style="max-width: 800px; margin: 0 auto;">
+                    <!-- Items -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer (Shared) -->
+        <footer id="contato">
+            <!-- Social Media Row (Ante-Rodapé) -->
+            <div class="container footer-social-row"
+                style="padding-bottom: 30px; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: #fff; font-size: 1.1rem; font-weight: 500;">Siga-nos nas redes:</span>
+                <a href="#" id="social-instagram" data-cms-href="social_instagram" target="_blank"
+                    class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" id="social-facebook" data-cms-href="social_facebook" target="_blank" class="social-icon"><i
+                        class="fab fa-facebook"></i></a>
+                <a href="#" id="social-youtube" data-cms-href="social_youtube" target="_blank" class="social-icon"><i
+                        class="fab fa-youtube"></i></a>
+                <a href="#" id="social-linkedin" data-cms-href="social_linkedin" target="_blank" class="social-icon"><i
+                        class="fab fa-linkedin"></i></a>
+            </div>
+
+            <div class="container footer-grid">
+                <div class="footer-col">
+                    <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png"
+                        alt="FICV Logo Footer"
+                        style="filter: brightness(0) invert(1); opacity: 0.7; width: 150px; margin-bottom: 20px;">
+                    <p id="footer-desc" data-cms-key="footer_desc">Faculdade Internacional Cidade Viva. Transformando
+                        vidas através da educação de excelência com
+                        princípios
+                        cristãos.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Links Rápidos</h3>
+                    <ul>
+                        <li><a href="/">Início</a></li>
+                        <li><a href="/cursos">Cursos</a></li>
+                        <li><a href="#">Vestibular</a></li>
+                        <li><a href="#">Portal do Aluno</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contato</h3>
+                    <p><i class="fas fa-phone"></i> <span id="footer-phone" data-cms-key="contact_phone">(83)
+                            3041-7471</span></p>
+                    <p><i class="fas fa-envelope"></i> <span id="footer-email"
+                            data-cms-key="contact_email">contato@ficv.edu.br</span></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="footer-address"
+                            data-cms-key="contact_address">João Pessoa - PB</span></p>
+                </div>
+                <!-- MEC Seal Column -->
+                <div class="footer-col"
+                    style="display: flex; flex-direction: column; align-items: flex-end; text-align: right;">
+                    <a href="https://emec.mec.gov.br/emec/consulta-cadastro/detalhamento/d96957f455f6405d14c6542552b0f6eb/MjEyMjQ="
+                        target="_blank" id="footer-emec-link" data-cms-href="footer_emec_url">
+                        <img src="images/emec-qrcode.png" alt="Consulta e-MEC" style="width: 100px; border-radius: 8px;"
+                            id="footer-emec-img" data-cms-key="footer_emec_img">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom center">
+                <p id="footer-copyright" data-cms-key="footer_copyright">&copy; 2025 FICV - Todos os direitos
+                    reservados.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- MAIN JS + DYNAMIC LOAD -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const SUPABASE_URL = 'https://zvfotmlfwglwysqbximn.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2Zm90bWxmd2dsd3lzcWJ4aW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5NzA2MjEsImV4cCI6MjA4MTU0NjYyMX0.vUTtOAi8bXmDv5t-T0v7Nm1GLPdk1yozLZW-YLn8nG8';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Fetch All CMS Content (Header, Footer, etc)
+        async function loadCMSContent() {
+            const { data } = await supabase.from('site_content').select('item_key, content_value');
+            if (data) {
+                const content = {};
+                data.forEach(item => content[item.item_key] = item.content_value);
+
+                // Apply keys
+                document.querySelectorAll('[data-cms-key]').forEach(el => {
+                    const key = el.getAttribute('data-cms-key');
+                    if (content[key]) {
+                        if (el.tagName.toLowerCase() === 'img') el.src = content[key];
+                        else if (el.tagName.toLowerCase() === 'div' && el.style.backgroundImage) el.style.backgroundImage = `url('${content[key]}')`;
+                        else el.innerText = content[key];
+                    }
+                });
+
+                // Apply hrefs
+                document.querySelectorAll('[data-cms-href]').forEach(el => {
+                    const key = el.getAttribute('data-cms-href');
+                    if (content[key]) el.href = content[key];
+                });
+            }
+        }
+        loadCMSContent();
+
+        // Get Slug
+        const params = new URLSearchParams(window.location.search);
+        let slug = params.get('s');
+
+        // Fallback: Check pathname for "pretty URL" pattern: /nivel/slug OR /curso.html/nivel/slug (if rewrite fails)
+        // Ideally: /graduacao/teologia -> slug = teologia
+        if (!slug) {
+            const pathSegments = window.location.pathname.split('/').filter(s => s.length > 0 && s !== 'curso');
+            if (pathSegments.length >= 1) {
+                if (pathSegments[0] === 'news' || pathSegments[0] === 'noticias') {
+                    // This is actually a news page executing curso.html by mistake?
+                    // Or vite rewrite failed?
+                    console.warn("Rota de notícias detectada em curso.html");
+                    // Stop execution or redirect?
+                    // If vite configured correctly this file shouldn't be served, but let's be safe
+                    // We just return or let it fail gracefully?
+                    // Better yet, check if slug is actually for a course?
+                }
+                // Assuming the last segment is the slug
+                slug = pathSegments[pathSegments.length - 1];
+            }
+        }
+
+        if (!slug) {
+            console.warn("No slug found, redirecting to home.");
+            window.location.href = '/';
+        }
+
+        async function loadCourse() {
+            try {
+                const { data: courses, error } = await supabase.from('courses').select('*').eq('slug', slug);
+
+                if (!courses || courses.length === 0) {
+                    alert('Curso não encontrado.');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const c = courses[0];
+                document.title = `${c.name} | FICV`;
+
+                // --- HERO ---
+                document.getElementById('hero-title').innerHTML = highlightLastWord(c.name);
+                document.getElementById('hero-desc').innerText = c.description_short || '';
+                document.getElementById('hero-badge').innerText = c.level || 'Curso';
+                if (c.banner_url) {
+                    document.getElementById('hero-section').style.backgroundImage = `url('${c.banner_url}')`;
+                } else if (c.image_url) {
+                    // Fallback to card image if no banner
+                    // document.getElementById('hero-section').style.backgroundImage = `url('${c.image_url}')`;
+                    // Better fallback styling or default needed?
+                }
+
+                // --- INFO ---
+                document.getElementById('info-modality').innerText = c.modality || '-';
+                document.getElementById('info-workload').innerText = c.workload || '-';
+                document.getElementById('info-duration').innerText = c.duration || '-';
+                document.getElementById('info-area').innerText = c.area || '-';
+                document.getElementById('info-disciplines').innerText = c.disciplines_text || '-';
+
+                // --- ABOUT ---
+                document.getElementById('about-intro').innerText = c.about_intro || '';
+                document.getElementById('about-body').innerHTML = c.about_content ? c.about_content.replace(/\n/g, '<br>') : '<p>Informações em breve.</p>';
+
+                // Rotating Badge Logic
+                if (c.badge_text) {
+                    document.getElementById('rotating-badge-container').style.display = 'flex';
+                    document.getElementById('rotating-badge-text-val').textContent = c.badge_text;
+                    if (c.badge_image_url) {
+                        document.getElementById('rotating-badge-img').src = c.badge_image_url;
+                        document.getElementById('rotating-badge-img').style.display = 'block';
+                    } else {
+                        document.getElementById('rotating-badge-img').style.display = 'none';
+                    }
+                } else {
+                    document.getElementById('rotating-badge-container').style.display = 'none';
+                }
+
+                // Reasons
+                if (c.reasons_json && c.reasons_json.length > 0) {
+                    document.getElementById('reasons-container').style.display = 'block';
+                    const reasonsHtml = c.reasons_json.map(r => `
+                        <li style="margin-bottom:15px; display:flex; gap:10px; color:#ccc;">
+                            <i class="fas fa-check-circle" style="color:var(--color-secondary)"></i>
+                            ${r}
+                        </li>
+                    `).join('');
+                    document.getElementById('reasons-list').innerHTML = reasonsHtml;
+                }
+
+                // --- SIDEBAR ---
+                if (c.coordinator_name) {
+                    document.getElementById('coord-widget').style.display = 'block';
+                    document.getElementById('coord-name').innerText = c.coordinator_name;
+                    document.getElementById('coord-role').innerText = c.coordinator_role || 'Coordenador';
+                    if (c.coordinator_image) document.getElementById('coord-img').src = c.coordinator_image;
+                }
+
+                if (c.price_full) document.getElementById('price-full').innerText = `De R$ ${c.price_full}`;
+                else document.getElementById('price-full').style.display = 'none';
+
+                if (c.price_monthly) {
+                    // Split for styling? Simple text for now to avoid breaking formatting logic excessively
+                    // User provided "R$ 399,00" format in DB.
+                    // Let's just put the value. Styling needs specific separation of cents/currency.
+                    // Assuming input is simple number or formatted string.
+                    document.getElementById('price-val').parentElement.innerHTML = `<span style="font-size:1.2rem; font-weight:400;">Valor</span> ${c.price_monthly}`;
+                }
+
+                // --- CURRICULUM ---
+                if (c.curriculum_json && c.curriculum_json.length > 0) {
+                    document.getElementById('curriculum-section').style.display = 'block';
+                    const modulesHtml = c.curriculum_json.map(mod => `
+                        <div class="module-card">
+                            <div class="module-header">
+                                <div class="module-icon"><i class="${mod.icon || 'fas fa-book'}"></i></div>
+                                <div class="module-title">
+                                    <h3>${mod.title}</h3>
+                                </div>
+                            </div>
+                            <ul class="discipline-list">
+                                ${mod.items.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `).join('');
+                    document.getElementById('curriculum-grid').innerHTML = modulesHtml;
+                }
+
+                // --- PROFESSORS ---
+                if (c.professors_json && c.professors_json.length > 0) {
+                    document.getElementById('course-professors-section').style.display = 'block';
+                    const profsHtml = c.professors_json.map(p => `
+                        <div class="prof-item">
+                          <img src="${p.image}" alt="${p.name}" title="${p.name}">
+                          <div class="prof-overlay">
+                            <div class="prof-name">${p.name}</div>
+                          </div>
+                        </div>
+                    `).join('');
+                    document.getElementById('course-professors-list').innerHTML = profsHtml + profsHtml + profsHtml + profsHtml;
+                }
+
+                // --- FAQ ---
+                if (c.faq_json && c.faq_json.length > 0) {
+                    document.getElementById('faq-section').style.display = 'block';
+                    const faqHtml = c.faq_json.map((item, index) => `
+                        <div class="faq-item" onclick="toggleFaq(this)">
+                            <div class="faq-question">
+                                <h3>${item.question}</h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>${item.answer}</p>
+                            </div>
+                        </div>
+                     `).join('');
+                    document.getElementById('faq-list').innerHTML = faqHtml;
+                }
+
+
+                // --- CTA ---
+                if (c.cta_title) {
+                    const t = document.querySelector('[data-cms-key="cta_enroll_title"]');
+                    if (t) t.innerText = c.cta_title;
+                }
+                if (c.cta_description) {
+                    const d = document.querySelector('[data-cms-key="cta_enroll_desc"]');
+                    if (d) d.innerText = c.cta_description;
+                }
+                if (c.cta_button_text) {
+                    const bt = document.querySelector('[data-cms-key="cta_enroll_btn_text"]');
+                    if (bt) bt.innerText = c.cta_button_text;
+                }
+                if (c.cta_button_link) {
+                    const bl = document.querySelector('[data-cms-href="cta_enroll_btn_link"]');
+                    if (bl) bl.href = c.cta_button_link;
+                }
+                if (c.cta_disclaimer) {
+                    const di = document.querySelector('[data-cms-key="cta_enroll_disclaimer"]');
+                    if (di) di.innerText = c.cta_disclaimer;
+                }
+
+                // --- BREVO FORM OPTION ---
+                if (c.brevo_form_html && c.brevo_form_html.trim().length > 0) {
+                    // Inject Brevo Form into Hero and Final CTA
+                    const heroCont = document.getElementById('hero-cta-container');
+                    const finalCont = document.getElementById('final-cta-container');
+
+                    const injectBrevoForm = (container, html) => {
+                        if (!container) return;
+                        container.innerHTML = '';
+                        const range = document.createRange();
+                        const fragment = range.createContextualFragment(html);
+                        container.appendChild(fragment);
+
+                        // Force Brazil (+55) as default country
+                        const fixCountry = () => {
+                            const countrySelect = container.querySelector('select[name="SMS__COUNTRY_CODE"]');
+                            if (countrySelect) {
+                                for (let opt of countrySelect.options) {
+                                    if (opt.value === 'BR' || opt.text.includes('+55')) {
+                                        if (countrySelect.value !== opt.value) {
+                                            countrySelect.value = opt.value;
+                                            countrySelect.dispatchEvent(new Event('change', { bubbles: true }));
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        };
+
+                        // Run multiple times to catch Brevo initialization
+                        setTimeout(fixCountry, 100);
+                        setTimeout(fixCountry, 500);
+                        setTimeout(fixCountry, 1500);
+                    };
+
+                    injectBrevoForm(heroCont, c.brevo_form_html);
+                    injectBrevoForm(finalCont, c.brevo_form_html);
+
+                    // Sidebar should NOT have the form, but a button to the Hero
+                    const sideBtn = document.getElementById('sidebar-btn');
+                    if (sideBtn) {
+                        sideBtn.innerText = 'Matricule-se Agora';
+                        sideBtn.href = '#hero-section';
+                    }
+                }
+
+                // Show content
+                document.getElementById('page-loader').style.display = 'none';
+                document.getElementById('course-content').style.display = 'block';
+
+            } catch (e) {
+                console.error('Error loading course', e);
+                alert('Erro ao carregar curso.');
+            }
+        }
+
+        function highlightLastWord(text) {
+            if (!text) return '';
+            const words = text.split(' ');
+            if (words.length > 1) {
+                const last = words.pop();
+                return `${words.join(' ')} <span>${last}</span>`;
+            }
+            return text;
+        }
+
+        loadCourse();
+
+
+        // --- MENU LOGIC Duplicated from main.js (simplified) ---
+        const menuTrigger = document.querySelector('.menu-trigger');
+        const closeMenu = document.querySelector('.close-menu');
+        const offcanvasMenu = document.querySelector('.offcanvas-menu');
+        if (menuTrigger && offcanvasMenu) {
+            menuTrigger.addEventListener('click', () => offcanvasMenu.classList.add('active'));
+            if (closeMenu) closeMenu.addEventListener('click', () => offcanvasMenu.classList.remove('active'));
+        }
+        window.toggleFaq = function (el) {
+            el.classList.toggle('active');
+        }
+
+    </script>
+    <style>
+        /* CSS Fix for About Section Layout */
+
+
+        .about-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .about-content .section-header-wrapper {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .section-header-text {
+            max-width: 100% !important;
+            /* Remove 300px limit inherited from style.css */
+        }
+
+        .course-full-content {
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin-top: 30px;
+        }
+
+        .course-full-content #about-body {
+            margin-bottom: 30px;
+            /* Space between about body and reasons */
+            color: #ccc;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        /* FAQ Styles */
+        .faq-item {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .faq-item.active {
+            border-color: var(--color-secondary);
+        }
+
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question h3 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .faq-question i {
+            color: var(--color-secondary);
+            transition: 0.3s;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: 0.3s ease-out;
+            padding: 0 20px;
+            background: #0a0a0a;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            /* Arbitrary high enough value */
+            padding: 20px;
+            border-top: 1px solid #222;
+        }
+
+        .faq-answer p {
+            color: #ccc;
+            margin: 0;
+            line-height: 1.6;
+        }
+    </style>
+</body>
+
+</html>

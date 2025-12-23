@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FICV Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Quill WYSIWYG -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #3ecf8e;
+            --dark: #1a1a1a;
+            --sidebar-bg: #24292e;
+            --sidebar-active: #3ecf8e;
+            --sidebar-hover: #2f363d;
+            --bg-light: #f4f6f9;
+            --text-main: #333;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-light);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* LOGIN SCREEN */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-light);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* ADMIN LAYOUT */
+        #admin-wrapper {
+            display: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        #sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            color: #c9d1d9;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #444;
+        }
+
+        .sidebar-header h3 {
+            margin: 0;
+            color: white;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-title {
+            padding: 15px 20px;
+            font-weight: bold;
+            color: #8b949e;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 12px 20px;
+            color: #c9d1d9;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .menu-item.active {
+            background: rgba(62, 207, 142, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .menu-item i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .submenu {
+            list-style: none;
+            padding: 0;
+            background: rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .submenu.open {
+            display: block;
+        }
+
+        .submenu-item {
+            padding: 10px 20px 10px 55px;
+            display: block;
+            color: #8b949e;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .submenu-item:hover {
+            color: white;
+        }
+
+        .submenu-item.active {
+            color: var(--primary);
+        }
+
+        /* MAIN CONTENT */
+        #main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 30px;
+            background: var(--bg-light);
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* CARDS / TABLES */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            color: #555;
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Dark Theme for Section Boxes */
+        .dark-card {
+            background: #1a1a1a !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
+            padding: 20px !important;
+        }
+
+        .dark-card label {
+            color: #aaa !important;
+        }
+
+        .dark-card input,
+        .dark-card textarea,
+        .dark-card select {
+            background: #252525 !important;
+            border: 1px solid #444 !important;
+            color: #fff !important;
+        }
+
+        .dark-card input::placeholder,
+        .dark-card textarea::placeholder {
+            color: #666;
+        }
+
+        /* Switch Toggle Style */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+            vertical-align: middle;
+            margin: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #4CAF50 !important;
+            /* Fixed green */
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(22px);
+        }
+
+        .status-badge {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #888;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- AUTH -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h3>CMS FICV</h3>
+            <p>Acesso Administrativo</p>
+            <form id="loginForm">
+                <input type="email" id="email" placeholder="Email" required value="admin@ficv.edu.br">
+                <input type="password" id="password" placeholder="Senha" required>
+                <div id="loginMsg" style="color:red; margin:10px 0; font-size:0.9rem;"></div>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="admin-wrapper" class="hidden">
+        <!-- SIDEBAR -->
+        <div id="sidebar">
+            <div class="sidebar-header" style="text-align: center; padding: 20px 10px;">
+                <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo"
+                    style="max-width: 130px; filter: brightness(0) invert(1);">
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-title">Conteúdo do Site</li>
+
+                <li>
+                    <div class="menu-item" onclick="toggleSubmenu('submenu-site')">
+                        <i class="fas fa-desktop"></i> Editar Site <i class="fas fa-chevron-down"
+                            style="margin-left:auto; font-size:0.8rem"></i>
+                    </div>
+                    <ul id="submenu-site" class="submenu open">
+                        <li class="submenu-item" onclick="loadView('slides_list')">Banner Destaques</li>
+                        <li class="submenu-item" onclick="loadView('courses_list')">Nossos Cursos</li>
+                        <li class="submenu-item" style="padding-left: 40px; font-size: 0.85rem; opacity: 0.8;"
+                            onclick="loadView('modalities_list')"><i class="fas fa-angle-right"></i> Modalidades</li>
+                        <li class="submenu-item" style="padding-left: 40px; font-size: 0.85rem; opacity: 0.8;"
+                            onclick="loadView('levels_list')"><i class="fas fa-angle-right"></i> Níveis</li>
+                        <li class="submenu-item" onclick="loadView('site_content', 'about')">Porque a FICV</li>
+                        <li class="submenu-item" onclick="loadView('site_content', 'quem_somos')">Quem Somos (Página)
+                        </li>
+                        <li class="submenu-item" onclick="loadView('site_content', 'estrutura')">Estrutura (Página)</li>
+                        <li class="submenu-item" onclick="loadView('features_list')">Cards Pilares</li>
+                        <li class="submenu-item" onclick="loadView('site_header')">Cabeçalho / Header</li>
+                        <li class="submenu-item" onclick="loadView('site_content', 'hero')">Hero (Início)</li>
+                        <li class="submenu-item" onclick="loadView('professors_list')">Professores</li>
+                        <li class="submenu-item" onclick="loadView('polos_list')">Polos</li>
+                        <li class="submenu-item" onclick="loadView('partners_list')">Parceiros</li>
+
+                    </ul>
+                </li>
+
+                <li>
+                    <div class="menu-item" onclick="toggleSubmenu('submenu-menu')">
+                        <i class="fas fa-bars"></i> Editar Menu <i class="fas fa-chevron-down"
+                            style="margin-left:auto; font-size:0.8rem"></i>
+                    </div>
+                    <ul id="submenu-menu" class="submenu">
+                        <li class="submenu-item" onclick="loadView('site_content', 'menu_items')">Itens do Menu</li>
+                    </ul>
+                </li>
+
+                <li>
+                    <div class="menu-item" onclick="toggleSubmenu('submenu-footer')">
+                        <i class="fas fa-shoe-prints"></i> Editar Rodapé <i class="fas fa-chevron-down"
+                            style="margin-left:auto; font-size:0.8rem"></i>
+                    </div>
+                    <ul id="submenu-footer" class="submenu">
+                        <li class="submenu-item" onclick="loadView('site_content', 'footer_items')">Itens do Rodapé</li>
+                        <li class="submenu-item" onclick="loadView('site_content', 'social')">Redes Sociais</li>
+                    </ul>
+                </li>
+
+                <li class="menu-title">Blog / Notícias</li>
+
+                <li>
+                    <div class="menu-item" onclick="loadView('news_list')">
+                        <i class="far fa-newspaper"></i> Novidades
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item" onclick="loadView('categories_list')">
+                        <i class="fas fa-tags"></i> Categorias
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item" onclick="loadView('formats_list')">
+                        <i class="fas fa-layer-group"></i> Formatos
+                    </div>
+                </li>
+
+                <li class="menu-title">Interações</li>
+                <li>
+                    <div class="menu-item" onclick="loadView('messages_list')">
+                        <i class="fas fa-envelope"></i> Mensagens
+                    </div>
+                </li>
+
+                <li class="menu-title">Sistema</li>
+                <li>
+                    <div class="menu-item" onclick="loadView('users_list')">
+                        <i class="fas fa-users-cog"></i> Usuários
+                    </div>
+                </li>
+                <li>
+                    <div class="menu-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- CONTENT -->
+        <div id="main-content">
+            <div id="view-container">
+                <!-- Dynamic Content Here -->
+                <h2>Bem-vindo ao CMS</h2>
+                <p>Selecione uma opção no menu lateral para começar.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FOR GENERIC EDIT -->
+    <script>
+        const SUPABASE_URL = 'https://zvfotmlfwglwysqbximn.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2Zm90bWxmd2dsd3lzcWJ4aW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5NzA2MjEsImV4cCI6MjA4MTU0NjYyMX0.vUTtOAi8bXmDv5t-T0v7Nm1GLPdk1yozLZW-YLn8nG8';
+
+        let supabaseClient;
+
+        window.addEventListener('load', () => {
+            try {
+                if (!window.supabase) {
+                    if (window.createClient) {
+                        // Fallback for some CDN versions importing named export
+                        supabaseClient = window.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    } else {
+                        throw new Error('Supabase SDK not loaded via CDN');
+                    }
+                } else {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                }
+                console.log("Supabase Initialized");
+
+                // If session already exists check
+                initApp();
+
+            } catch (err) {
+                console.error(err);
+                alert("Erro crítico: Não foi possível conectar ao sistema (Supabase SDK Falhou). Verifique sua conexão ou recarregue com Ctrl + F5.");
+                if (document.getElementById('loginMsg')) document.getElementById('loginMsg').innerText = "Erro ao carregar sistema. Recarregue a página.";
+            }
+        });
+
+        // --- AUTH ---
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!supabaseClient) {
+                    alert("Sistema offline.");
+                    return;
+                }
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const msg = document.getElementById('loginMsg');
+                msg.innerText = "Entrando...";
+
+                try {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) {
+                        msg.innerText = "Erro: " + error.message;
+                    } else {
+                        msg.innerText = "Sucesso! Redirecionando...";
+                        initApp();
+                    }
+                } catch (e) {
+                    msg.innerText = "Erro de conexão.";
+                    console.error(e);
+                }
+            });
+        }
+
+
+        async function initApp() {
+            console.log("initApp running...");
+            try {
+                const { data } = await supabaseClient.auth.getSession();
+                console.log("Session data:", data);
+
+                if (data && data.session) {
+                    console.log("Session valid. Hiding login, showing admin.");
+
+                    // Creates missing default content if any
+                    if (window.ensureSiteDefaults) await ensureSiteDefaults();
+
+                    const loginScreen = document.getElementById('login-screen');
+                    const adminWrapper = document.getElementById('admin-wrapper');
+
+                    loginScreen.classList.add('hidden');
+                    loginScreen.style.display = 'none'; // Force hide
+
+                    adminWrapper.classList.remove('hidden');
+                    adminWrapper.style.display = 'flex'; // Force show
+                } else {
+                    console.log("No session. Showing login.");
+                    document.getElementById('login-screen').classList.remove('hidden');
+                    document.getElementById('login-screen').style.display = 'flex';
+                }
+            } catch (e) {
+                console.error("Error in initApp:", e);
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.reload();
+        }
+
+        // Helper to safely pass objects to inline onclick handlers
+        window.safeParam = function (obj) {
+            if (!obj) return 'null';
+            return JSON.stringify(obj).replace(/"/g, '&quot;').replace(/'/g, "\\'");
+        }
+
+        // --- UI LOGIC ---
+        function toggleSubmenu(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('open');
+        }
+
+        async function loadView(viewType, param) {
+            const container = document.getElementById('view-container');
+            container.innerHTML = '<div style="text-align:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+
+            // Highlight Active
+            document.querySelectorAll('.submenu-item, .menu-item').forEach(el => el.classList.remove('active'));
+            // (Simpler active state logic could be added)
+
+            try {
+                if (viewType === 'site_content') {
+                    if (param === 'about') {
+                        await renderAboutForm(container);
+                    } else {
+                        await renderSiteContent(container, param);
+                    }
+                } else if (viewType === 'features_list') {
+                    await renderFeaturesList(container);
+                } else if (viewType === 'professors_list') {
+                    await renderProfessorsList(container);
+                } else if (viewType === 'polos_list') {
+                    await renderPolosList(container);
+                } else if (viewType === 'partners_list') {
+                    await renderPartnersList(container);
+                } else if (viewType === 'slides_list') {
+                    await renderSlidesList(container);
+                } else if (viewType === 'courses_list') {
+                    await renderCoursesList(container);
+                } else if (viewType === 'news_list') {
+                    await renderNewsList(container);
+                } else if (viewType === 'categories_list') {
+                    await renderGenericTable(container, 'categories', 'Categorias');
+                } else if (viewType === 'formats_list') {
+                    await renderGenericTable(container, 'formats', 'Formatos');
+                } else if (viewType === 'modalities_list') {
+                    await renderGenericTable(container, 'modalities', 'Modalidades');
+                } else if (viewType === 'levels_list') {
+                    await renderGenericTable(container, 'levels', 'Níveis de Ensino');
+                } else if (viewType === 'site_header') {
+                    await renderSiteContent(container, 'header');
+                } else if (viewType === 'messages_list') {
+                    await renderMessagesList(container);
+                }
+            } catch (e) {
+                container.innerHTML = `<p style="color:red">Erro: ${e.message}</p>`;
+            }
+        }
+
+        // --- RENDERERS ---
+
+        // 1. SITE CONTENT (Generic Key/Value)
+        async function renderSiteContent(container, section) {
+            let sectionTitle = section.charAt(0).toUpperCase() + section.slice(1);
+
+            // Fetch Items
+            const { data, error } = await supabaseClient
+                .from('site_content')
+                .select('*')
+                .eq('section', section) // Filter by section if you implement filtering col
+            // NOTE: Since checking 'section' column existence, let's assume filtering by key prefix or actual column
+            // Allow "hero", "courses" etc.
+
+            // If section filtering returns empty, maybe we need to filter by key prefix?
+            // For now let's update upsert to include 'section' properly
+
+            let items = data || [];
+
+            // If empty, show button to add common keys for this section (optional helper)
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${sectionTitle}</h2>
+        <button class="btn btn-primary" onclick="openContentModal(null, '${section}')"><i class="fas fa-plus"></i>
+            Adicionar Item</button>
+    </div>
+    <div class="card">
+        ${items.length === 0 && section === 'about' ? `<div style="text-align:center; padding:20px;">
+            <p>Nenhum conteúdo encontrado para esta seção.</p>
+            <button class="btn btn-primary" onclick="initAboutDefaults()">Inicializar Valores Padrão</button>
+        </div>` : ''}
+        <table>
+            <thead>
+                <tr>
+                    <th>Chave</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="siteContentTableBody">
+                ${items.map(item => `
+                <tr>
+                    <td>${item.item_type === 'image' ? `<i class="fas fa-image"></i> ` : ''}${item.item_key}</td>
+                    <td>${item.item_type}</td>
+                    <td>${item.item_type === 'image' ? `<img src="${item.content_value}"
+                            style="height:50px; border-radius:4px;">` : (item.content_value || '').substring(0, 100)}
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" style="padding:5px 10px; font-size:0.8rem"
+                            onclick='openContentModal(${safeParam(item)}, "${section}")'><i
+                                class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger" style="padding:5px 10px; font-size:0.8rem"
+                            onclick='deleteSiteContent("${item.id}", "${section}")'><i
+                                class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        window.deleteSiteContent = async function (id, section) {
+            if (!confirm('Tem certeza que deseja excluir este item?')) return;
+            await supabaseClient.from('site_content').delete().eq('id', id);
+            loadView('site_content', section);
+        }
+
+        window.ensureSiteDefaults = async function () {
+            const defaults = [
+                {
+                    item_key: 'about_image', section: 'about', item_type: 'image', content_value:
+                        'https://cursos.ficv.edu.br/wp-content/uploads/2025/11/FICV-Joao-Pessoa.jpg'
+                },
+                { item_key: 'about_title_prefix', section: 'about', item_type: 'text', content_value: 'Por que a' },
+                { item_key: 'about_title_highlight', section: 'about', item_type: 'text', content_value: 'FICV?' },
+                {
+                    item_key: 'about_description', section: 'about', item_type: 'text', content_value: 'A Faculdade Internacional Cidade Viva nasceu em 2018 a partir do sonho de formar líderes que transformam o mundo.'
+                },
+                {
+                    item_key: 'about_list_1', section: 'about', item_type: 'text', content_value: 'Doutores, Mestres e Especialistas atuantes.'
+                },
+                {
+                    item_key: 'about_list_2', section: 'about', item_type: 'text', content_value: 'Infraestrutura moderna e acolhedora.'
+                },
+                { item_key: 'about_button_text', section: 'about', item_type: 'text', content_value: 'Conheça nossa História' },
+                { item_key: 'about_button_link', section: 'about', item_type: 'text', content_value: '#' },
+                // Header Links
+                { item_key: 'header_student_ava_url', section: 'header', item_type: 'text', content_value: 'https://ava.ficv.edu.br' },
+                { item_key: 'header_student_portal_url', section: 'header', item_type: 'text', content_value: 'https://portal.ficv.edu.br' },
+                { item_key: 'nav_biblioteca_url', section: 'header', item_type: 'text', content_value: 'https://ficv.i10bibliotecas.com.br/' },
+                { item_key: 'nav_repositorio_url', section: 'header', item_type: 'text', content_value: 'https://ficv.i10bibliotecas.com.br/ri' },
+                { item_key: 'nav_validacao_diploma_url', section: 'header', item_type: 'text', content_value: 'https://diplomas.somosb4.com.br/validar' },
+                { item_key: 'nav_revista_url', section: 'header', item_type: 'text', content_value: 'https://periodicos.ficv.edu.br/summaesapientiae' },
+                // Polos
+                { item_key: 'home_polos_be_partner_link', section: 'polos', item_type: 'text', content_value: '#' },
+                // Social
+                { item_key: 'social_instagram', section: 'social', item_type: 'text', content_value: '#' },
+                { item_key: 'social_facebook', section: 'social', item_type: 'text', content_value: '#' },
+                { item_key: 'social_linkedin', section: 'social', item_type: 'text', content_value: '#' },
+                { item_key: 'social_youtube', section: 'social', item_type: 'text', content_value: '#' },
+
+                // Quem Somos
+                { item_key: 'quem_somos_hero_title', section: 'quem_somos', item_type: 'text', content_value: 'Quem Somos' },
+                { item_key: 'quem_somos_history_text', section: 'quem_somos', item_type: 'text', content_value: 'A Fundação Cidade Viva, mantenedora da Faculdade Internacional Cidade Viva, foi instituída oficialmente no ano de 2008...' },
+                { item_key: 'quem_somos_mission', section: 'quem_somos', item_type: 'text', content_value: 'Formar com cosmovisão cristã e excelência acadêmica líderes que transformam o mundo.' },
+                { item_key: 'quem_somos_vision', section: 'quem_somos', item_type: 'text', content_value: 'Ser, até 2027, um Centro Universitário de referência nacional...' },
+
+                // Estrutura
+                { item_key: 'estrutura_hero_title', section: 'estrutura', item_type: 'text', content_value: 'Nossa Estrutura' },
+                { item_key: 'estrutura_intro_title', section: 'estrutura', item_type: 'text', content_value: 'Espaços Modernos e Acolhedores' },
+                { item_key: 'estrutura_intro_text', section: 'estrutura', item_type: 'text', content_value: 'A Faculdade Internacional Cidade Viva oferece uma infraestrutura completa...' },
+                { item_key: 'estrutura_gallery_1_title', section: 'estrutura', item_type: 'text', content_value: 'Campus João Pessoa' },
+                { item_key: 'estrutura_gallery_1_image', section: 'estrutura', item_type: 'image', content_value: 'https://cursos.ficv.edu.br/wp-content/uploads/2025/11/FICV-Joao-Pessoa.jpg' },
+
+                // Footer Items
+                { item_key: 'footer_desc', section: 'footer_items', item_type: 'text', content_value: 'Faculdade Internacional Cidade Viva. Transformando vidas através da educação de excelência com princípios cristãos.' },
+                { item_key: 'contact_phone', section: 'footer_items', item_type: 'text', content_value: '(83) 3041-7471' },
+                { item_key: 'contact_email', section: 'footer_items', item_type: 'text', content_value: 'contato@ficv.edu.br' },
+                { item_key: 'contact_address', section: 'footer_items', item_type: 'text', content_value: 'João Pessoa - PB' },
+                { item_key: 'footer_emec_url', section: 'footer_items', item_type: 'text', content_value: 'https://emec.mec.gov.br/emec/consulta-cadastro/detalhamento/d96957f455f6405d14c6542552b0f6eb/MjEyMjQ=' },
+                { item_key: 'footer_emec_img', section: 'footer_items', item_type: 'image', content_value: 'images/emec-qrcode.png' },
+                { item_key: 'footer_copyright', section: 'footer_items', item_type: 'text', content_value: '© 2025 FICV - Todos os direitos reservados.' }
+            ];
+
+            const { error } = await supabaseClient.from('site_content').upsert(defaults, { onConflict: 'item_key', ignoreDuplicates: true });
+            if (error) console.error("Erro ao verificar defaults:", error);
+
+            // Self-healing: Fix items that might have lost their section due to the previous bug
+            const socialKeys = ['social_instagram', 'social_facebook', 'social_youtube', 'social_linkedin'];
+            await supabaseClient.from('site_content')
+                .update({ section: 'social' })
+                .in('item_key', socialKeys)
+                .or('section.eq.,section.eq.undefined,section.is.null'); // Fix empty or undefined sections
+        }
+
+        // --- CUSTOM FORM FOR ABOUT SECTION ---
+        window.renderAboutForm = async function (container) {
+            // Fetch items
+            const { data } = await supabaseClient.from('site_content').select('*').eq('section', 'about');
+            const map = {};
+            (data || []).forEach(d => map[d.item_key] = d.content_value);
+
+            // Defaults if missing (visual only)
+            const defaults = {
+                about_image: '',
+                about_title_prefix: 'Por que a',
+                about_title_highlight: 'FICV?',
+                about_description: '',
+                about_list_1: '',
+                about_list_2: '',
+                about_button_text: 'Saiba Mais',
+                about_button_link: '#'
+            };
+            const c = { ...defaults, ...map };
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>Editar: Por que a FICV</h2>
+        <button class="btn btn-primary" onclick="saveAboutForm()">Salvar Alterações</button>
+        <button class="btn" onclick="loadSite()" style="margin-left:5px">Ver Site</button>
+    </div>
+    <div class="card">
+        <div class="form-group">
+            <label>Imagem Lateral (URL ou Upload)</label>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <img src="${c.about_image}" id="preview_about_image"
+                    style="height:60px; border-radius:4px; border:1px solid #ddd; object-fit:cover; display:${c.about_image ? 'block' : 'none'}">
+                <input type="text" id="about_image" value="${c.about_image}" style="flex-grow:1"
+                    placeholder="URL da imagem">
+                <input type="file"
+                    onchange="uploadFile(this, 'about_image'); document.getElementById('preview_about_image').style.display='block';">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Título (Prefixo)</label>
+            <input type="text" id="about_title_prefix" value="${c.about_title_prefix}">
+        </div>
+        <div class="form-group">
+            <label>Título (Destaque/Amarelo)</label>
+            <input type="text" id="about_title_highlight" value="${c.about_title_highlight}">
+        </div>
+        <div class="form-group">
+            <label>Conteúdo (Descrição)</label>
+            <textarea id="about_description" rows="5">${c.about_description}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Item Lista 1</label>
+            <input type="text" id="about_list_1" value="${c.about_list_1}">
+        </div>
+        <div class="form-group">
+            <label>Item Lista 2</label>
+            <input type="text" id="about_list_2" value="${c.about_list_2}">
+        </div>
+        <div class="form-group">
+            <label>Texto do Botão</label>
+            <input type="text" id="about_button_text" value="${c.about_button_text}">
+        </div>
+        <div class="form-group">
+            <label>Link do Botão</label>
+            <input type="text" id="about_button_link" value="${c.about_button_link}">
+        </div>
+    </div>
+    `;
+        }
+
+        window.saveAboutForm = async function () {
+            const keys = [
+                'about_image', 'about_title_prefix', 'about_title_highlight',
+                'about_description', 'about_list_1', 'about_list_2',
+                'about_button_text', 'about_button_link'
+            ];
+
+            for (let key of keys) {
+                const val = document.getElementById(key).value;
+                const type = key.includes('image') ? 'image' : 'text';
+
+                await supabaseClient.from('site_content').upsert({
+                    item_key: key,
+                    section: 'about',
+                    item_type: type,
+                    content_value: val
+                }, { onConflict: 'item_key' });
+            }
+            alert("Seção atualizada com sucesso!");
+            loadView('site_content', 'about');
+        }
+
+        window.loadSite = function () {
+            window.open('/', '_blank');
+        }
+
+        window.openContentModal = function (item, section) {
+            // Simple Prompt for now, or build a modal div
+            // Let's replace the view with a form, or overlay. Simple overlay is better.
+            const key = item ? item.item_key : prompt("Identificador (Chave) do item (ex: hero_titulo):");
+            if (!key) return;
+
+            // We can build a proper nice Modal, but for speed let's inject a form into container temporarily or use a dedicated modal div
+            // I'll create a generic modal in HTML to reuse
+
+            showGenericModal(item, key, section);
+        }
+
+        // --- FEATURES LOGIC ---
+        async function renderFeaturesList(container) {
+            const { data, error } = await supabaseClient.from('features').select('*').order('display_order', {
+                ascending: true
+            });
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>Cards Pilares (Features)</h2>
+        <button class="btn btn-primary" onclick="renderFeatureForm()"><i class="fas fa-plus"></i> Novo Item</button>
+        <button class="btn" onclick="loadSite()" style="margin-left:5px">Ver Site</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ordem</th>
+                    <th>Ícone</th>
+                    <th>Título 1</th>
+                    <th>Título 2 (Destaque)</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(item => `
+                <tr>
+                    <td>${item.display_order}</td>
+                    <td><img src="${item.icon_url}" style="height:40px; border-radius:4px; max-width:40px;"></td>
+                    <td>${item.title_1}</td>
+                    <td>${item.title_2}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick='renderFeatureForm(${safeParam(item)})'>Editar</button>
+                        <button class="btn btn-danger" onclick='deleteItem("features", ${item.id})'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        window.renderFeatureForm = function (item = null) {
+            const container = document.getElementById('view-container');
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${item ? 'Editar Pilar' : 'Novo Pilar'}</h2>
+        <button class="btn" onclick="loadView('features_list')">Voltar</button>
+    </div>
+    <div class="card">
+        <div class="form-group">
+            <label>Ordem</label>
+            <input type="number" id="featureOrder" value="${item?.display_order || 0}">
+        </div>
+        <div class="form-group">
+            <label>Ícone (Imagem/SVG URL)</label>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <img src="${item?.icon_url || ''}" id="preview_feature_img"
+                    style="height:50px; display:${item?.icon_url ? 'block' : 'none'}; border:1px solid #ddd; padding:5px; background:#eee;">
+                <input type="text" id="featureIcon" value="${item?.icon_url || ''}" style="flex-grow:1">
+                <input type="file"
+                    onchange="uploadFile(this, 'featureIcon'); document.getElementById('preview_feature_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_feature_img').style.display='block';">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Título (Parte 1 - Normal)</label>
+            <input type="text" id="featureTitle1" value="${item?.title_1 || ''}">
+        </div>
+        <div class="form-group">
+            <label>Título (Parte 2 - Destaque embaixo)</label>
+            <input type="text" id="featureTitle2" value="${item?.title_2 || ''}">
+        </div>
+        <div class="form-group">
+            <label>Texto do Verso</label>
+            <textarea id="featureDesc" rows="3">${item?.description || ''}</textarea>
+        </div>
+        <button class="btn btn-primary" onclick="${item ? `saveFeature(${item.id})` : 'saveFeature()'}">Salvar</button>
+    </div>
+    `;
+        }
+
+        window.saveFeature = async function (id = null) {
+            const data = {
+                icon_url: document.getElementById('featureIcon').value,
+                title_1: document.getElementById('featureTitle1').value,
+                title_2: document.getElementById('featureTitle2').value,
+                description: document.getElementById('featureDesc').value,
+                display_order: document.getElementById('featureOrder').value
+            };
+
+            if (id) {
+                await supabaseClient.from('features').update(data).eq('id', id);
+            } else {
+                await supabaseClient.from('features').insert(data);
+            }
+            loadView('features_list');
+        }
+
+        // --- PROFESSORS LOGIC ---
+        async function renderProfessorsList(container) {
+            const { data, error } = await supabaseClient.from('professors').select('*').order('display_order', {
+                ascending: true
+            });
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>Professores</h2>
+        <button class="btn btn-primary" onclick="renderProfessorForm()"><i class="fas fa-plus"></i> Novo
+            Professor</button>
+        <button class="btn" onclick="loadSite()" style="margin-left:5px">Ver Site</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ordem</th>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(p => `
+                <tr>
+                    <td>${p.display_order}</td>
+                    <td><img src="${p.image_url}" style="height:50px; border-radius:4px; object-fit:cover; width:50px;">
+                    </td>
+                    <td>${p.name}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick='renderProfessorForm(${safeParam(p)})'>Editar</button>
+                        <button class="btn btn-danger" onclick='deleteItem("professors", ${p.id})'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        window.renderProfessorForm = function (item = null) {
+            const container = document.getElementById('view-container');
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${item ? 'Editar Professor' : 'Novo Professor'}</h2>
+        <button class="btn" onclick="loadView('professors_list')">Voltar</button>
+    </div>
+    <div class="card">
+        <div class="form-group">
+            <label>Ordem</label>
+            <input type="number" id="profOrder" value="${item?.display_order || 0}">
+        </div>
+        <div class="form-group">
+            <label>Nome</label>
+            <input type="text" id="profName" value="${item?.name || ''}">
+        </div>
+        <div class="form-group">
+            <label>Foto (URL ou Upload)</label>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <img src="${item?.image_url || ''}" id="preview_prof_img"
+                    style="height:60px; width:60px; object-fit:cover; display:${item?.image_url ? 'block' : 'none'}; border:1px solid #ddd; padding:2px;">
+                <input type="text" id="profImg" value="${item?.image_url || ''}" style="flex-grow:1">
+                <input type="file"
+                    onchange="uploadFile(this, 'profImg'); document.getElementById('preview_prof_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_prof_img').style.display='block';">
+            </div>
+        </div>
+        <button class="btn btn-primary"
+            onclick="${item ? `saveProfessor(${item.id})` : 'saveProfessor()'}">Salvar</button>
+    </div>
+    `;
+        }
+
+        window.saveProfessor = async function (id = null) {
+            const data = {
+                name: document.getElementById('profName').value,
+                image_url: document.getElementById('profImg').value,
+                display_order: document.getElementById('profOrder').value
+            };
+
+            if (id) {
+                await supabaseClient.from('professors').update(data).eq('id', id);
+            } else {
+                await supabaseClient.from('professors').insert(data);
+            }
+            loadView('professors_list');
+        }
+
+        // --- POLOS LOGIC ---
+        async function renderPolosList(container) {
+            const { data } = await supabaseClient.from('polos').select('*').order('name', { ascending: true });
+
+            // Fetch Partner Link
+            const { data: linkData } = await supabaseClient.from('site_content').select('*').eq('item_key', 'home_polos_be_partner_link').single();
+            const partnerLink = linkData ? linkData.content_value : '#';
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>Polos</h2>
+        <button class="btn btn-primary" onclick="renderPoloForm()"><i class="fas fa-plus"></i> Novo Polo</button>
+        <button class="btn" onclick="loadSite()" style="margin-left:5px">Ver Site</button>
+    </div>
+
+    <div class="card" style="margin-bottom: 20px; padding: 20px; background:#1e1e1e; border:1px solid #333;">
+        <h3 style="margin-top:0; margin-bottom:15px; font-size:1.1rem; color:#ccc;">Link: Quero ser um Polo</h3>
+        <div style="display:flex; gap:10px; align-items:flex-end;">
+            <div style="flex-grow:1;">
+                <input type="text" id="polosPartnerLink" value="${partnerLink}" placeholder="https://..." style="width:100%; padding:10px; background:#111; border:1px solid #444; color:#fff; border-radius:4px;">
+            </div>
+            <button class="btn btn-primary" onclick="savePolosLink()">ATUALIZAR LINK</button>
+        </div>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Cidade/UF</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(p => `
+                <tr>
+                    <td>${p.name} ${!p.active ? '<span style="color:red; font-size:0.8rem">(Inativo)</span>' : ''}</td>
+                    <td>${p.city} - ${p.state_code.toUpperCase()}</td>
+                    <td>${p.phone}</td>
+                    <td>${p.email}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick='renderPoloForm(${safeParam(p)})'>Editar</button>
+                        <button class="btn btn-danger" onclick='deleteItem("polos", ${p.id})'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        window.savePolosLink = async function () {
+            const link = document.getElementById('polosPartnerLink').value;
+            const { error } = await supabaseClient.from('site_content').upsert({
+                item_key: 'home_polos_be_partner_link',
+                section: 'polos',
+                item_type: 'text',
+                content_value: link
+            }, { onConflict: 'item_key' });
+
+            if (error) alert('Erro: ' + error.message);
+            else alert('Link atualizado!');
+        }
+
+        window.renderPoloForm = function (item = null) {
+            const container = document.getElementById('view-container');
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${item ? 'Editar Polo' : 'Novo Polo'}</h2>
+        <div>
+            <label style="margin-right:10px; font-weight:bold; cursor:pointer;">
+                <input type="checkbox" id="poloActive" ${item?.active !== false ? 'checked' : ''}> Ativo
+            </label>
+            <button class="btn" onclick="loadView('polos_list')">Voltar</button>
+        </div>
+    </div>
+    <div class="card">
+        <div class="form-group" style="display:grid; grid-template-columns: 2fr 1fr; gap:10px;">
+            <div>
+                <label>Nome do Polo</label>
+                <input type="text" id="poloName" value="${item?.name || ''}">
+            </div>
+            <div>
+                <label>Estado (Sigla ex: pb)</label>
+                <input type="text" id="poloState" value="${item?.state_code || ''}" maxlength="2"
+                    style="text-transform:uppercase">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Cidade</label>
+            <input type="text" id="poloCity" value="${item?.city || ''}">
+        </div>
+        <div class="form-group">
+            <label>Endereço</label>
+            <input type="text" id="poloAddress" value="${item?.address || ''}">
+        </div>
+        <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div>
+                <label>Telefone</label>
+                <input type="text" id="poloPhone" value="${item?.phone || ''}">
+            </div>
+            <div>
+                <label>Email</label>
+                <input type="text" id="poloEmail" value="${item?.email || ''}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Horário de Funcionamento</label>
+            <input type="text" id="poloSchedule" value="${item?.schedule || ''}">
+        </div>
+        <div class="form-group">
+            <label>Link do Google Maps (Opcional)</label>
+            <input type="text" id="poloMap" value="${item?.maps_link || ''}">
+        </div>
+        <button class="btn btn-primary" onclick="${item ? `savePolo(${item.id})` : 'savePolo()'}">Salvar</button>
+    </div>
+    `;
+        }
+
+        window.savePolo = async function (id = null) {
+            const data = {
+                name: document.getElementById('poloName').value,
+                state_code: document.getElementById('poloState').value.toLowerCase(),
+                city: document.getElementById('poloCity').value,
+                address: document.getElementById('poloAddress').value,
+                phone: document.getElementById('poloPhone').value,
+                email: document.getElementById('poloEmail').value,
+                schedule: document.getElementById('poloSchedule').value,
+                maps_link: document.getElementById('poloMap').value,
+                active: document.getElementById('poloActive').checked
+            };
+
+            if (id) {
+                await supabaseClient.from('polos').update(data).eq('id', id);
+            } else {
+                await supabaseClient.from('polos').insert(data);
+            }
+            loadView('polos_list');
+        }
+
+        // --- PARTNERS LOGIC ---
+        async function renderPartnersList(container) {
+            const { data, error } = await supabaseClient.from('partners').select('*').order('display_order', {
+                ascending: true
+            });
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>Parceiros</h2>
+        <button class="btn btn-primary" onclick="renderPartnerForm()"><i class="fas fa-plus"></i> Novo Parceiro</button>
+        <button class="btn" onclick="loadSite()" style="margin-left:5px">Ver Site</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ordem</th>
+                    <th>Logo</th>
+                    <th>Nome</th>
+                    <th>Link</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(p => `
+                <tr>
+                    <td>${p.display_order}</td>
+                    <td><img src="${p.image_url}"
+                            style="height:40px; border-radius:4px; max-width:100px; object-fit:contain; background:#333; padding:5px;">
+                    </td>
+                    <td>${p.name}</td>
+                    <td>${p.link || '-'}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick='renderPartnerForm(${safeParam(p)})'>Editar</button>
+                        <button class="btn btn-danger" onclick='deleteItem("partners", ${p.id})'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        window.renderPartnerForm = function (item = null) {
+            const container = document.getElementById('view-container');
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${item ? 'Editar Parceiro' : 'Novo Parceiro'}</h2>
+        <button class="btn" onclick="loadView('partners_list')">Voltar</button>
+    </div>
+    <div class="card">
+        <div class="form-group">
+            <label>Ordem</label>
+            <input type="number" id="partnerOrder" value="${item?.display_order || 0}">
+        </div>
+        <div class="form-group">
+            <label>Nome</label>
+            <input type="text" id="partnerName" value="${item?.name || ''}">
+        </div>
+        <div class="form-group">
+            <label>Logo (URL ou Upload)</label>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <img src="${item?.image_url || ''}" id="preview_partner_img"
+                    style="height:60px; max-width:150px; object-fit:contain; display:${item?.image_url ? 'block' : 'none'}; border:1px solid #ddd; padding:5px; background:#333;">
+                <input type="text" id="partnerImg" value="${item?.image_url || ''}" style="flex-grow:1">
+                <input type="file"
+                    onchange="uploadFile(this, 'partnerImg'); document.getElementById('preview_partner_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_partner_img').style.display='block';">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Link (Opcional)</label>
+            <input type="text" id="partnerLink" value="${item?.link || ''}">
+        </div>
+        <button class="btn btn-primary" onclick="${item ? `savePartner(${item.id})` : 'savePartner()'}">Salvar</button>
+    </div>
+    `;
+        }
+
+        window.savePartner = async function (id = null) {
+            const data = {
+                name: document.getElementById('partnerName').value,
+                image_url: document.getElementById('partnerImg').value,
+                link: document.getElementById('partnerLink').value,
+                display_order: document.getElementById('partnerOrder').value
+            };
+
+            if (id) {
+                await supabaseClient.from('partners').update(data).eq('id', id);
+            } else {
+                await supabaseClient.from('partners').insert(data);
+            }
+            loadView('partners_list');
+        }
+
+        // --- SLIDES LOGIC ---
+        async function renderSlidesList(container) {
+            const { data, error } = await supabaseClient.from('slides').select('*').order('display_order', { ascending: true });
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>Banners Destaques</h2>
+        <button class="btn btn-primary" onclick="renderSlideForm()"><i class="fas fa-plus"></i> Novo Banner</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ordem</th>
+                    <th>Título</th>
+                    <th>Imagem</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(slide => `
+                <tr>
+                    <td>${slide.display_order}</td>
+                    <td>${slide.title}</td>
+                    <td><img src="${slide.image_url}" style="height:50px; object-fit:cover;"></td>
+                    <td>
+                        <button class="btn btn-primary" onclick='renderSlideForm(${safeParam(slide)})'>Editar</button>
+                        <button class="btn btn-danger" onclick='deleteItem("slides", ${slide.id})'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        window.renderSlideForm = function (slide = null) {
+            const container = document.getElementById('view-container');
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${slide ? 'Editar Banner' : 'Novo Banner'}</h2>
+        <button class="btn" onclick="loadView('slides_list')">Voltar</button>
+    </div>
+    <div class="card">
+        <div class="form-group">
+            <label>Ordem de Exibição</label>
+            <input type="number" id="slideOrder" value="${slide?.display_order || 0}">
+        </div>
+        <div class="form-group">
+            <label>Título Principal (Parte Branca)</label>
+            <input type="text" id="slideTitle" value="${slide?.title || ''}">
+        </div>
+        <div class="form-group">
+            <label>Texto Destaque (Amarelo/Grande)</label>
+            <input type="text" id="slideTitleHighlight" value="${slide?.title_highlight || ''}">
+        </div>
+        <div class="form-group">
+            <label>Subtítulo / Tag (ex: Pós-graduação)</label>
+            <input type="text" id="slideSubtitle" value="${slide?.subtitle || ''}">
+        </div>
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="slideDesc" rows="3">${slide?.description || ''}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Texto do Botão</label>
+            <input type="text" id="slideBtnText" value="${slide?.button_text || 'Saiba Mais'}">
+        </div>
+        <div class="form-group">
+            <label>Link do Botão</label>
+            <input type="text" id="slideBtnLink" value="${slide?.button_link || '#'}">
+        </div>
+        <div class="form-group">
+            <label>Imagem (Desktop: Direita / Mobile: Topo)</label>
+            <input type="text" id="slideImg" value="${slide?.image_url || ''}">
+            <input type="file" id="slideFile" onchange="uploadFile(this, 'slideImg')">
+        </div>
+
+        <button class="btn btn-primary" onclick="saveSlide(${slide?.id || 'null'})">Salvar Banner</button>
+    </div>
+    `;
+        }
+
+        window.saveSlide = async function (id) {
+            const data = {
+                display_order: document.getElementById('slideOrder').value,
+                title: document.getElementById('slideTitle').value,
+                title_highlight: document.getElementById('slideTitleHighlight').value,
+                subtitle: document.getElementById('slideSubtitle').value,
+                description: document.getElementById('slideDesc').value,
+                button_text: document.getElementById('slideBtnText').value,
+                button_link: document.getElementById('slideBtnLink').value,
+                image_url: document.getElementById('slideImg').value
+            };
+
+            let res;
+            if (id) {
+                res = await supabaseClient.from('slides').update(data).eq('id', id);
+            } else {
+                res = await supabaseClient.from('slides').insert(data);
+            }
+
+            if (res.error) alert(res.error.message);
+            else {
+                alert('Salvo!');
+                loadView('slides_list');
+            }
+        }
+
+        // --- COURSES LOGIC ---
+        async function renderCoursesList(container) {
+            const { data, error } = await supabaseClient.from('courses').select('*').order('display_order', {
+                ascending: true
+            });
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>Nossos Cursos</h2>
+        <button class="btn btn-primary" onclick="renderCourseForm()"><i class="fas fa-plus"></i> Novo Curso</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ordem</th>
+                    <th>Nome</th>
+                    <th>Nível</th>
+                    <th>Modalidade</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(course => `
+                <tr>
+                    <td>${course.display_order}</td>
+                    <td>${course.name}</td>
+                    <td>${course.level}</td>
+                    <td>${course.modality}</td>
+                    <td style="text-align:center;">
+                        <span class="status-badge">${course.is_active ? 'Ativo' : 'Inativo'}</span>
+                        <label class="switch">
+                            <input type="checkbox" ${course.is_active ? 'checked' : ''} onchange="toggleCourseStatus(${course.id}, this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" onclick='renderCourseForm(${safeParam(course)})'>Editar</button>
+                        <button class="btn btn-danger" onclick='deleteItem("courses", ${course.id})'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        window.toggleCourseStatus = async function (id, isActive) {
+            const { error } = await supabaseClient
+                .from('courses')
+                .update({ is_active: isActive })
+                .eq('id', id);
+
+            if (error) {
+                alert('Erro ao atualizar status: ' + error.message);
+                loadView('courses_list'); // Refresh to revert UI
+            }
+        }
+
+        // --- HELPER FUNCTIONS ---
+        window.showTab = function (tabId, btn) {
+            // Define tab groups
+            const tabGroups = [
+                ['tab-home', 'tab-page'], // Courses
+                ['tab-news-card', 'tab-news-content'] // News
+            ];
+
+            // Find which group the requested tab belongs to
+            const activeGroup = tabGroups.find(group => group.includes(tabId));
+
+            if (activeGroup) {
+                // Hide all in group
+                activeGroup.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = 'none';
+                });
+                // Show target
+                const target = document.getElementById(tabId);
+                if (target) target.style.display = 'block';
+            }
+
+            // Reset buttons styling
+            if (btn && btn.parentNode) {
+                const btns = btn.parentNode.querySelectorAll('button');
+                btns.forEach(b => {
+                    b.style.borderBottom = 'none';
+                    b.style.color = '#888';
+                });
+                btn.style.borderBottom = '2px solid var(--color-primary)'; // Changed to primary for better visibility
+                btn.style.color = '#333'; // Changed to dark for visibility on white card
+            }
+        }
+
+        window.generateSlug = function (val, targetId = 'courseSlug') {
+            const slugInput = document.getElementById(targetId);
+            if (slugInput && (!slugInput.value || slugInput.value.trim() === '')) {
+                slugInput.value = val.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g,
+                    "-").replace(/^-+|-+$/g, "");
+            }
+        }
+
+        window.renderCourseForm = async function (course = null) {
+            const container = document.getElementById('view-container');
+
+            // Fetch Modalities & Levels
+            const { data: mods } = await supabaseClient.from('modalities').select('*');
+            const { data: levels } = await supabaseClient.from('levels').select('*');
+
+            const modalOptions = (mods || []).map(m => `<option value="${m.name}" ${course?.modality === m.name ? 'selected' : ''
+                }>${m.name}</option>`).join('');
+            const levelOptions = (levels || []).map(l => `<option value="${l.name}" ${course?.level === l.name ? 'selected' : ''
+                }>${l.name}</option>`).join('');
+
+            // Helper for JSON fields
+            const reasonsText = course?.reasons_json ? course.reasons_json.join('\n') : '';
+            const curriculumText = course?.curriculum_json ? JSON.stringify(course.curriculum_json, null, 2) : `[
+  {
+    "title": "Módulo 1",
+    "icon": "fas fa-scroll",
+    "items": ["Item A", "Item B"]
+  }
+]`;
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${course ? 'Editar Curso' : 'Novo Curso'}</h2>
+        <div>
+            <label style="margin-right:10px; font-weight:bold; cursor:pointer;">
+                <input type="checkbox" id="courseActive" ${course ? (course.is_active !== false ? 'checked' : '') : ''}> Ativo
+            </label>
+            <button class="btn" onclick="loadView('courses_list')">Voltar</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <!-- TABS -->
+        <div style="display:flex; border-bottom:1px solid #444; margin-bottom:20px;">
+            <button class="btn"
+                style="background:transparent; border-bottom:2px solid var(--color-secondary); border-radius:0; color:#fff;"
+                onclick="showTab('tab-home', this)">Card Home</button>
+            <button class="btn" style="background:transparent; border-radius:0; color:#888;"
+                onclick="showTab('tab-page', this)">Página do Curso</button>
+        </div>
+
+        <!-- TAB HOME -->
+        <div id="tab-home">
+            <div class="form-group">
+                <label>Ordem de Exibição</label>
+                <input type="number" id="courseOrder" value="${course?.display_order || 0}">
+            </div>
+            <div class="form-group">
+                <label>Nome do Curso</label>
+                <input type="text" id="courseName" value="${course?.name || ''}" onfocusout="generateSlug(this.value)">
+            </div>
+            <div class="form-group">
+                <label>Slug (URL) - ex: pos-educacao-crista-classica</label>
+                <input type="text" id="courseSlug" value="${course?.slug || ''}">
+                <small>Deixe em branco para gerar automaticamente do nome.</small>
+            </div>
+            <div class="form-group">
+                <label>Nível</label>
+                <select id="courseLevel">
+                    <option value="">Selecione...</option>
+                    ${levelOptions}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Modalidade</label>
+                <select id="courseModality">
+                    <option value="">Selecione...</option>
+                    ${modalOptions}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Imagem do Card (URL ou Upload)</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <img src="${course?.image_url || ''}" id="preview_course_img"
+                        style="height:60px; border-radius:4px; display:${course?.image_url ? 'block' : 'none'}; border:1px solid #ddd; padding:2px;">
+                    <input type="text" id="courseImg" value="${course?.image_url || ''}" style="flex-grow:1">
+                    <input type="file"
+                        onchange="uploadFile(this, 'courseImg'); document.getElementById('preview_course_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_course_img').style.display='block';">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Breve Descrição (Opcional - SEO/Cards pequenos)</label>
+                <textarea id="courseShortDesc" rows="2">${course?.description_short || ''}</textarea>
+            </div>
+        </div>
+
+        <!-- TAB PAGE -->
+        <div id="tab-page" style="display:none;">
+            <h3 style="margin-top:0; border-bottom:1px solid #333; padding-bottom:5px;">Cabeçalho e Informações</h3>
+            <div class="form-group">
+                <label>Banner de Fundo (Hero) - URL ou Upload</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <img src="${course?.banner_url || ''}" id="preview_banner_img"
+                        style="height:40px; border-radius:4px; display:${course?.banner_url ? 'block' : 'none'}; border:1px solid #ddd;">
+                    <input type="text" id="courseBanner" value="${course?.banner_url || ''}" style="flex-grow:1">
+                    <input type="file"
+                        onchange="uploadFile(this, 'courseBanner'); document.getElementById('preview_banner_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_banner_img').style.display='block';">
+                </div>
+            </div>
+
+            <!-- Rotating Badge Section -->
+            <h4 style="margin-top:20px; border-bottom:1px solid #444; padding-bottom:5px;">Selo Giratório (Opcional)</h4>
+            <div class="form-group">
+                <label>Texto do Selo (ex: Psicoteologia * Psicoteologia *)</label>
+                <input type="text" id="courseBadgeText" value="${course?.badge_text || ''}" placeholder="Texto circular...">
+            </div>
+            <div class="form-group">
+                <label>Imagem Central do Selo (Ícone/Logo)</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <img src="${course?.badge_image_url || ''}" id="preview_badge_img"
+                        style="height:50px; width:50px; object-fit:contain; border-radius:50%; display:${course?.badge_image_url ? 'block' : 'none'}; border:1px solid #ddd; background:#eee;">
+                    <input type="text" id="courseBadgeImg" value="${course?.badge_image_url || ''}" style="flex-grow:1">
+                    <input type="file"
+                        onchange="uploadFile(this, 'courseBadgeImg'); document.getElementById('preview_badge_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_badge_img').style.display='block';">
+                </div>
+            </div>
+
+            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div>
+                    <label>Carga Horária</label>
+                    <input type="text" id="courseWorkload" value="${course?.workload || ''}"
+                        placeholder="Ex: 400 Horas">
+                </div>
+                <div>
+                    <label>Duração</label>
+                    <input type="text" id="courseDuration" value="${course?.duration || ''}" placeholder="Ex: 14 Meses">
+                </div>
+                <div>
+                    <label>Área</label>
+                    <input type="text" id="courseArea" value="${course?.area || ''}" placeholder="Ex: Humanas">
+                </div>
+            <div class="form-group">
+                <label>Qtd. Disciplinas</label>
+                <input type="text" id="courseDisciplines" value="${course?.disciplines_text || ''}" placeholder="Ex: 12 Disciplinas">
+            </div>
+
+            <h3 style="margin-top:40px; background: #1a1a1a; border-left: 4px solid #0056b3; padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Formulário Brevo</h3>
+            <p style="color:#666; font-size:0.85rem; margin-bottom:10px;">Insira aqui o código HTML do formulário da Brevo para substituir os botões de matrícula.</p>
+            <div class="form-group">
+                <label>Código HTML do Formulário (Brevo)</label>
+                <textarea id="courseBrevoForm" rows="6" placeholder="Cole aqui o código <iframe...> ou <script...>">${course?.brevo_form_html || ''}</textarea>
+            </div>
+        </div>
+
+            <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Conteúdo "Sobre"</h3>
+            <div class="form-group">
+                <label>Introdução (Texto Destacado abaixo do título 'Sobre')</label>
+                <textarea id="courseAboutIntro" rows="3">${course?.about_intro || ''}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Conteúdo Principal (Editor Rico)</label>
+                <div id="course-about-editor" style="height: 300px; background: white; color: black;">${course?.about_content || ''}</div>
+            </div>
+            <div class="form-group">
+                <label>Lista "Por que escolher?" (Uma frase por linha)</label>
+                <textarea id="courseReasons" rows="5">${reasonsText}</textarea>
+            </div>
+
+            <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Coordenação & Preço</h3>
+            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div>
+                    <label>Nome Coordenador</label>
+                    <input type="text" id="courseCoordName" value="${course?.coordinator_name || ''}">
+                </div>
+                <div>
+                    <label>Cargo Coordenador</label>
+                    <input type="text" id="courseCoordRole" value="${course?.coordinator_role || ''}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Foto Coordenador (URL)</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <input type="text" id="courseCoordImg" value="${course?.coordinator_image || ''}"
+                        style="flex-grow:1">
+                    <input type="file" onchange="uploadFile(this, 'courseCoordImg')">
+                </div>
+            </div>
+            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div>
+                    <label>Preço "De" (R$)</label>
+                    <input type="text" id="coursePriceFull" value="${course?.price_full || ''}">
+                </div>
+                <div>
+                    <label>Preço "Por" (R$)</label>
+                    <input type="text" id="coursePriceMonthly" value="${course?.price_monthly || ''}">
+                </div>
+            </div>
+
+            <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Matriz Curricular</h3>
+            <div class="form-group">
+                <label>Módulos do Curso</label>
+                <div id="curriculum-modules-container" style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
+                    <!-- Modules injected here -->
+                </div>
+                <button type="button" class="btn btn-outline" onclick="addCurriculumModule()">+ Adicionar Módulo</button>
+            </div>
+
+            <!-- Professors Section -->
+             <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Professores do Curso</h3>
+             <div class="form-group">
+                 <label>Lista de Professores (Fotos)</label>
+                 <div id="professors-items-container" style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
+                     <!-- Professors injected here -->
+                 </div>
+                 <button type="button" class="btn btn-outline" onclick="addProfessorItem()">+ Adicionar Professor</button>
+             </div>
+
+            <!-- FAQ Section -->
+             <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Perguntas Frequentes (FAQ)</h3>
+             <div class="form-group">
+                 <label>Lista de Perguntas</label>
+                 <div id="faq-items-container" style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
+                     <!-- FAQs injected here -->
+                 </div>
+                 <button type="button" class="btn btn-outline" onclick="addFaqItem()">+ Adicionar Pergunta</button>
+             </div>
+        <!-- CTA Section -->
+            <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Configuração de Venda / CTA</h3>
+            <p style="color:#666; font-size:0.9rem;">Personalize a seção de chamada para ação no final da página do curso.</p>
+
+            <div class="form-group">
+                <label>Título do CTA</label>
+                <input type="text" id="ctaTitle" value="${course?.cta_title || 'Garanta sua vaga com condição especial!'}" placeholder="ex: Garanta sua vaga...">
+            </div>
+            <div class="form-group">
+                <label>Descrição do CTA</label>
+                <textarea id="ctaDesc" rows="2" placeholder="ex: Junte-se a uma comunidade...">${course?.cta_description || 'Junte-se a uma comunidade de líderes educadores e transforme sua visão pedagógica.'}</textarea>
+            </div>
+            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div>
+                    <label>Texto do Botão</label>
+                    <input type="text" id="ctaBtnText" value="${course?.cta_button_text || 'QUERO ME MATRICULAR!'}" placeholder="ex: QUERO ME MATRICULAR!">
+                </div>
+                <div>
+                    <label>Link do Botão</label>
+                    <input type="text" id="ctaBtnLink" value="${course?.cta_button_link || '#'}" placeholder="ex: https://...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Aviso Legal (Disclaimer)</label>
+                <input type="text" id="ctaDisclaimer" value="${course?.cta_disclaimer || '*Vagas limitadas. Condição promocional por tempo determinado.'}" placeholder="ex: *Vagas limitadas...">
+            </div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:20px; width:100%;"
+            onclick="${course ? `saveCourse(${course.id})` : 'saveCourse()'}">Salvar Curso Completo</button>
+        <div style="text-align:center; margin-top:10px;">
+            ${course && course.slug ? (() => {
+                    const lvl = (course.level || 'curso').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,
+                        "").replace(/[^a-z0-9]+/g, "-");
+                    return `<a href="/${lvl}/${course.slug}" target="_blank" style="color:var(--color-secondary);">Visualizar
+                Página</a>`;
+                })() : ''}
+        </div>
+    </div>
+    `;
+
+            // Initialize Quill for Course About
+            setTimeout(() => {
+                window.quillCourseAbout = new Quill('#course-about-editor', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [2, 3, false] }],
+                            ['bold', 'italic', 'underline'],
+                            ['blockquote', 'code-block'],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                            ['link', 'image'],
+                            ['clean']
+                        ]
+                    }
+                });
+
+                // Load Modules
+                const initialModules = course && course.curriculum_json ? course.curriculum_json : [];
+                if (initialModules.length > 0) {
+                    initialModules.forEach(m => addCurriculumModule(m));
+                } else {
+                    // Add one empty if none
+                    // addCurriculumModule();
+                }
+
+                // Load FAQs
+                const initialFaqs = course && course.faq_json ? course.faq_json : [];
+                if (initialFaqs.length > 0) {
+                    initialFaqs.forEach(f => addFaqItem(f));
+                }
+
+                // Load Professors
+                const initialProfs = course && course.professors_json ? course.professors_json : [];
+                if (initialProfs.length > 0) {
+                    initialProfs.forEach(p => addProfessorItem(p));
+                }
+            }, 100);
+        }
+
+        window.addCurriculumModule = function (data = null) {
+            const container = document.getElementById('curriculum-modules-container');
+            const id = Date.now() + Math.random().toString(36).substr(2, 9);
+
+            const div = document.createElement('div');
+            div.className = 'curriculum-module-box';
+            div.style.border = '1px solid #ddd';
+            div.style.padding = '20px';
+            div.style.borderRadius = '8px';
+            div.style.background = '#f9f9f9';
+
+            const title = data ? data.title : '';
+            const icon = data ? data.icon : 'fas fa-book';
+            // If items is array, join with newline. If description string, use it.
+            let desc = '';
+            if (data && data.items && Array.isArray(data.items)) {
+                desc = data.items.join('\n');
+            }
+
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <h4 style="margin:0; color:#555;">Módulo</h4>
+                    <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;" onclick="this.parentElement.parentElement.remove()">Remover</button>
+                </div>
+                <div class="form-group">
+                    <label>Título do Módulo</label>
+                    <input type="text" class="mod-title" value="${title}" placeholder="Ex: Módulo 1 - Fundamentos">
+                </div>
+                <div class="form-group">
+                    <label>Ícone (FontAwesome)</label>
+                    <input type="text" class="mod-icon" value="${icon}" placeholder="fas fa-book">
+                </div>
+                <div class="form-group">
+                    <label>Conteúdo / Disciplinas (uma por linha)</label>
+                    <textarea class="mod-items" rows="5" placeholder="Disciplina 1&#10;Disciplina 2&#10;Disciplina 3">${desc}</textarea>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        window.addFaqItem = function (data = null) {
+            const container = document.getElementById('faq-items-container');
+            const id = Date.now() + Math.random().toString(36).substr(2, 9);
+
+            const div = document.createElement('div');
+            div.className = 'faq-item-box';
+            div.style.border = '1px solid #ddd';
+            div.style.padding = '20px';
+            div.style.borderRadius = '8px';
+            div.style.background = '#f9f9f9';
+
+            const question = data ? data.question : '';
+            const answer = data ? data.answer : '';
+
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <h4 style="margin:0; color:#555;">Pergunta</h4>
+                    <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;" onclick="this.parentElement.parentElement.remove()">Remover</button>
+                </div>
+                <div class="form-group">
+                    <label>Pergunta</label>
+                    <input type="text" class="faq-question" value="${question}" placeholder="Ex: Qual a duração do curso?">
+                </div>
+                <div class="form-group">
+                    <label>Resposta</label>
+                    <textarea class="faq-answer" rows="3" placeholder="A duração é de...">${answer}</textarea>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        window.addProfessorItem = function (data = null) {
+            const container = document.getElementById('professors-items-container');
+            const div = document.createElement('div');
+            div.className = 'professor-item-box';
+            div.style.border = '1px solid #ddd';
+            div.style.padding = '20px';
+            div.style.borderRadius = '8px';
+            div.style.background = '#f9f9f9';
+
+            const name = data ? data.name : '';
+            const image = data ? data.image : ''; // Use 'image' generic key
+
+            // random id for file input
+            const rid = Math.random().toString(36).substr(2, 5);
+
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <h4 style="margin:0; color:#555;">Professor</h4>
+                    <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;" onclick="this.parentElement.parentElement.remove()">Remover</button>
+                </div>
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" class="prof-name" value="${name}" placeholder="Nome do Professor">
+                </div>
+                <div class="form-group">
+                    <label>Foto (URL)</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                         <img src="${image}" id="prev_${rid}" style="height:40px; width:40px; object-fit:cover; display:${image ? 'block' : 'none'}; border-radius:50%;">
+                        <input type="text" class="prof-img" id="img_${rid}" value="${image}" placeholder="https://..." style="flex-grow:1">
+                        <input type="file" onchange="uploadFile(this, 'img_${rid}'); document.getElementById('prev_${rid}').src = window.URL.createObjectURL(this.files[0]); document.getElementById('prev_${rid}').style.display='block';">
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        window.saveCourse = async function (id) {
+            // Arrays handling
+            const reasonsRaw = document.getElementById('courseReasons').value.split('\n').filter(l => l.trim() !== '');
+
+            // NEW: Curriculum from DOM
+            let curriculumRaw = [];
+            document.querySelectorAll('.curriculum-module-box').forEach(box => {
+                const title = box.querySelector('.mod-title').value;
+                const icon = box.querySelector('.mod-icon').value;
+                const itemsStr = box.querySelector('.mod-items').value;
+                const items = itemsStr.split('\n').filter(l => l.trim() !== '');
+
+                if (title || items.length > 0) {
+                    curriculumRaw.push({
+                        title: title,
+                        icon: icon,
+                        items: items
+                    });
+                }
+            });
+
+
+            // FAQ Handling from DOM
+            let faqRaw = [];
+            document.querySelectorAll('.faq-item-box').forEach(box => {
+                const q = box.querySelector('.faq-question').value;
+                const a = box.querySelector('.faq-answer').value;
+                if (q || a) {
+                    faqRaw.push({
+                        question: q,
+                        answer: a
+                    });
+                }
+            });
+
+            // Professors Handling
+            let profsRaw = [];
+            document.querySelectorAll('.professor-item-box').forEach(box => {
+                const n = box.querySelector('.prof-name').value;
+                const i = box.querySelector('.prof-img').value;
+                if (n || i) {
+                    profsRaw.push({
+                        name: n,
+                        image: i
+                    });
+                }
+            });
+
+            const data = {
+                display_order: document.getElementById('courseOrder').value,
+                name: document.getElementById('courseName').value,
+                slug: document.getElementById('courseSlug').value ||
+                    document.getElementById('courseName').value.toLowerCase().replace(/ /g, '-'),
+                level: document.getElementById('courseLevel').value,
+                modality: document.getElementById('courseModality').value,
+                image_url: document.getElementById('courseImg').value,
+                description_short: document.getElementById('courseShortDesc').value,
+                is_active: document.getElementById('courseActive').checked,
+
+                // Page Data
+                banner_url: document.getElementById('courseBanner').value,
+                workload: document.getElementById('courseWorkload').value,
+                duration: document.getElementById('courseDuration').value,
+                area: document.getElementById('courseArea').value,
+                disciplines_text: document.getElementById('courseDisciplines').value,
+                about_intro: document.getElementById('courseAboutIntro').value,
+                about_content: window.quillCourseAbout.root.innerHTML,
+                reasons_json: reasonsRaw,
+                coordinator_name: document.getElementById('courseCoordName').value,
+                coordinator_role: document.getElementById('courseCoordRole').value,
+                coordinator_image: document.getElementById('courseCoordImg').value,
+                price_full: document.getElementById('coursePriceFull').value,
+                price_monthly: document.getElementById('coursePriceMonthly').value,
+                curriculum_json: curriculumRaw,
+                professors_json: profsRaw,
+                badge_text: document.getElementById('courseBadgeText').value,
+                badge_image_url: document.getElementById('courseBadgeImg').value,
+                faq_json: faqRaw,
+                cta_title: document.getElementById('ctaTitle').value,
+                cta_description: document.getElementById('ctaDesc').value,
+                cta_button_text: document.getElementById('ctaBtnText').value,
+                cta_button_link: document.getElementById('ctaBtnLink').value,
+                cta_disclaimer: document.getElementById('ctaDisclaimer').value,
+                brevo_form_html: document.getElementById('courseBrevoForm').value
+            };
+
+            let res;
+            if (id) {
+                res = await supabaseClient.from('courses').update(data).eq('id', id);
+            } else {
+                res = await supabaseClient.from('courses').insert(data).select();
+            }
+
+            if (res.error) {
+                alert('Erro ao salvar: ' + res.error.message);
+            } else {
+                alert('Curso salvo com sucesso!');
+
+                // If new course, switch to edit mode to prevent duplicates on next save
+                if (!id && res.data && res.data.length > 0) {
+                    // Reload form with new ID
+                    renderCourseForm(res.data[0]);
+                }
+                // If update, do nothing (stay on page)
+            }
+        }
+
+        // 2. NEWS LIST
+        async function renderNewsList(container) {
+            const { data, error } = await supabaseClient.from('news').select('*').order('created_at', { ascending: false });
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>Novidades</h2>
+        <button class="btn btn-primary" onclick="renderNewsForm()"><i class="fas fa-plus"></i> Nova Notícia</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(news => `
+                <tr>
+                    <td>${news.title}</td>
+                    <td>${news.publish_date}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick='renderNewsForm(${safeParam(news)})'>Editar</button>
+                        <button class="btn btn-danger" onclick='deleteItem("news", ${news.id})'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        // 3. NEWS FORM
+        window.renderNewsForm = async function (newsItem = null) {
+            const container = document.getElementById('view-container');
+
+            // Fetch Categories
+            const { data: cats } = await supabaseClient.from('categories').select('*');
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${newsItem ? 'Editar Notícia' : 'Nova Notícia'}</h2>
+        <button class="btn" onclick="loadView('news_list')">Voltar</button>
+    </div>
+    <div class="card">
+        <!-- TABS -->
+        <div style="display:flex; border-bottom:1px solid #444; margin-bottom:20px;">
+            <button class="btn"
+                style="background:transparent; border-bottom:2px solid var(--color-secondary); border-radius:0; color:#333;"
+                onclick="showTab('tab-news-card', this)">Card / Resumo</button>
+            <button class="btn" style="background:transparent; border-radius:0; color:#888;"
+                onclick="showTab('tab-news-content', this)">Página da Notícia</button>
+        </div>
+
+        <!-- TAB CARD -->
+        <div id="tab-news-card">
+            <div class="form-group">
+                <label>Título</label>
+                <input type="text" id="newsTitle" value="${newsItem?.title || ''}"
+                    onfocusout="generateSlug(this.value, 'newsSlug')">
+            </div>
+            <div class="form-group">
+                <label>Slug (URL) - ex: nova-parceria-internacional</label>
+                <input type="text" id="newsSlug" value="${newsItem?.slug || ''}">
+                <small>Deixe em branco para gerar automaticamente do título.</small>
+            </div>
+            <div class="form-group">
+                <label>Subtítulo / Resumo</label>
+                <input type="text" id="newsSubtitle" value="${newsItem?.subtitle || ''}">
+            </div>
+            <div class="form-group">
+                <label>Data Publicação</label>
+                <input type="date" id="newsDate"
+                    value="${newsItem?.publish_date || new Date().toISOString().split('T')[0]}">
+            </div>
+            <div class="form-group">
+                <label>Imagem de Destaque (URL ou Upload)</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <img src="${newsItem?.image_url || ''}" id="preview_news_img"
+                        style="height:60px; border-radius:4px; display:${newsItem?.image_url ? 'block' : 'none'}; border:1px solid #ddd; padding:2px;">
+                    <input type="text" id="newsImg" value="${newsItem?.image_url || ''}" style="flex-grow:1">
+                    <input type="file"
+                        onchange="uploadFile(this, 'newsImg'); document.getElementById('preview_news_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_news_img').style.display='block';">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Categoria</label>
+                <select id="newsCat">
+                    <option value="">Selecione</option>
+                    ${cats.map(c => `<option value="${c.id}" ${newsItem?.category_id == c.id ? 'selected' : ''}>${c.name}
+                    </option>`).join('')}
+                </select>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT -->
+        <div id="tab-news-content" style="display:none;">
+            <div class="form-group">
+                <label>Imagem do Cabeçalho (Opcional - substitui a Imagem de Destaque no topo)</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <img src="${newsItem?.header_image_url || ''}" id="preview_news_header_img"
+                        style="height:60px; border-radius:4px; display:${newsItem?.header_image_url ? 'block' : 'none'}; border:1px solid #ddd; padding:2px;">
+                    <input type="text" id="newsHeaderImg" value="${newsItem?.header_image_url || ''}" style="flex-grow:1">
+                    <input type="file"
+                        onchange="uploadFile(this, 'newsHeaderImg'); document.getElementById('preview_news_header_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_news_header_img').style.display='block';">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Conteúdo Completo</label>
+                <div id="editor-container" style="height: 400px; background: white; color: black;">${newsItem?.content
+                || ''}</div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:20px; width:100%;"
+            onclick="saveNews(${newsItem?.id || 'null'})">Salvar Notícia</button>
+    </div>
+    `;
+
+            // Initialize Quill
+            setTimeout(() => {
+                window.quillEditor = new Quill('#editor-container', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['link', 'image', 'video'],
+                            ['clean']
+                        ]
+                    }
+                });
+            }, 100);
+        }
+
+        // Save News
+        window.saveNews = async function (id) {
+            const slugRaw = document.getElementById('newsSlug').value;
+            const titleRaw = document.getElementById('newsTitle').value;
+
+            // Generate slug if empty
+            const slug = slugRaw ? slugRaw : titleRaw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,
+                "").replace(/[^a-z0-9]+/g, "-");
+
+            const data = {
+                title: titleRaw,
+                slug: slug,
+                subtitle: document.getElementById('newsSubtitle').value,
+                publish_date: document.getElementById('newsDate').value,
+                image_url: document.getElementById('newsImg').value,
+                header_image_url: document.getElementById('newsHeaderImg').value,
+                category_id: document.getElementById('newsCat').value || null,
+                image_url: document.getElementById('newsImg').value,
+                category_id: document.getElementById('newsCat').value || null,
+                content: window.quillEditor.root.innerHTML
+            };
+
+            let res;
+            if (id) {
+                res = await supabaseClient.from('news').update(data).eq('id', id);
+            } else {
+                res = await supabaseClient.from('news').insert(data);
+            }
+
+            if (res.error) alert(res.error.message);
+            else {
+                alert('Notícia Salva com Sucesso!');
+                loadView('news_list');
+            }
+        }
+
+        // Helper for Tabs (if not already global, but renderCourseForm used it, so it might be local there or I need to expose it)
+        // Checking if showTab exists globally.
+        if (!window.showTab) {
+            window.showTab = function (tabId, btn) {
+                // Hide all direct children divs of parent that are potential tabs?
+                // Or just specific IDs. Since we reuse this, let's target siblings logic or specific IDs.
+                // Simple implementation for this context:
+                const container = btn.closest('.card');
+                // Hide all divs that start with tab-
+                const tabs = container.querySelectorAll('[id^="tab-"]');
+                tabs.forEach(t => t.style.display = 'none');
+
+                // Show target
+                document.getElementById(tabId).style.display = 'block';
+
+                // Reset buttons
+                const btns = btn.parentNode.querySelectorAll('button');
+                btns.forEach(b => {
+                    b.style.borderBottom = 'none';
+                    b.style.color = '#888';
+                });
+
+                // Active button
+                btn.style.borderBottom = '2px solid var(--color-secondary)';
+                btn.style.color = '#333'; // or secondary
+            }
+        }
+
+        // Helper for Slug
+        if (!window.generateSlug) {
+            window.generateSlug = function (text, targetId) {
+                const slug = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-");
+                const target = document.getElementById(targetId);
+                if (target && !target.value) target.value = slug;
+            }
+        }
+        window.deleteItem = async function (table, id) {
+            if (!confirm('Tem certeza?')) return;
+            await supabaseClient.from(table).delete().eq('id', id);
+            // Reload current view (approximate)
+            if (table === 'news') loadView('news_list');
+            else if (table === 'categories') loadView('categories_list');
+            else if (table === 'formats') loadView('formats_list');
+            else if (table === 'modalities') loadView('modalities_list');
+            else if (table === 'levels') loadView('levels_list');
+            else if (table === 'features') loadView('features_list');
+            else if (table === 'professors') loadView('professors_list');
+            else if (table === 'slides') loadView('slides_list');
+            else if (table === 'courses') loadView('courses_list');
+            else if (table === 'partners') loadView('partners_list');
+            else if (table === 'polos') loadView('polos_list');
+            else if (table === 'contact_messages') loadView('messages_list');
+        }
+
+        // --- MESSAGES LOGIC ---
+        async function renderMessagesList(container) {
+            const { data, error } = await supabaseClient
+                .from('contact_messages')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            container.innerHTML = `
+            <div class="content-header">
+                <h2>Mensagens (Fale Conosco)</h2>
+                <button class="btn" onclick="loadView('messages_list')">Atualizar</button>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Assunto</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${(data || []).map(msg => `
+                        <tr style="${msg.is_read ? 'opacity:0.7' : 'font-weight:bold; background:rgba(62, 207, 142, 0.05);'}">
+                            <td>${new Date(msg.created_at).toLocaleDateString('pt-BR')} ${new Date(msg.created_at).toLocaleTimeString('pt-BR')}</td>
+                            <td>${msg.name}</td>
+                            <td><a href="mailto:${msg.email}">${msg.email}</a></td>
+                            <td>${msg.subject}</td>
+                            <td>
+                                <button class="btn btn-primary" onclick='viewMessage(${safeParam(msg)})'>Ver</button>
+                                <button class="btn btn-danger" onclick='deleteItem("contact_messages", "${msg.id}")'>Excluir</button>
+                            </td>
+                        </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+            `;
+        }
+
+        window.viewMessage = async function (msg) {
+            const container = document.getElementById('view-container');
+
+            // Mark as read
+            if (!msg.is_read) {
+                await supabaseClient.from('contact_messages').update({ is_read: true }).eq('id', msg.id);
+            }
+
+            container.innerHTML = `
+             <div class="content-header">
+                <h2>Visualizar Mensagem</h2>
+                <button class="btn" onclick="loadView('messages_list')">Voltar</button>
+             </div>
+             <div class="card">
+                <div class="form-group">
+                    <label>De:</label>
+                    <p><strong>${msg.name}</strong> (${msg.email})</p>
+                    ${msg.phone ? `<p>Telefone: ${msg.phone}</p>` : ''}
+                </div>
+                 <div class="form-group">
+                    <label>Data:</label>
+                    <p>${new Date(msg.created_at).toLocaleString('pt-BR')}</p>
+                </div>
+                <div class="form-group">
+                    <label>Assunto:</label>
+                    <p>${msg.subject}</p>
+                </div>
+                <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+                <div class="form-group">
+                    <label>Mensagem:</label>
+                    <p style="white-space: pre-wrap; font-size:1.1rem; line-height:1.6;">${msg.message}</p>
+                </div>
+                <div style="margin-top:30px;">
+                    <a href="mailto:${msg.email}?subject=Re: ${msg.subject}" class="btn btn-primary">Responder por Email</a>
+                </div>
+             </div>
+             `;
+        }
+
+        // 4. GENERIC TABLE (Categories/Formats)
+        async function renderGenericTable(container, table, title) {
+            const { data } = await supabaseClient.from(table).select('*').order('id');
+
+            container.innerHTML = `
+    <div class="content-header">
+        <h2>${title}</h2>
+        <button class="btn btn-primary" onclick="addGenericItem('${table}')"><i class="fas fa-plus"></i> Adicionar
+            item</button>
+        <button class="btn" onclick="loadView('courses_list')">Voltar</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(row => `
+                <tr>
+                    <td>${row.id}</td>
+                    <td>${row.name}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick='deleteItem("${table}", ${row.id})'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+        }
+
+        window.addGenericItem = async function (table) {
+            const name = prompt("Nome:");
+            if (name) {
+                await supabaseClient.from(table).insert({ name });
+                if (table === 'categories') loadView('categories_list');
+                else if (table === 'formats') loadView('formats_list');
+                else if (table === 'modalities') loadView('modalities_list');
+                else if (table === 'levels') loadView('levels_list');
+            }
+        }
+
+        // --- HELPER: FILE UPLOAD ---
+        window.uploadFile = async function (input, targetId) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // Sanitize filename: remove accents, special chars, spaces
+            const cleanName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9.-]/g, "_");
+            const fileName = `uploads/${Date.now()}-${cleanName}`;
+
+            const { data, error } = await supabaseClient.storage.from('uploads').upload(fileName, file);
+            if (error) return alert(error.message);
+
+            const { data: publicData } = supabaseClient.storage.from('uploads').getPublicUrl(fileName);
+            document.getElementById(targetId).value = publicData.publicUrl;
+        }
+
+        // --- HELPER: SITE CONTENT MODAL ---
+        // Basic Overlay
+        const modalHtml = `
+    <div id="contentModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
+        <div style="background:white; padding:30px; border-radius:8px; width:500px; position:relative;">
+            <h3 id="modalTitle">Editar Item</h3>
+            <input type="hidden" id="modalKey">
+            <input type="hidden" id="modalSection">
+
+            <div class="form-group">
+                <label>Chave</label>
+                <input type="text" id="modalKeyDisplay" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Tipo</label>
+                <select id="modalType" onchange="toggleModalType()">
+                    <option value="text">Texto</option>
+                    <option value="image">Imagem</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="modalTextGroup">
+                <label>Valor</label>
+                <textarea id="modalValue" rows="4"></textarea>
+            </div>
+
+            <div class="form-group" id="modalImageGroup" style="display:none">
+                <label>Imagem</label>
+                <input type="file" id="modalFile" onchange="uploadFile(this, 'modalImgUrl')">
+                <input type="text" id="modalImgUrl" placeholder="URL da imagem">
+            </div>
+
+            <div style="text-align:right; margin-top:20px;">
+                <button class="btn" style="background:#ccc"
+                    onclick="document.getElementById('contentModal').style.display='none'">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveSiteContentFromModal()">Salvar</button>
+            </div>
+        </div>
+    </div>
+    `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        window.toggleModalType = function () {
+            const t = document.getElementById('modalType').value;
+            document.getElementById('modalTextGroup').style.display = t === 'image' ? 'none' : 'block';
+            document.getElementById('modalImageGroup').style.display = t === 'image' ? 'block' : 'none';
+        }
+
+        window.showGenericModal = function (item, key, section) {
+            document.getElementById('contentModal').style.display = 'flex';
+            document.getElementById('modalKey').value = key;
+            document.getElementById('modalKeyDisplay').value = key;
+            document.getElementById('modalSection').value = section;
+
+            if (item) {
+                document.getElementById('modalType').value = item.item_type;
+                if (item.item_type === 'image') {
+                    document.getElementById('modalImgUrl').value = item.content_value;
+                } else {
+                    document.getElementById('modalValue').value = item.content_value;
+                }
+            } else {
+                document.getElementById('modalType').value = 'text';
+                document.getElementById('modalValue').value = '';
+                document.getElementById('modalImgUrl').value = '';
+            }
+            toggleModalType();
+        }
+
+        window.saveSiteContentFromModal = async function () {
+            const key = document.getElementById('modalKey').value;
+            const section = document.getElementById('modalSection').value;
+            const type = document.getElementById('modalType').value;
+            let val = type === 'image' ? document.getElementById('modalImgUrl').value :
+                document.getElementById('modalValue').value;
+
+            const { error } = await supabaseClient.from('site_content').upsert({
+                item_key: key,
+                section: section,
+                item_type: type,
+                content_value: val
+            }, { onConflict: 'item_key' });
+
+            if (error) alert(error.message);
+            else {
+                document.getElementById('contentModal').style.display = 'none';
+                loadView('site_content', section);
+            }
+        }
+
+    </script>
+</body>
+
+</html>
