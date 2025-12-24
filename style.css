@@ -140,6 +140,10 @@ form input[type="button"] {
   /* Updated to 1420px per user request */
 }
 
+.text-mobile {
+  display: none;
+}
+
 
 .mobile-trigger {
   display: none;
@@ -1140,10 +1144,19 @@ footer {
   }
 
   .top-bar-left {
-    max-width: 60%;
+    max-width: 65%;
+    /* Increase space for text */
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .text-desktop {
+    display: none;
+  }
+
+  .text-mobile {
+    display: block;
   }
 
   #main-header {
