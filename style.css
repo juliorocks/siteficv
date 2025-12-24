@@ -1105,44 +1105,66 @@ footer {
   .top-bar-links {
     display: none;
     position: absolute;
-    top: 40px;
+    top: 100%;
+    /* 40px implied by parent height, or explicit top: 40px */
     right: 0;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    margin: 0;
+    font-size: 0.875rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
     background-color: #fff;
-    /* White dropdown */
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.175);
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    z-index: 1000;
     flex-direction: column;
-    width: 200px;
+    width: auto;
+    /* Let min-width handle it or strictly fit content? Reference image allows width variation but usually fixed min. */
+    width: max-content;
+    /* Ensure it fits text */
     gap: 0;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    z-index: 1002;
-    padding: 8px 0;
-    border-radius: 6px;
-    /* Smooth corners */
   }
 
   .top-bar-links.active {
-    display: flex;
+    display: block;
+    /* Dropdown usually block, but we used flex before. Block is fine for standard links. */
   }
 
   .top-bar-links a {
-    height: 40px;
+    display: block;
     width: 100%;
-    padding: 0 20px;
-    justify-content: flex-start;
-    color: #333;
-    /* Dark text */
-    font-weight: 500;
+    padding: 0.25rem 1rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    height: auto;
+    /* Reset fixed height */
   }
 
   .top-bar-links a:hover,
-  .top-bar-links a.active {
-    background: var(--color-secondary);
+  .top-bar-links a:focus {
+    color: #1e2125;
+    background-color: #e9ecef;
+  }
+
+  .top-bar-links a.active,
+  .top-bar-links a:active {
     color: #fff;
-    font-weight: 500;
+    text-decoration: none;
+    background-color: #F5B031;
   }
 
   .top-bar-links a.active::before {
     display: none;
-    /* Hide desktop marker */
   }
 
   .top-bar-left {
