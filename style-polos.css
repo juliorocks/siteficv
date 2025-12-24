@@ -126,9 +126,10 @@
     cursor: pointer;
 }
 
-.polos-image-map path:hover {
+.polos-image-map path:hover,
+.polos-image-map path.active-state {
     fill: var(--color-secondary);
-    /* Yellow on hover */
+    /* Yellow on hover/active */
     transform: translateY(-2px);
     filter: drop-shadow(0 0 10px rgba(240, 187, 80, 0.5));
 }

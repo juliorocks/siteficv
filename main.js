@@ -807,6 +807,12 @@ document.addEventListener('DOMContentLoaded', () => {
         openPolosModal(stateCode, stateName);
       });
     });
+
+    // Pre-select Paraíba (PB)
+    const pbPath = document.querySelector('.polos-image-map path[id="pb"]') || document.querySelector('.polos-image-map path[id="PB"]');
+    if (pbPath) {
+      pbPath.classList.add('active-state');
+    }
   }
 
   function positionTooltip(e, tooltip) {
