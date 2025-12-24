@@ -1052,20 +1052,14 @@ footer {
 }
 
 /* Reveal animations - cleaned up empty rulesets */
-.reveal {
-  opacity: 1;
-  transform: translateY(0);
-  transition: all 0.8s ease;
-}
-
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reveal.active.fade-right,
-.reveal.active.fade-left {
-  transform: translateX(0);
+/* Reveal animations disabled */
+.reveal,
+.reveal.active,
+.reveal.fade-left,
+.reveal.fade-right {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 /* Responsive */
