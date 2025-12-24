@@ -1200,6 +1200,11 @@ footer {
     top: 40px;
   }
 
+  .logo img {
+    max-width: 140px;
+    height: auto;
+  }
+
   .hero-section {
     padding-top: 100px;
   }
