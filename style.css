@@ -118,7 +118,7 @@ form input[type="button"] {
   /* Deep dark blue */
   color: #fff;
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   height: 40px;
   /* Explicit height */
   display: flex;
@@ -151,7 +151,7 @@ form input[type="button"] {
   color: #c0c0c0;
   font-weight: 500;
   transition: 0.3s;
-  font-size: 12px;
+  font-size: 11px;
   height: 100%;
   display: flex;
   align-items: center;
