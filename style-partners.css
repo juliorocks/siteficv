@@ -30,10 +30,12 @@
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: translate3d(0, 0, 0);
-    width: 200px;
-    /* Adjust based on logo needs */
+    width: auto !important;
+    /* Allow content to fit */
+    padding: 0 40px;
+    /* Add margin/spacing */
+    margin: 0;
     height: 100px;
-    margin: 0 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -71,6 +73,24 @@
     width: auto;
 }
 
+.partner-item img,
+.partner-logo-custom svg,
+.partner-logo-custom i {
+    height: 35px !important;
+    /* Reduce size */
+    width: auto !important;
+}
+
+.partner-logo-custom {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+}
+
 @keyframes marquee-partners {
     0% {
         transform: translateX(0);
@@ -83,7 +103,7 @@
 
 @media(max-width: 768px) {
     .partner-item {
-        width: 150px;
-        margin: 0 20px;
+        padding: 0 20px;
+        /* Smaller spacing on mobile */
     }
 }
