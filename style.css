@@ -868,13 +868,23 @@ form input[type="button"] {
 }
 
 /* Marquee Definitions */
+/* Marquee Definitions */
 .professors-marquee,
 .partners-marquee {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   width: max-content;
   max-width: none !important;
-  animation: marquee 30s linear infinite !important;
   /* Force running */
+}
+
+.professors-marquee {
+  animation: marquee 120s linear infinite !important;
+}
+
+.partners-marquee {
+  animation: marquee 60s linear infinite !important;
 }
 
 /* Ensure items are visible */
