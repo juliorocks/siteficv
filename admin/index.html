@@ -484,6 +484,11 @@
                     </div>
                 </li>
                 <li>
+                    <div class="menu-item" onclick="loadView('profile')">
+                        <i class="fas fa-user-circle"></i> Meu Perfil
+                    </div>
+                </li>
+                <li>
                     <div class="menu-item" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i> Sair
                     </div>
@@ -730,6 +735,10 @@
                     await renderSiteContent(container, 'header');
                 } else if (viewType === 'messages_list') {
                     await renderMessagesList(container);
+                } else if (viewType === 'users_list') {
+                    await renderUsersList(container);
+                } else if (viewType === 'profile') {
+                    await renderProfile(container);
                 }
             } catch (e) {
                 container.innerHTML = `<p style="color:red">Erro: ${e.message}</p>`;
@@ -2444,6 +2453,278 @@
                 </div>
              </div>
              `;
+        }
+
+        // --- USERS & PROFILE ---
+
+        // Render Users List
+        async function renderUsersList(container) {
+            // Attempt to fetch profiles. If fails, show error about missing table.
+            const { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
+
+            if (error) {
+                container.innerHTML = `<div class="card"><p style="color:red">Erro ao carregar usuários. Verifique se a tabela 'profiles' existe e se você tem permissão.</p><p>${error.message}</p></div>`;
+                return;
+            }
+
+            container.innerHTML = `
+            <div class="content-header">
+                <h2>Gerenciar Usuários</h2>
+                <button class="btn btn-primary" onclick="openUserModal()"><i class="fas fa-plus"></i> Novo Usuário</button>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Função (Role)</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${(data || []).map(u => `
+                        <tr>
+                            <td><img src="${u.avatar_url || 'https://via.placeholder.com/40'}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;"></td>
+                            <td>${u.full_name || 'Sem nome'}</td>
+                            <td>${u.email}</td>
+                            <td><span class="status-badge" style="background:${getRoleColor(u.role)}; color:white; padding:4px 8px; border-radius:4px;">${u.role || 'user'}</span></td>
+                            <td>
+                                <button class="btn btn-primary" style="padding:5px 10px;" onclick='openUserModal(${safeParam(u)})'>Editar</button>
+                                <!-- Delete is tricky for auth users from client, mainly delete profile link -->
+                                <button class="btn btn-danger" style="padding:5px 10px;" onclick='deleteUser("${u.id}")'>Excluir</button>
+                            </td>
+                        </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+             </div>
+            `;
+        }
+
+        function getRoleColor(role) {
+            if (role === 'admin') return '#dc3545';
+            if (role === 'editor') return '#28a745';
+            if (role === 'author') return '#ffc107';
+            return '#6c757d';
+        }
+
+        // User Modal and Save Logic
+        window.openUserModal = function (user = null) {
+            const container = document.getElementById('view-container');
+            // Check if creating or editing
+            // If creating, we need email/pass. If editing, mostly role/profile info.
+
+            const isEdit = !!user;
+
+            container.innerHTML = `
+             <div class="content-header">
+                <h2>${isEdit ? 'Editar Usuário' : 'Novo Usuário'}</h2>
+                <button class="btn" onclick="loadView('users_list')">Voltar</button>
+             </div>
+             <div class="card" style="max-width:600px; margin:0 auto;">
+                ${!isEdit ? `
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="userPass" required minlength="6">
+                </div>
+                ` : `
+                 <div class="form-group">
+                    <label>Email (Somente Leitura)</label>
+                    <input type="email" value="${user.email}" disabled style="background:#eee;">
+                </div>
+                `}
+                
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="userFullName" value="${user?.full_name || ''}">
+                </div>
+                
+                 <div class="form-group">
+                    <label>Função</label>
+                    <select id="userRole">
+                        <option value="user" ${user?.role === 'user' ? 'selected' : ''}>Usuário</option>
+                        <option value="author" ${user?.role === 'author' ? 'selected' : ''}>Autor</option>
+                        <option value="editor" ${user?.role === 'editor' ? 'selected' : ''}>Editor</option>
+                        <option value="admin" ${user?.role === 'admin' ? 'selected' : ''}>Administrador</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="${isEdit ? `updateUserProfile('${user.id}')` : `createNewUser()`}">
+                    ${isEdit ? 'Salvar Alterações' : 'Criar Usuário'}
+                </button>
+                ${!isEdit ? '<p style="margin-top:10px; font-size:0.8rem; color:#888;">Nota: Criar um usuário via painel pode exigir confirmação de email.</p>' : ''}
+             </div>
+             `;
+        }
+
+        window.createNewUser = async function () {
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPass').value;
+            const fullName = document.getElementById('userFullName').value;
+            const role = document.getElementById('userRole').value;
+
+            if (!email || !password) return alert("Preencha email e senha");
+
+            try {
+                // 1. Create Auth User
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email, password,
+                    options: {
+                        data: { full_name: fullName } // Initial metadata
+                    }
+                });
+
+                if (error) throw error;
+
+                const newUserId = data.user?.id;
+
+                if (newUserId) {
+                    // 2. Create Profile Entry manually (if trigger didn't catch it or if we want to enforce specific fields immediately)
+                    // First check if profile exists (via trigger)
+                    const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', newUserId).single();
+
+                    if (prof) {
+                        await supabaseClient.from('profiles').update({ role, full_name: fullName, email: email }).eq('id', newUserId);
+                    } else {
+                        // Insert if not exists
+                        await supabaseClient.from('profiles').insert({ id: newUserId, email, role, full_name: fullName });
+                    }
+
+                    alert("Usuário criado com sucesso!");
+                    loadView('users_list');
+                } else {
+                    alert("Usuário criado, mas verifique se a confirmação de email é necessária.");
+                }
+
+            } catch (e) {
+                alert("Erro: " + e.message);
+                console.error(e);
+            }
+        }
+
+        window.updateUserProfile = async function (id) {
+            const fullName = document.getElementById('userFullName').value;
+            const role = document.getElementById('userRole').value;
+
+            const { error } = await supabaseClient.from('profiles').update({ full_name: fullName, role: role }).eq('id', id);
+
+            if (error) alert("Erro ao atualizar perfil: " + error.message);
+            else {
+                alert("Perfil atualizado!");
+                loadView('users_list');
+            }
+        }
+
+        window.deleteUser = async function (id) {
+            if (!confirm("Tem certeza? Isso removerá o perfil do sistema. O login de autenticação pode permanecer se não for removido manualmente.")) return;
+
+            const { error } = await supabaseClient.from('profiles').delete().eq('id', id);
+            if (error) alert("Erro: " + error.message);
+            else {
+                loadView('users_list');
+            }
+        }
+
+        // Render My Profile
+        async function renderProfile(container) {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) return;
+
+            // Fetch profile data
+            let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+            if (!profile) profile = { full_name: user.user_metadata?.full_name || '', avatar_url: '' };
+
+            const rid = Math.random().toString(36).substr(2, 5);
+
+            container.innerHTML = `
+             <div class="content-header">
+                <h2>Meu Perfil</h2>
+             </div>
+             <div class="card" style="max-width:600px;">
+                <h3 style="margin-top:0;">Dados Pessoais</h3>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="text" value="${user.email}" disabled style="background:#eee;">
+                </div>
+                 <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="myFullName" value="${profile.full_name || ''}">
+                </div>
+                 <div class="form-group">
+                    <label>Foto de Perfil</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                         <img src="${profile.avatar_url || ''}" id="prev_${rid}" style="height:50px; width:50px; object-fit:cover; border-radius:50%; display:${profile.avatar_url ? 'block' : 'none'};">
+                        <input type="text" id="myAvatar" value="${profile.avatar_url || ''}" style="flex-grow:1">
+                        <input type="file" onchange="uploadFile(this, 'myAvatar'); document.getElementById('prev_${rid}').src = window.URL.createObjectURL(this.files[0]); document.getElementById('prev_${rid}').style.display='block';">
+                    </div>
+                </div>
+                
+                 <button class="btn btn-primary" onclick="saveMyProfile()">Salvar Dados</button>
+                 
+                 <hr style="margin: 30px 0; border:0; border-top:1px solid #eee;">
+                 
+                 <h3>Alterar Senha</h3>
+                 <div class="form-group">
+                    <label>Nova Senha</label>
+                    <input type="password" id="newPass" placeholder="Mínimo 6 caracteres">
+                </div>
+                 <div class="form-group">
+                    <label>Confirmar Nova Senha</label>
+                    <input type="password" id="confirmPass">
+                </div>
+                <button class="btn btn-danger" onclick="changeMyPassword()">Atualizar Senha</button>
+
+             </div>
+             `;
+        }
+
+        window.saveMyProfile = async function () {
+            const fullName = document.getElementById('myFullName').value;
+            const avatarUrl = document.getElementById('myAvatar').value;
+            const { data: { user } } = await supabaseClient.auth.getUser();
+
+            // Check if profile exists
+            const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+
+            let error;
+            if (prof) {
+                const res = await supabaseClient.from('profiles').update({ full_name: fullName, avatar_url: avatarUrl }).eq('id', user.id);
+                error = res.error;
+            } else {
+                const res = await supabaseClient.from('profiles').insert({ id: user.id, full_name: fullName, avatar_url: avatarUrl, email: user.email });
+                error = res.error;
+            }
+
+            if (error) alert("Erro ao salvar: " + error.message);
+            else {
+                alert("Perfil atualizado!");
+                // Update metadata too for consistency
+                await supabaseClient.auth.updateUser({ data: { full_name: fullName } });
+            }
+        }
+
+        window.changeMyPassword = async function () {
+            const p1 = document.getElementById('newPass').value;
+            const p2 = document.getElementById('confirmPass').value;
+
+            if (!p1 || p1.length < 6) return alert("A senha deve ter pelo menos 6 caracteres.");
+            if (p1 !== p2) return alert("As senhas não coincidem.");
+
+            const { error } = await supabaseClient.auth.updateUser({ password: p1 });
+
+            if (error) alert("Erro ao mudar senha: " + error.message);
+            else {
+                alert("Senha alterada com sucesso!");
+                document.getElementById('newPass').value = '';
+                document.getElementById('confirmPass').value = '';
+            }
         }
 
         // 4. GENERIC TABLE (Categories/Formats)
