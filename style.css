@@ -543,9 +543,6 @@ form input[type="button"] {
   overflow: hidden;
   position: relative;
   padding: 20px 0;
-  /* Add mask for left and right edges */
-  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
 }
 
 .courses-track {
