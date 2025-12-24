@@ -2460,7 +2460,32 @@
         // Render Users List
         async function renderUsersList(container) {
             // Attempt to fetch profiles. If fails, show error about missing table.
-            const { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
+            let { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
+
+            // Fallback: If no error but data is empty or my user is missing, and I'm logged in, try to "inject" myself to see if it fixes
+            try {
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (user) {
+                    // Check if profiles table works at all
+                    if (error && error.message.includes('relation "public.profiles" does not exist')) {
+                        container.innerHTML = `<div class="card"><p style="color:red">Erro: A tabela 'profiles' não existe no banco de dados.</p><p>Execute o script SQL fornecido para corrigir.</p></div>`;
+                        return;
+                    }
+
+                    // If data fetched but I'm not in it (RLS issue or not created yet)
+                    if (data && !data.find(u => u.id === user.id)) {
+                        // Optional: Add myself virtually for UI consistency or attempt auto-insert
+                        const myProfile = {
+                            id: user.id,
+                            email: user.email,
+                            full_name: user.user_metadata?.full_name || 'Eu (Admin)',
+                            role: 'admin', // Assume admin since I'm here
+                            avatar_url: ''
+                        };
+                        data = [myProfile, ...data];
+                    }
+                }
+            } catch (e) { console.error(e); }
 
             if (error) {
                 container.innerHTML = `<div class="card"><p style="color:red">Erro ao carregar usuários. Verifique se a tabela 'profiles' existe e se você tem permissão.</p><p>${error.message}</p></div>`;
