@@ -520,7 +520,6 @@ form input[type="button"] {
 
 .features-title-col {
   flex: 0 0 250px;
-  /* Fixed width for title */
   text-align: left;
 }
 
@@ -529,13 +528,11 @@ form input[type="button"] {
   color: #fff;
   line-height: 1.2;
   font-weight: 400;
-  /* Regular for "Nossos" */
 }
 
 .features-title-col h2 span {
   display: block;
   font-weight: 800;
-  /* Bold for "Cursos" */
   font-size: 3rem;
   color: var(--color-secondary);
   margin-top: 5px;
@@ -546,19 +543,52 @@ form input[type="button"] {
   overflow: hidden;
   position: relative;
   padding: 20px 0;
-  /* Mask for fade effect on logic edges if desired, but not requested. */
 }
 
 .courses-track {
   display: flex;
   gap: 0;
-  /* Gap handled by margin-right on card */
   padding-left: 10px;
-  /* Slight offset */
+}
+
+/* Responsive Features Split */
+@media (max-width: 900px) {
+  .features-split {
+    flex-direction: column;
+    align-items: stretch;
+    /* Full width */
+    gap: 30px;
+  }
+
+  .features-title-col {
+    flex: none;
+    width: 100%;
+    text-align: center;
+    /* Center title on mobile */
+  }
+
+  .features-title-col .course-filters {
+    margin: 20px auto 0 auto !important;
+    /* Center filters */
+    width: 100%;
+    max-width: 400px !important;
+    /* Allow slightly wider filters */
+  }
+
+  .courses-slider-wrapper {
+    width: 100%;
+    flex: none;
+    padding: 0;
+  }
+
+  .courses-track {
+    padding-left: 20px;
+  }
 }
 
 .course-card {
   width: 320px;
+  /* ... rest of existing styles ... */
   flex-shrink: 0;
   background: #E6E6E6;
   border-radius: 8px;
