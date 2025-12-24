@@ -868,6 +868,32 @@ form input[type="button"] {
   text-transform: uppercase;
 }
 
+/* Marquee Definitions */
+.professors-marquee,
+.partners-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite !important;
+  /* Force running */
+}
+
+/* Ensure items are visible */
+.prof-item,
+.partner-item {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.partner-item {
+  flex-shrink: 0;
+  width: 250px;
+  /* Fixed width for partners */
+  margin: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @keyframes marquee {
   0% {
     transform: translateX(0);
@@ -876,6 +902,7 @@ form input[type="button"] {
   100% {
     transform: translateX(-50%);
   }
+
 
   /* Assumes duplication of content for seamless loop */
 }
