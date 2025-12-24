@@ -956,10 +956,13 @@ footer {
 }
 
 /* Responsive */
+/* Responsive */
 @media(max-width: 900px) {
   .split-hero {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 10px;
+    /* Reduced gap */
   }
 
   .hero-content {
@@ -968,15 +971,46 @@ footer {
 
   .hero-image {
     order: 1;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
+    /* Removed bottom margin to pull title closer */
   }
 
   .header-buttons {
     display: none;
   }
 
+  /* Typography Adjustments for Mobile */
   .hero-content h2 {
+    font-size: 1.4rem;
+    /* Smaller "Graduação em" */
+    margin-bottom: 5px;
+  }
+
+  .hero-content h2 .highlight {
     font-size: 2.5rem;
+    /* Smaller "Teologia" */
+  }
+
+  .hero-content h3 {
+    font-size: 0.75rem;
+    /* "EAD E PRESENCIAL..." much smaller */
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    opacity: 0.9;
+  }
+
+  .hero-content p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* Features/Nossos Cursos Typography for Mobile */
+  .features-title-col h2 {
+    font-size: 1.5rem;
+  }
+
+  .features-title-col h2 span {
+    font-size: 2.2rem;
   }
 }
 
