@@ -17,6 +17,7 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   background-color: var(--color-bg-dark);
   color: var(--color-text);
@@ -1100,8 +1101,10 @@ footer {
 
   .mobile-trigger {
     display: flex;
-    padding-right: 20px;
+    padding-right: 30px !important;
+    margin-right: 10px;
   }
+
 
   .top-bar-links {
     display: none;
