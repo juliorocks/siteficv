@@ -219,8 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `).join('');
 
-          // Duplicate for smooth loop (8x for safety on all screens)
-          marquee.innerHTML = itemsHtml.repeat(8);
+          // Duplicate for smooth loop (20x for ultra safety)
+          marquee.innerHTML = itemsHtml.repeat(20);
         }
       }
     } catch (e) {
