@@ -1052,14 +1052,14 @@ footer {
 }
 
 /* Reveal animations - cleaned up empty rulesets */
-/* Reveal animations disabled */
+/* Reveal animations disabled globally */
 .reveal,
 .reveal.active,
-.reveal.fade-left,
-.reveal.fade-right {
+[class*="fade"] {
   opacity: 1 !important;
   transform: none !important;
   transition: none !important;
+  animation: none !important;
 }
 
 /* Responsive */
