@@ -309,7 +309,6 @@ form input[type="button"] {
   z-index: 2000;
   transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
   padding: 40px;
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.9);
   overflow-y: auto;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -1449,12 +1448,17 @@ footer {
   height: 30px;
   width: 90%;
 }
-/* EMERGENCY OVERRIDE: Remove all fade animations/effects */
-.reveal, .fade-left, .fade-right, .fade-up, .fade-down, [class*='fade'] {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
 
+/* EMERGENCY OVERRIDE: Remove all fade animations/effects */
+.reveal,
+.fade-left,
+.fade-right,
+.fade-up,
+.fade-down,
+[class*='fade'] {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
