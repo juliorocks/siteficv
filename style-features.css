@@ -132,42 +132,8 @@
 
 @media(max-width: 500px) {
     .feature-grid {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: none;
-        margin: 0;
-        gap: 15px;
-        /* Restoration of slightly larger gap */
-    }
-
-    .flip-card {
-        min-height: 240px;
-        /* Increased height to fit content */
-        aspect-ratio: auto;
-    }
-
-    .feature-icon-svg {
-        width: 48px;
-        /* Slightly larger icon */
-        height: 48px;
-        margin-bottom: 12px;
-    }
-
-    .feature-text-group {
-        gap: 4px;
-    }
-
-    .feature-line-1,
-    .feature-line-2 {
-        font-size: 0.9rem;
-    }
-
-    .flip-card-front,
-    .flip-card-back {
-        padding: 15px;
-    }
-
-    .flip-card-back p {
-        font-size: 0.85rem;
-        line-height: 1.4;
+        grid-template-columns: 1fr;
+        max-width: 300px;
+        margin: 0 auto;
     }
 }
