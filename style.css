@@ -880,11 +880,11 @@ form input[type="button"] {
 }
 
 .professors-marquee {
-  animation: marquee 120s linear infinite !important;
+  animation: marquee 50s linear infinite !important;
 }
 
 .partners-marquee {
-  animation: marquee 60s linear infinite !important;
+  animation: marquee 30s linear infinite !important;
 }
 
 /* Ensure items are visible */
