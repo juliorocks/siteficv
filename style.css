@@ -136,8 +136,8 @@ form input[type="button"] {
   align-items: center;
   height: 100%;
   width: 100%;
-  max-width: 1400px;
-  /* Updated to 1400px per user request */
+  max-width: 1410px;
+  /* Updated to 1410px per user request */
 }
 
 .top-bar-right {
