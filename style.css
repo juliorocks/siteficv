@@ -1486,3 +1486,42 @@ footer {
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+/* Mobile Footer Fixes - Logo + QR Side by Side */
+@media (max-width: 768px) {
+  .container.footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px;
+    text-align: left !important;
+  }
+
+  .footer-col-logo {
+    grid-column: 1;
+    order: 1;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .footer-col-mec {
+    grid-column: 2;
+    order: 2;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    display: flex !important;
+  }
+
+  .footer-col-links {
+    grid-column: 1;
+    order: 3;
+    text-align: left;
+  }
+
+  .footer-col-contact {
+    grid-column: 2;
+    order: 4;
+    text-align: left;
+  }
+}
