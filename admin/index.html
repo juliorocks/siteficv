@@ -378,10 +378,13 @@
             <h3>CMS FICV</h3>
             <p>Acesso Administrativo</p>
             <form id="loginForm">
-                <input type="email" id="email" placeholder="Email" required value="admin@ficv.edu.br">
+                <input type="email" id="email" placeholder="Email" required value="jcs.sjc@gmail.com">
                 <input type="password" id="password" placeholder="Senha" required>
                 <div id="loginMsg" style="color:red; margin:10px 0; font-size:0.9rem;"></div>
                 <button type="submit">Entrar</button>
+                <button type="button" id="signUpBtn"
+                    style="width:100%; padding:12px; background:transparent; border:1px solid #ccc; border-radius:50px; cursor:pointer; font-size:16px; margin-top:10px;">Criar
+                    Conta / Sou Novo</button>
                 <div style="margin-top: 15px;">
                     <a href="#" id="forgotBtn" style="color: #666; font-size: 0.9rem; text-decoration: none;">Esqueci
                         minha senha</a>
@@ -630,6 +633,48 @@
         async function logout() {
             await supabaseClient.auth.signOut();
             window.location.reload();
+        }
+
+        // JOIN / SIGNUP Logic
+        const signUpBtn = document.getElementById('signUpBtn');
+        if (signUpBtn) {
+            signUpBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const msg = document.getElementById('loginMsg');
+
+                if (!email || !password) {
+                    msg.innerText = "Preencha email e senha para criar.";
+                    msg.style.color = "red";
+                    return;
+                }
+
+                msg.innerText = "Criando conta...";
+
+                try {
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email,
+                        password
+                    });
+
+                    if (error) {
+                        msg.innerText = "Erro: " + error.message;
+                    } else {
+                        if (data.session) {
+                            msg.innerText = "Conta criada! Entrando...";
+                            initApp();
+                        } else {
+                            msg.innerText = "Conta criada! Verifique seu email para confirmar.";
+                            msg.style.color = "blue";
+                        }
+                    }
+                } catch (err) {
+                    console.error(err);
+                    msg.innerText = "Erro ao criar conta.";
+                }
+            });
+        }
         }
 
         // Helper to safely pass objects to inline onclick handlers
