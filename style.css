@@ -43,7 +43,7 @@ img {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 0 1.5rem;
 }
 
 .text-primary {
@@ -1101,13 +1101,16 @@ footer {
     position: absolute;
     top: 40px;
     right: 0;
-    background-color: #0b1c3e;
+    background-color: #fff;
+    /* White dropdown */
     flex-direction: column;
     width: 200px;
     gap: 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     z-index: 1002;
-    padding: 5px 0;
+    padding: 8px 0;
+    border-radius: 6px;
+    /* Smooth corners */
   }
 
   .top-bar-links.active {
@@ -1117,30 +1120,23 @@ footer {
   .top-bar-links a {
     height: 40px;
     width: 100%;
-    padding: 0 15px;
+    padding: 0 20px;
     justify-content: flex-start;
+    color: #333;
+    /* Dark text */
+    font-weight: 500;
   }
 
-  .top-bar-links a.active::before {
-    left: 0;
-    width: 4px;
-    /* Vertical marker on mobile? Or stick to top? Top might look weird in dropdown. */
-    height: 100%;
-    top: 0;
-    border-radius: 0;
+  .top-bar-links a:hover,
+  .top-bar-links a.active {
+    background: var(--color-secondary);
+    color: #fff;
+    font-weight: 500;
   }
 
-  /* Override the top marker for mobile dropdown if desired, but user image didn't specify active state in dropdown. */
-  /* Let's keep it simple or reset it */
   .top-bar-links a.active::before {
     display: none;
-    /* Hide top bar marker in dropdown */
-  }
-
-  .top-bar-links a.active {
-    background: rgba(255, 255, 255, 0.05);
-    /* Highlight background instead */
-    font-weight: 700;
+    /* Hide desktop marker */
   }
 
   .top-bar-left {
