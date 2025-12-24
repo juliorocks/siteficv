@@ -1126,6 +1126,8 @@ footer {
     /* Let min-width handle it or strictly fit content? Reference image allows width variation but usually fixed min. */
     width: max-content;
     /* Ensure it fits text */
+    height: auto;
+    /* Override desktop height */
     gap: 0;
   }
 
