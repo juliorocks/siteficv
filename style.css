@@ -872,6 +872,7 @@ form input[type="button"] {
 .partners-marquee {
   display: flex;
   width: max-content;
+  max-width: none !important;
   animation: marquee 30s linear infinite !important;
   /* Force running */
 }

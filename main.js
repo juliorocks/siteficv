@@ -212,15 +212,15 @@ document.addEventListener('DOMContentLoaded', () => {
           // Generate items HTML matching exact current structure
           const itemsHtml = data.map(p => `
                     <div class="prof-item">
-                      <img src="${p.image_url}" alt="${p.name}" title="${p.name}">
+                      <img src="${p.image_url}" alt="${p.name}" title="${p.name}" loading="eager">
                       <div class="prof-overlay">
                         <div class="prof-name">${p.name}</div>
                       </div>
                     </div>
                 `).join('');
 
-          // Duplicate for smooth loop
-          marquee.innerHTML = itemsHtml + itemsHtml + itemsHtml + itemsHtml;
+          // Duplicate for smooth loop (12x for safety on all screens)
+          marquee.innerHTML = itemsHtml.repeat(12);
         }
       }
     } catch (e) {
