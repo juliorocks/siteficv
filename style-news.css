@@ -35,7 +35,7 @@
 
 /* News Card */
 .news-card {
-    background: #f5f5f5;
+    background: #e8e8e8;
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -74,7 +74,7 @@
 }
 
 .news-content h3 {
-    color: #1a2e3b;
+    color: #1d2e56;
     /* Dark Blue Text */
     font-size: 1.3rem;
     font-weight: 800;
