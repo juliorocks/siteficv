@@ -1102,17 +1102,15 @@ footer {
   .mobile-trigger {
     display: flex;
     padding-right: 30px !important;
-    margin-right: 10px;
   }
-
 
   .top-bar-links {
     display: none;
     position: absolute;
     top: 100%;
     /* 40px implied by parent height, or explicit top: 40px */
-    right: 15px;
-    /* Create margin from edge */
+    right: 0;
+    /* Aligned to parent */
     min-width: 10rem;
     padding: 0.5rem 0;
     margin: 0;
@@ -1191,9 +1189,9 @@ footer {
   }
 
   .top-bar-right {
+    position: relative;
+    /* Anchor for dropdown */
     margin-left: auto;
-    margin-right: 15px;
-    /* Ensure padding from edge */
   }
 
   #main-header {
