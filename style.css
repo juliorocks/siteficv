@@ -111,6 +111,50 @@ form input[type="button"] {
   border-radius: 50px !important;
 }
 
+/* Top Bar */
+.top-bar {
+  background-color: #1d2e56;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 8px 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1001;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.top-bar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar-right {
+  display: flex;
+  gap: 20px;
+}
+
+.top-bar-right a {
+  text-decoration: none;
+  color: #ccc;
+  font-weight: 500;
+  transition: 0.3s;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.top-bar-right a:hover {
+  color: #fff;
+}
+
+.top-bar-right a.active {
+  color: var(--color-secondary);
+  font-weight: 700;
+  position: relative;
+}
+
 /* Header */
 #main-header {
   background: #070707;
@@ -119,7 +163,8 @@ form input[type="button"] {
   padding: 15px 0;
   position: fixed;
   /* Persistent Fixed */
-  top: 0;
+  top: 36px;
+  /* Shift down for top-bar */
   width: 100%;
   z-index: 1000;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -320,8 +365,8 @@ form input[type="button"] {
 /* Hero Slider */
 .hero-section {
   position: relative;
-  padding-top: 100px;
-  /* Space for fixed header */
+  padding-top: 140px;
+  /* Space for fixed header + top bar */
   padding-bottom: 60px;
   min-height: 100vh;
   display: flex;
@@ -993,6 +1038,18 @@ footer {
 
   .header-buttons {
     display: none;
+  }
+
+  .top-bar {
+    display: none;
+  }
+
+  #main-header {
+    top: 0;
+  }
+
+  .hero-section {
+    padding-top: 100px;
   }
 
   /* Typography Adjustments for Mobile */
