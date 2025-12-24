@@ -869,22 +869,22 @@ form input[type="button"] {
 
 /* Marquee Definitions */
 /* Marquee Definitions */
+/* Marquee Definitions - JS Driven */
 .professors-marquee,
 .partners-marquee {
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
-  width: max-content;
-  max-width: none !important;
-  /* Force running */
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  /* animation: none !important; - handled by JS */
 }
 
-.professors-marquee {
-  animation: marquee 30s linear infinite !important;
-}
-
+/* Remove CSS Animations */
+.professors-marquee,
 .partners-marquee {
-  animation: marquee 30s linear infinite !important;
+  animation: none !important;
 }
 
 /* Ensure items are visible */

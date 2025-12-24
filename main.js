@@ -177,6 +177,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Partners Loader ---
+  // --- Marquee Scroller ---
+  function startMarquee(selector, speed) {
+    const el = document.querySelector(selector);
+    if (!el) return;
+    let pos = 0;
+    let lastTime = 0;
+    function animate(time) {
+      if (!lastTime) lastTime = time;
+      const dt = time - lastTime;
+      if (el.scrollWidth > el.clientWidth) {
+        pos += speed * (dt / 16);
+        if (pos >= el.scrollWidth / 2) {
+          pos = 0;
+        }
+        el.scrollLeft = pos;
+      }
+      lastTime = time;
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  }
+
+  // --- Partners Loader ---
   async function loadPartners() {
     try {
       const { data } = await supabase.from('partners').select('*').order('display_order', { ascending: true });
@@ -186,15 +209,17 @@ document.addEventListener('DOMContentLoaded', () => {
           const itemsHtml = data.map(p => `
                       <div class="partner-item" title="${p.name}">
                           <div class="partner-logo-custom">
-                              <img src="${p.image_url}" alt="${p.name}" style="height:50px; max-width:180px; object-fit:contain; filter:brightness(0) invert(1);"> 
+                              <img src="${p.image_url}" alt="${p.name}" style="height:50px; max-width:180px; object-fit:contain; filter:brightness(0) invert(1);" loading="eager"> 
                               ${!p.image_url ? `<span>${p.name}</span>` : ''}
                           </div>
                       </div>
                   `).join('');
-          /* Note: filter: brightness(0) invert(1) makes black logos white, suitable for dark background. 
-             Remove if logos are already white or colored. Adjust as needed. */
 
-          marquee.innerHTML = itemsHtml + itemsHtml + itemsHtml + itemsHtml;
+          // Duplicate 20x for seamless loop via JS Scroll
+          marquee.innerHTML = itemsHtml.repeat(20);
+
+          // Start JS Scroller
+          startMarquee('.partners-marquee', 1.5);
         }
       }
     } catch (e) {
@@ -221,6 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Duplicate for smooth loop (20x for ultra safety)
           marquee.innerHTML = itemsHtml.repeat(20);
+
+          startMarquee('.professors-marquee', 2.0);
         }
       }
     } catch (e) {
