@@ -160,6 +160,22 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPolos();
   loadTopBar();
 
+  // Mobile Top Bar Toggle
+  const mobileTrigger = document.getElementById('mobileTrigger');
+  const topBarLinks = document.getElementById('topBarLinks');
+  if (mobileTrigger && topBarLinks) {
+    mobileTrigger.addEventListener('click', () => {
+      topBarLinks.classList.toggle('active');
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!topBarLinks.contains(e.target) && !mobileTrigger.contains(e.target) && topBarLinks.classList.contains('active')) {
+        topBarLinks.classList.remove('active');
+      }
+    });
+  }
+
   // --- Partners Loader ---
   async function loadPartners() {
     try {

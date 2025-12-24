@@ -140,7 +140,22 @@ form input[type="button"] {
   /* Updated to 1420px per user request */
 }
 
+
+.mobile-trigger {
+  display: none;
+  color: #fff;
+  font-size: 11px;
+  cursor: pointer;
+  align-items: center;
+  gap: 5px;
+}
+
 .top-bar-right {
+  display: flex;
+  height: 100%;
+}
+
+.top-bar-links {
   display: flex;
   gap: 20px;
   height: 100%;
@@ -1064,8 +1079,71 @@ footer {
     display: none;
   }
 
-  .top-bar {
+  .header-buttons {
     display: none;
+  }
+
+  .top-bar {
+    display: flex;
+    /* Ensure visible on mobile */
+  }
+
+  .mobile-trigger {
+    display: flex;
+  }
+
+  .top-bar-links {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: #0b1c3e;
+    flex-direction: column;
+    width: 200px;
+    gap: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1002;
+    padding: 5px 0;
+  }
+
+  .top-bar-links.active {
+    display: flex;
+  }
+
+  .top-bar-links a {
+    height: 40px;
+    width: 100%;
+    padding: 0 15px;
+    justify-content: flex-start;
+  }
+
+  .top-bar-links a.active::before {
+    left: 0;
+    width: 4px;
+    /* Vertical marker on mobile? Or stick to top? Top might look weird in dropdown. */
+    height: 100%;
+    top: 0;
+    border-radius: 0;
+  }
+
+  /* Override the top marker for mobile dropdown if desired, but user image didn't specify active state in dropdown. */
+  /* Let's keep it simple or reset it */
+  .top-bar-links a.active::before {
+    display: none;
+    /* Hide top bar marker in dropdown */
+  }
+
+  .top-bar-links a.active {
+    background: rgba(255, 255, 255, 0.05);
+    /* Highlight background instead */
+    font-weight: 700;
+  }
+
+  .top-bar-left {
+    max-width: 60%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   #main-header {
