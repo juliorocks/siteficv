@@ -796,10 +796,10 @@ form input[type="button"] {
   margin-top: 40px;
 }
 
+/* Force light gray as requested */
 .news-card {
-  background: #111 !important;
-  /* Force darker gray */
-  border: 1px solid #333;
+  background: #e8e8e8 !important;
+  border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
   transition: border-color 0.3s ease;
@@ -809,7 +809,7 @@ form input[type="button"] {
 }
 
 .news-card:hover {
-  border-color: var(--color-secondary);
+  border-color: #1d2e56;
 }
 
 .news-image {
@@ -838,8 +838,8 @@ form input[type="button"] {
 }
 
 .news-content h3 {
-  color: var(--color-secondary) !important;
-  /* Force Yellow */
+  color: #1d2e56 !important;
+  /* Dark Blue */
   font-size: 1.3rem;
   margin-bottom: 15px;
   line-height: 1.3;
