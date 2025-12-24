@@ -123,3 +123,10 @@
         padding-right: 20px !important;
     }
 }
+
+/* Limit Related Posts to 2 on Mobile */
+@media (max-width: 768px) {
+    #related-grid .news-card:nth-child(n+3) {
+        display: none;
+    }
+}
