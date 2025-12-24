@@ -136,6 +136,8 @@ form input[type="button"] {
   align-items: center;
   height: 100%;
   width: 100%;
+  max-width: 96%;
+  /* Match reference site width */
 }
 
 .top-bar-right {
