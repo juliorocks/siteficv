@@ -1080,6 +1080,15 @@ footer {
   .section-header-text {
     max-width: 100%;
   }
+
+  /* Standardize Section Titles for Mobile */
+  .standard-section-title {
+    font-size: 1.5rem !important;
+  }
+
+  .standard-section-title span {
+    font-size: 2.2rem !important;
+  }
 }
 
 /* --- Skeleton Loading --- */
