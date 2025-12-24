@@ -1182,7 +1182,11 @@ footer {
   }
 
   .text-mobile {
-    display: block;
+    display: none;
+  }
+
+  .top-bar-right {
+    margin-left: auto;
   }
 
   #main-header {
