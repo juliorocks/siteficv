@@ -1187,6 +1187,8 @@ footer {
 
   .top-bar-right {
     margin-left: auto;
+    margin-right: 15px;
+    /* Ensure padding from edge */
   }
 
   #main-header {
