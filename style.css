@@ -1082,12 +1082,19 @@ footer {
   }
 
   /* Standardize Section Titles for Mobile */
-  .standard-section-title {
+  .standard-section-title,
+  .features-title-col h2 {
     font-size: 1.5rem !important;
+    line-height: 1 !important;
   }
 
-  .standard-section-title span {
+  .standard-section-title span,
+  .features-title-col h2 span {
     font-size: 2.2rem !important;
+    line-height: 1 !important;
+    margin-top: -2px !important;
+    /* Pull closer, adjusted for mobile size */
+    display: block;
   }
 }
 
