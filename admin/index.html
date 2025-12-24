@@ -40,7 +40,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-light);
+            background: #1a1a1a;
             z-index: 9999;
             display: flex;
             justify-content: center;
@@ -48,13 +48,14 @@
         }
 
         .login-box {
-            background: white;
+            background: #24292e;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             width: 100%;
             max-width: 400px;
             text-align: center;
+            color: white;
         }
 
         .login-box input {
@@ -375,19 +376,19 @@
     <!-- AUTH -->
     <div id="login-screen">
         <div class="login-box">
-            <h3>CMS FICV</h3>
-            <p>Acesso Administrativo</p>
+            <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo"
+                style="max-width: 220px; margin-bottom: 20px;">
             <form id="loginForm">
                 <input type="email" id="email" placeholder="Email" required value="jcs.sjc@gmail.com">
                 <input type="password" id="password" placeholder="Senha" required>
                 <div id="loginMsg" style="color:red; margin:10px 0; font-size:0.9rem;"></div>
                 <button type="submit">Entrar</button>
                 <button type="button" id="signUpBtn"
-                    style="width:100%; padding:12px; background:transparent; border:1px solid #ccc; border-radius:50px; cursor:pointer; font-size:16px; margin-top:10px;">Criar
+                    style="width:100%; padding:12px; background:transparent; border:1px solid #555; border-radius:50px; cursor:pointer; font-size:16px; margin-top:10px; color: #ccc;">Criar
                     Conta / Sou Novo</button>
                 <div style="margin-top: 15px;">
-                    <a href="#" id="forgotBtn" style="color: #666; font-size: 0.9rem; text-decoration: none;">Esqueci
-                        minha senha</a>
+                    <a href="#" id="forgotBtn" style="color: #888; font-size: 0.9rem; text-decoration: none;">Esqueci
+                        my senha</a>
                 </div>
             </form>
         </div>
