@@ -500,7 +500,7 @@
         <div id="main-content">
             <div id="view-container">
                 <!-- Dynamic Content Here -->
-                <h2>Bem-vindo ao CMS</h2>
+                <h2 id="welcome-message">Bem-vindo ao CMS</h2>
                 <p>Selecione uma opção no menu lateral para começar.</p>
             </div>
         </div>
@@ -625,6 +625,24 @@
 
                     adminWrapper.classList.remove('hidden');
                     adminWrapper.style.display = 'flex'; // Force show
+
+                    // Update Welcome Message with Name and Time
+                    const user = data.session.user;
+                    let displayName = "Usuário";
+                    if (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) {
+                        displayName = user.user_metadata.full_name || user.user_metadata.name;
+                    } else if (user.email) {
+                        const emailName = user.email.split('@')[0];
+                        displayName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                    }
+
+                    const hour = new Date().getHours();
+                    let greeting = "Bom dia";
+                    if (hour >= 12) greeting = "Boa tarde";
+                    if (hour >= 18) greeting = "Boa noite";
+
+                    const welcomeEl = document.getElementById('welcome-message');
+                    if (welcomeEl) welcomeEl.innerText = `${greeting}, ${displayName}!`;
                 } else {
                     console.log("No session. Showing login.");
                     document.getElementById('login-screen').classList.remove('hidden');
