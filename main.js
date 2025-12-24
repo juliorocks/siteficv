@@ -651,51 +651,50 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Courses Slider (Auto Scroll Left) ---
-  // --- Courses Slider (Auto Scroll Continuous) ---
+  // --- Courses Slider (Smooth Infinite Loop) ---
   const scrollTrack = document.querySelector('.courses-track');
 
   if (scrollTrack) {
-    let scrollPos = 0;
+    let currentTranslate = 0;
+    const speed = 0.5; // Smooth slow speed
     let isHovered = false;
+    let reqId;
 
-    // Clone children to ensure infinite loop visual
-    // Only if we have enough items
-    const children = Array.from(scrollTrack.children);
-    if (children.length > 0 && children.length < 10) {
-      // Clone effectively 2x to fill space if needed, or rely on CSS wrapping? 
-      // Actually, best way for infinite smooth scroll is cloning the set.
-      children.forEach(child => {
-        scrollTrack.appendChild(child.cloneNode(true));
-      });
-    }
+    // Pause on interactions
+    const stopScroll = () => isHovered = true;
+    const startScroll = () => isHovered = false;
 
-    // Pause on hover
-    scrollTrack.addEventListener('mouseenter', () => isHovered = true);
-    scrollTrack.addEventListener('mouseleave', () => isHovered = false);
-    // Also pause on touch to allow dragging
-    scrollTrack.addEventListener('touchstart', () => isHovered = true);
-    scrollTrack.addEventListener('touchend', () => isHovered = false);
+    scrollTrack.addEventListener('mouseenter', stopScroll);
+    scrollTrack.addEventListener('mouseleave', startScroll);
+    scrollTrack.addEventListener('touchstart', stopScroll);
+    scrollTrack.addEventListener('touchend', startScroll);
 
-    function autoSmoothScroll() {
-      if (!isHovered && scrollTrack.scrollWidth > scrollTrack.clientWidth) {
-        scrollPos += 0.5; // Smooth slow speed
-        if (scrollPos >= scrollTrack.scrollWidth / 2) {
-          // Assuming we doubled content, reset to 0 when halfway (seamless)
-          // This requires exact doubling logic.
-          // Simplification: If scrollLeft maxes out, logic breaks. 
-          // Better is: manipulate scrollLeft of wrapper.
-          // Let's use the Wrapper scrollLeft.
+    function animateCourses() {
+      if (!isHovered) {
+        currentTranslate -= speed;
+
+        const firstCard = scrollTrack.firstElementChild;
+        if (firstCard) {
+          // Calculate width including margin
+          const style = window.getComputedStyle(firstCard);
+          const cardWidth = firstCard.offsetWidth + parseFloat(style.marginRight) + parseFloat(style.marginLeft);
+
+          // Check if first card is fully out of view (slight buffer)
+          if (Math.abs(currentTranslate) >= cardWidth) {
+            // Move first card to end
+            scrollTrack.appendChild(firstCard);
+            // Reset translate by the exact width of the moved card to maintain visual position
+            currentTranslate += cardWidth;
+          }
         }
+
+        scrollTrack.style.transform = `translateX(${currentTranslate}px)`;
       }
-      requestAnimationFrame(autoSmoothScroll);
+      reqId = requestAnimationFrame(animateCourses);
     }
 
-    // ACTUALLY, simpler approach to remove "travadinha" (stutter):
-    // Just remove the interval I added previously. The user might prefer manual scroll or purely smooth CSS marquee.
-    // The previous code did a "snap" every 4 seconds. I will REMOVE that Interval entirely.
-    // User said "ao passar os slides, fica dando uma travadinha". This might refer to manual swipe OR the auto play.
-    // "Tire esse efeito" -> Likely remove the auto-snap.
-    // I'll just remove the auto-scrolling interval block entirely so it's manual/drag only, which is smoother for UX.
+    // Start Animation
+    reqId = requestAnimationFrame(animateCourses);
   }
 
   // --- Load Interactive Map & Data ---
