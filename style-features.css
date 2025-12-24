@@ -135,27 +135,30 @@
         grid-template-columns: repeat(2, 1fr);
         max-width: none;
         margin: 0;
-        gap: 10px;
+        gap: 15px;
+        /* Restoration of slightly larger gap */
     }
 
     .flip-card {
-        min-height: 180px;
+        min-height: 240px;
+        /* Increased height to fit content */
         aspect-ratio: auto;
     }
 
     .feature-icon-svg {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 10px;
+        width: 48px;
+        /* Slightly larger icon */
+        height: 48px;
+        margin-bottom: 12px;
     }
 
     .feature-text-group {
-        gap: 2px;
+        gap: 4px;
     }
 
     .feature-line-1,
     .feature-line-2 {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
 
     .flip-card-front,
@@ -165,5 +168,6 @@
 
     .flip-card-back p {
         font-size: 0.85rem;
+        line-height: 1.4;
     }
 }
