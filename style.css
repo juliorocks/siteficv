@@ -1111,7 +1111,8 @@ footer {
     position: absolute;
     top: 100%;
     /* 40px implied by parent height, or explicit top: 40px */
-    right: 0;
+    right: 15px;
+    /* Create margin from edge */
     min-width: 10rem;
     padding: 0.5rem 0;
     margin: 0;
