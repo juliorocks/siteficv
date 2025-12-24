@@ -23,6 +23,8 @@ body {
   color: var(--color-text);
   font-family: var(--font-main);
   overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
 a {
@@ -1109,8 +1111,8 @@ footer {
     position: absolute;
     top: 100%;
     /* 40px implied by parent height, or explicit top: 40px */
-    right: 0;
-    /* Aligned to parent */
+    right: 15px;
+    /* Aligned to parent with margin */
     min-width: 10rem;
     padding: 0.5rem 0;
     margin: 0;
