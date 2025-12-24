@@ -118,7 +118,7 @@ form input[type="button"] {
   /* Deep dark blue */
   color: #fff;
   font-family: 'Figtree', sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   height: 40px;
   /* Explicit height */
   display: flex;
@@ -136,8 +136,8 @@ form input[type="button"] {
   align-items: center;
   height: 100%;
   width: 100%;
-  max-width: 1440px;
-  /* Updated to 1440px per user request */
+  max-width: 1400px;
+  /* Updated to 1400px per user request */
 }
 
 .top-bar-right {
@@ -151,7 +151,7 @@ form input[type="button"] {
   color: #c0c0c0;
   font-weight: 500;
   transition: 0.3s;
-  font-size: 11px;
+  font-size: 12px;
   height: 100%;
   display: flex;
   align-items: center;
