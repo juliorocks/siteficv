@@ -382,6 +382,10 @@
                 <input type="password" id="password" placeholder="Senha" required>
                 <div id="loginMsg" style="color:red; margin:10px 0; font-size:0.9rem;"></div>
                 <button type="submit">Entrar</button>
+                <div style="margin-top: 15px;">
+                    <a href="#" id="forgotBtn" style="color: #666; font-size: 0.9rem; text-decoration: none;">Esqueci
+                        minha senha</a>
+                </div>
             </form>
         </div>
     </div>
@@ -552,6 +556,44 @@
                     console.error(e);
                 }
             });
+
+            // Forgot Password Logic
+            const forgotBtn = document.getElementById('forgotBtn');
+            if (forgotBtn) {
+                forgotBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const msg = document.getElementById('loginMsg');
+
+                    if (!email) {
+                        msg.innerText = "Digite seu e-mail acima para recuperar a senha.";
+                        msg.style.color = "#d9534f"; // Red
+                        return;
+                    }
+
+                    if (!confirm(`Enviar link de recuperação para: ${email}?`)) return;
+
+                    msg.innerText = "Enviando email de recuperação...";
+                    msg.style.color = "blue";
+
+                    try {
+                        const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                            redirectTo: window.location.href, // Redirect back here after clicking email link
+                        });
+
+                        if (error) {
+                            msg.innerText = "Erro ao enviar: " + error.message;
+                            msg.style.color = "red";
+                        } else {
+                            msg.innerText = "Link enviado! Verifique seu email (e spam).";
+                            msg.style.color = "green";
+                        }
+                    } catch (err) {
+                        msg.innerText = "Erro inesperado.";
+                        console.error(err);
+                    }
+                });
+            }
         }
 
 
