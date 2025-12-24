@@ -53,15 +53,16 @@
     width: 100%;
     overflow: hidden;
     position: relative;
-    padding: 15px 15px 0 15px;
-    /* Padding for inner look */
+    padding: 0;
+    /* Flush to edges */
 }
 
 .news-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0;
+    /* Radius only top */
 }
 
 .news-content {
