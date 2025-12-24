@@ -1211,7 +1211,7 @@ footer {
   }
 
   .hero-image img {
-    max-width: 85% !important;
+    max-width: 75% !important;
     height: auto;
     margin: 0 auto;
     display: block;
