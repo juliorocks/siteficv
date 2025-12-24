@@ -112,16 +112,19 @@ form input[type="button"] {
 }
 
 /* Top Bar */
+/* Top Bar */
 .top-bar {
-  background-color: #1d2e56;
+  background-color: #0b1c3e;
+  /* Deep dark blue */
   color: #fff;
-  font-size: 0.8rem;
-  padding: 8px 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  padding: 10px 0;
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1001;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .top-bar-inner {
@@ -137,12 +140,10 @@ form input[type="button"] {
 
 .top-bar-right a {
   text-decoration: none;
-  color: #ccc;
+  color: #c0c0c0;
   font-weight: 500;
   transition: 0.3s;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 12px;
 }
 
 .top-bar-right a:hover {
@@ -152,7 +153,6 @@ form input[type="button"] {
 .top-bar-right a.active {
   color: var(--color-secondary);
   font-weight: 700;
-  position: relative;
 }
 
 /* Header */

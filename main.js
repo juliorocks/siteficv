@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProfessors();
   loadPartners();
   loadPolos();
+  loadTopBar();
 
   // --- Partners Loader ---
   async function loadPartners() {
@@ -277,6 +278,40 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (e) {
       console.error("Erro About", e);
+    }
+  }
+
+  // --- Top Bar Loader ---
+  async function loadTopBar() {
+    try {
+      const { data } = await supabase.from('site_content').select('*').eq('section', 'topbar');
+      if (data && data.length > 0) {
+        const content = {};
+        data.forEach(item => content[item.item_key] = item.content_value);
+
+        if (content['topbar_text_left']) {
+          const el = document.getElementById('topbar_text_left');
+          if (el) el.innerText = content['topbar_text_left'];
+        }
+        if (content['topbar_link_igreja']) {
+          const el = document.getElementById('topbar_link_igreja');
+          if (el) el.href = content['topbar_link_igreja'];
+        }
+        if (content['topbar_link_academy']) {
+          const el = document.getElementById('topbar_link_academy');
+          if (el) el.href = content['topbar_link_academy'];
+        }
+        if (content['topbar_link_education']) {
+          const el = document.getElementById('topbar_link_education');
+          if (el) el.href = content['topbar_link_education'];
+        }
+        if (content['topbar_link_godstock']) {
+          const el = document.getElementById('topbar_link_godstock');
+          if (el) el.href = content['topbar_link_godstock'];
+        }
+      }
+    } catch (e) {
+      console.error("Erro TopBar", e);
     }
   }
 
