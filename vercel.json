@@ -5,11 +5,15 @@
             "destination": "/admin/index.html"
         },
         {
-            "source": "/news/:slug*",
-            "destination": "/news.html"
+            "source": "/noticias",
+            "destination": "/noticias.html"
         },
         {
             "source": "/noticias/:slug*",
+            "destination": "/news.html"
+        },
+        {
+            "source": "/news/:slug*",
             "destination": "/news.html"
         },
         {
@@ -31,10 +35,6 @@
         {
             "source": "/quem-somos",
             "destination": "/quem-somos.html"
-        },
-        {
-            "source": "/noticias",
-            "destination": "/noticias.html"
         },
         {
             "source": "/npj",
