@@ -62,14 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.forEach(el => {
       const key = el.getAttribute('data-cms-key');
       if (data[key]) {
-        const val = data[key];
+        let val = data[key];
         const tag = el.tagName.toLowerCase();
+
+        // Dynamic cleanup for Year
+        if (key === 'footer_copyright') {
+          const currentYear = new Date().getFullYear();
+          val = val.replace(/20\d{2}/g, currentYear);
+        }
+
         if (tag === 'img') {
           el.src = val;
         } else if (tag === 'div' && el.style.backgroundImage) {
           el.style.backgroundImage = `url('${val}')`;
         } else {
-          el.innerText = val;
+          el.innerHTML = val;
         }
       }
     });
@@ -81,8 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
       let val = data[key];
 
       if (val && val !== '#' && val.trim() !== '') {
-        // Ensure Protocol
-        if (!val.startsWith('http') && !val.startsWith('mailto:') && !val.startsWith('tel:')) {
+        // Ensure Protocol (unless relative or anchor)
+        if (!val.startsWith('http') && !val.startsWith('mailto:') && !val.startsWith('tel:') && !val.startsWith('/') && !val.startsWith('#')) {
           val = 'https://' + val;
         }
         el.href = val;
