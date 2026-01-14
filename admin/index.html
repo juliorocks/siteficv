@@ -376,7 +376,7 @@
     <!-- AUTH -->
     <div id="login-screen">
         <div class="login-box">
-            <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo"
+            <img id="adminLoginLogo" src="/images/test-logo.png" alt="FICV Logo"
                 style="max-width: 220px; margin-bottom: 20px;">
             <form id="loginForm">
                 <input type="email" id="email" placeholder="Email" required value="jcs.sjc@gmail.com">
@@ -396,7 +396,7 @@
         <!-- SIDEBAR -->
         <div id="sidebar">
             <div class="sidebar-header" style="text-align: center; padding: 20px 10px;">
-                <img src="https://cursos.ficv.edu.br/wp-content/uploads/2025/02/logo-ficv.png" alt="FICV Logo"
+                <img id="adminSidebarLogo" src="/images/test-logo.png" alt="FICV Logo"
                     style="max-width: 130px; filter: brightness(0) invert(1);">
             </div>
 
@@ -3079,6 +3079,20 @@
         }
         }
 
+
+        async function initAdminLogo() {
+            try {
+               const { data } = await supabaseClient.from('site_content').select('content_value').eq('item_key', 'global_logo_url').single();
+               if(data && data.content_value) {
+                   const logoUrl = data.content_value;
+                   const loginLogo = document.getElementById('adminLoginLogo');
+                   if(loginLogo) loginLogo.src = logoUrl;
+                   const sidebarLogo = document.getElementById('adminSidebarLogo');
+                   if(sidebarLogo) sidebarLogo.src = logoUrl;
+               }
+            } catch(e) { console.log('Logo load error', e); }
+        }
+        initAdminLogo();
     </script>
 </body>
 
