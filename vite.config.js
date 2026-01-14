@@ -62,8 +62,10 @@ const courseRoutingPlugin = () => {
                     req.url = '/admin/index.html';
                 }
 
-                // News
-                if (url.startsWith('/news/') || url.startsWith('/noticias/')) {
+                // News Detail (Only if has slug)
+                // We check if url is EXACTLY /news/ or /noticias/ (or with query), if so, let it fall through to static page handler
+                // But if it has content afterwards, it is a detail page.
+                if ((url.startsWith('/news/') || url.startsWith('/noticias/')) && url.split('/').length > 2 && url.split('/')[2].trim() !== '') {
                     req.url = '/news.html';
                 }
 
