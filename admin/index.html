@@ -2407,8 +2407,8 @@
             }
         }
 
-    // Helper for Tabs (if not already global, but renderCourseForm used it, so it might be local there or I need to
-    expose it)
+        // Helper for Tabs (if not already global, but renderCourseForm used it, so it might be local there or I need to
+        // expose it)
         // Checking if showTab exists globally.
         if (!window.showTab) {
             window.showTab = function (tabId, btn) {
@@ -2553,7 +2553,7 @@
             let { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
 
             // Fallback: If no error but data is empty or my user is missing, and I'm logged in, try to "inject" myself to see
-            if it fixes
+            // if it fixes
             try {
                 const { data: { user } } = await supabaseClient.auth.getUser();
                 if (user) {
@@ -2687,95 +2687,93 @@
             onclick="${isEdit ? `updateUserProfile('${user.id}')` : `createNewUser()`}">
             ${isEdit ? 'Salvar Alterações' : 'Criar Usuário'}
         </button>
-        ${!isEdit ? '<p style="margin-top:10px; font-size:0.8rem; color:#888;">Nota: Criar um usuário via painel pode
-            exigir confirmação de email.</p > ' : ''}
+        ${!isEdit ? '<p style="margin-top:10px; font-size:0.8rem; color:#888;">Nota: Criar um usuário via painel pode exigir confirmação de email.</p > ' : ''}
     </div >
                 `;
-    }
+        }
 
-    window.createNewUser = async function () {
-    const email = document.getElementById('userEmail').value;
-    const password = document.getElementById('userPass').value;
-    const fullName = document.getElementById('userFullName').value;
-    const role = document.getElementById('userRole').value;
+        window.createNewUser = async function () {
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPass').value;
+            const fullName = document.getElementById('userFullName').value;
+            const role = document.getElementById('userRole').value;
 
-    if (!email || !password) return alert("Preencha email e senha");
+            if (!email || !password) return alert("Preencha email e senha");
 
-    try {
-    // 1. Create Auth User
-    const { data, error } = await supabaseClient.auth.signUp({
-    email, password,
-    options: {
-    data: { full_name: fullName } // Initial metadata
-    }
-    });
+            try {
+                // 1. Create Auth User
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email, password,
+                    options: {
+                        data: { full_name: fullName } // Initial metadata
+                    }
+                });
 
-    if (error) throw error;
+                if (error) throw error;
 
-    const newUserId = data.user?.id;
+                const newUserId = data.user?.id;
 
-    if (newUserId) {
+                if (newUserId) {
     // 2. Create Profile Entry manually (if trigger didn't catch it or if we want to enforce specific fields
     immediately)
-    // First check if profile exists (via trigger)
-    const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', newUserId).single();
+                    // First check if profile exists (via trigger)
+                    const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', newUserId).single();
 
-    if (prof) {
-    await supabaseClient.from('profiles').update({ role, full_name: fullName, email: email }).eq('id', newUserId);
-    } else {
-    // Insert if not exists
-    await supabaseClient.from('profiles').insert({ id: newUserId, email, role, full_name: fullName });
-    }
+                    if (prof) {
+                        await supabaseClient.from('profiles').update({ role, full_name: fullName, email: email }).eq('id', newUserId);
+                    } else {
+                        // Insert if not exists
+                        await supabaseClient.from('profiles').insert({ id: newUserId, email, role, full_name: fullName });
+                    }
 
-    alert("Usuário criado com sucesso!");
-    loadView('users_list');
-    } else {
-    alert("Usuário criado, mas verifique se a confirmação de email é necessária.");
-    }
+                    alert("Usuário criado com sucesso!");
+                    loadView('users_list');
+                } else {
+                    alert("Usuário criado, mas verifique se a confirmação de email é necessária.");
+                }
 
-    } catch (e) {
-    alert("Erro: " + e.message);
-    console.error(e);
-    }
-    }
+            } catch (e) {
+                alert("Erro: " + e.message);
+                console.error(e);
+            }
+        }
 
-    window.updateUserProfile = async function (id) {
-    const fullName = document.getElementById('userFullName').value;
-    const role = document.getElementById('userRole').value;
+        window.updateUserProfile = async function (id) {
+            const fullName = document.getElementById('userFullName').value;
+            const role = document.getElementById('userRole').value;
 
-    const { data, error } = await supabaseClient.from('profiles').update({ full_name: fullName, role: role }).eq('id', id).select();
+            const { data, error } = await supabaseClient.from('profiles').update({ full_name: fullName, role: role }).eq('id', id).select();
 
-    if (error) alert("Erro ao atualizar perfil: " + error.message);
-    else if (!data || data.length === 0) alert("Nenhuma alteração feita. Verifique se você tem permissão (RLS) ou se o usuário existe.");
-    else {
-        alert("Perfil atualizado!");
-        loadView('users_list');
-    }
-    }
+            if (error) alert("Erro ao atualizar perfil: " + error.message);
+            else if (!data || data.length === 0) alert("Nenhuma alteração feita. Verifique se você tem permissão (RLS) ou se o usuário existe.");
+            else {
+                alert("Perfil atualizado!");
+                loadView('users_list');
+            }
+        }
 
-    window.deleteUser = async function (id) {
-    if (!confirm("Tem certeza? Isso removerá o perfil do sistema. O login de autenticação pode permanecer se não for
-    removido manualmente.")) return;
+        window.deleteUser = async function (id) {
+            if (!confirm("Tem certeza? Isso removerá o perfil do sistema. O login de autenticação pode permanecer se não for removido manualmente.")) return;
 
-    const { error } = await supabaseClient.from('profiles').delete().eq('id', id);
-    if (error) alert("Erro: " + error.message);
-    else {
-    loadView('users_list');
-    }
-    }
+            const { error } = await supabaseClient.from('profiles').delete().eq('id', id);
+            if (error) alert("Erro: " + error.message);
+            else {
+                loadView('users_list');
+            }
+        }
 
-    // Render My Profile
-    async function renderProfile(container) {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) return;
+        // Render My Profile
+        async function renderProfile(container) {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) return;
 
-    // Fetch profile data
-    let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
-    if (!profile) profile = { full_name: user.user_metadata?.full_name || '', avatar_url: '' };
+            // Fetch profile data
+            let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+            if (!profile) profile = { full_name: user.user_metadata?.full_name || '', avatar_url: '' };
 
-    const rid = Math.random().toString(36).substr(2, 5);
+            const rid = Math.random().toString(36).substr(2, 5);
 
-    container.innerHTML = `
+            container.innerHTML = `
                 < div class="content-header" >
                     <h2>Meu Perfil</h2>
     </div >
@@ -2818,47 +2816,53 @@
 
                                 </div>
                                 `;
-    }
+        }
 
-                                window.saveMyProfile = async function () {
-    const fullName = document.getElementById('myFullName').value;
-                                const avatarUrl = document.getElementById('myAvatar').value;
-                                const {data: {user} } = await supabaseClient.auth.getUser();
+        window.saveMyProfile = async function () {
+            const fullName = document.getElementById('myFullName').value;
+            const avatarUrl = document.getElementById('myAvatar').value;
+            const { data: { user } } = await supabaseClient.auth.getUser();
 
-                                // Check if profile exists
-                                const {data: prof } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+            // Check if profile exists
+            const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
 
-                                let error;
-                                if (prof) {
-    const res = await supabaseClient.from('profiles').update({full_name: fullName, avatar_url: avatarUrl }).eq('id',
-                                user.id);
-                                error = res.error;
-    } else {
-    const res = await supabaseClient.from('profiles').insert({id: user.id, full_name: fullName, avatar_url: avatarUrl,
-    email: user.email });
-                                error = res.error;
-    }
+            let error;
+            if (prof) {
+                const res = await supabaseClient.from('profiles').update({ full_name: fullName, avatar_url: avatarUrl }).eq('id',
+                    user.id);
+                error = res.error;
+            } else {
+                const res = await supabaseClient.from('profiles').insert({
+                    id: user.id, full_name: fullName, avatar_url: avatarUrl,
+                    email: user.email
+                });
+                error = res.error;
+            }
 
-                                if (error) alert("Erro ao salvar: " + error.message);
-                                else {
-                                    alert("Perfil atualizado!");
-                                // Update metadata too for consistency
-                                await supabaseClient.auth.updateUser({data: {full_name: fullName } });
-    }
-    }
+            if (error) alert("Erro ao salvar: " + error.message);
+            else {
+                alert("Perfil atualizado!");
+                // Update metadata too for consistency
+                await supabaseClient.auth.updateUser({ data: { full_name: fullName } });
+            }
+        }
 
-                                window.changeMyPassword = async function () {
-    const p1 = document.getElementById('newPass').value;
-                                const p2 = document.getElementById('confirmPass').value;
+        window.changeMyPassword = async function () {
+            const p1 = document.getElementById('newPass').value;
+            const p2 = document.getElementById('confirmPass').value;
 
-                                if (!p1 || p1.length < 6) return alert("A senha deve ter pelo menos 6 caracteres."); if (p1 !==p2) return alert("As
-                                senhas não coincidem."); const {error}=await supabaseClient.auth.updateUser({password: p1 }); if (error)
-                                alert("Erro ao mudar senha: " + error.message);
-                                else {
-                                    alert(" Senha alterada com sucesso!"); document.getElementById('newPass').value='' ;
-        document.getElementById('confirmPass').value='' ; } } // 4. GENERIC TABLE (Categories/Formats) async function
-                                renderGenericTable(container, table, title) { const {data}=await
-                                supabaseClient.from(table).select('*').order('id'); container.innerHTML=` <div class="content-header">
+            if (!p1 || p1.length < 6) return alert("A senha deve ter pelo menos 6 caracteres."); if (p1 !== p2) return alert("As senhas não coincidem."); const { error } = await supabaseClient.auth.updateUser({ password: p1 }); if (error)
+                alert("Erro ao mudar senha: " + error.message);
+            else {
+                alert(" Senha alterada com sucesso!"); document.getElementById('newPass').value = '';
+                document.getElementById('confirmPass').value = '';
+            }
+        }
+
+        // 4. GENERIC TABLE (Categories/Formats)
+        async function renderGenericTable(container, table, title) {
+            const { data } = await
+                supabaseClient.from(table).select('*').order('id'); container.innerHTML = ` <div class="content-header">
                                     <h2>${title}</h2>
                                     <button class="btn btn-primary" onclick="addGenericItem('${table}')"><i class="fas fa-plus"></i> Adicionar
                                         item</button>
@@ -2889,36 +2893,36 @@
                                 `;
         }
 
-                                window.addGenericItem = async function (table) {
-        const name = prompt("Nome:");
-                                if (name) {
-                                    await supabaseClient.from(table).insert({ name });
-                                if (table === 'categories') loadView('categories_list');
-                                else if (table === 'formats') loadView('formats_list');
-                                else if (table === 'modalities') loadView('modalities_list');
-                                else if (table === 'levels') loadView('levels_list');
-        }
-        }
-
-                                // --- HELPER: FILE UPLOAD ---
-                                window.uploadFile = async function (input, targetId) {
-        const file = input.files[0];
-                                if (!file) return;
-
-                                // Sanitize filename: remove accents, special chars, spaces
-                                const cleanName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9.-]/g, "_");
-                                const fileName = `uploads/${Date.now()}-${cleanName}`;
-
-                                const {data, error} = await supabaseClient.storage.from('uploads').upload(fileName, file);
-                                if (error) return alert(error.message);
-
-                                const {data: publicData } = supabaseClient.storage.from('uploads').getPublicUrl(fileName);
-                                document.getElementById(targetId).value = publicData.publicUrl;
+        window.addGenericItem = async function (table) {
+            const name = prompt("Nome:");
+            if (name) {
+                await supabaseClient.from(table).insert({ name });
+                if (table === 'categories') loadView('categories_list');
+                else if (table === 'formats') loadView('formats_list');
+                else if (table === 'modalities') loadView('modalities_list');
+                else if (table === 'levels') loadView('levels_list');
+            }
         }
 
-                                // --- HELPER: SITE CONTENT MODAL ---
-                                // Basic Overlay
-                                const modalHtml = `
+        // --- HELPER: FILE UPLOAD ---
+        window.uploadFile = async function (input, targetId) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // Sanitize filename: remove accents, special chars, spaces
+            const cleanName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9.-]/g, "_");
+            const fileName = `uploads/${Date.now()}-${cleanName}`;
+
+            const { data, error } = await supabaseClient.storage.from('uploads').upload(fileName, file);
+            if (error) return alert(error.message);
+
+            const { data: publicData } = supabaseClient.storage.from('uploads').getPublicUrl(fileName);
+            document.getElementById(targetId).value = publicData.publicUrl;
+        }
+
+        // --- HELPER: SITE CONTENT MODAL ---
+        // Basic Overlay
+        const modalHtml = `
                                 <div id="contentModal"
                                     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
                                     <div style="background:white; padding:30px; border-radius:8px; width:500px; position:relative;">
@@ -2958,70 +2962,70 @@
                                                 </div>
                                             </div>
                                             `;
-                                            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-                                            window.toggleModalType = function () {
-        const t = document.getElementById('modalType').value;
-                                            document.getElementById('modalTextGroup').style.display = t === 'image' ? 'none' : 'block';
-                                            document.getElementById('modalImageGroup').style.display = t === 'image' ? 'block' : 'none';
+        window.toggleModalType = function () {
+            const t = document.getElementById('modalType').value;
+            document.getElementById('modalTextGroup').style.display = t === 'image' ? 'none' : 'block';
+            document.getElementById('modalImageGroup').style.display = t === 'image' ? 'block' : 'none';
         }
 
-                                            window.showGenericModal = function (item, key, section) {
-                                                document.getElementById('contentModal').style.display = 'flex';
-                                            document.getElementById('modalKey').value = key;
-                                            document.getElementById('modalKeyDisplay').value = key;
-                                            document.getElementById('modalSection').value = section;
+        window.showGenericModal = function (item, key, section) {
+            document.getElementById('contentModal').style.display = 'flex';
+            document.getElementById('modalKey').value = key;
+            document.getElementById('modalKeyDisplay').value = key;
+            document.getElementById('modalSection').value = section;
 
-                                            if (item) {
-                                                document.getElementById('modalType').value = item.item_type;
-                                            if (item.item_type === 'image') {
-                                                document.getElementById('modalImgUrl').value = item.content_value;
-        } else {
-                                                document.getElementById('modalValue').value = item.content_value;
-        }
-        } else {
-                                                document.getElementById('modalType').value = 'text';
-                                            document.getElementById('modalValue').value = '';
-                                            document.getElementById('modalImgUrl').value = '';
-        }
-                                            toggleModalType();
-        }
-
-                                            window.saveSiteContentFromModal = async function () {
-        const key = document.getElementById('modalKey').value;
-                                            const section = document.getElementById('modalSection').value;
-                                            const type = document.getElementById('modalType').value;
-                                            let val = type === 'image' ? document.getElementById('modalImgUrl').value :
-                                            document.getElementById('modalValue').value;
-
-                                            const {error} = await supabaseClient.from('site_content').upsert({
-                                                item_key: key,
-                                            section: section,
-                                            item_type: type,
-                                            content_value: val
-        }, {onConflict: 'item_key' });
-
-                                            if (error) alert(error.message);
-                                            else {
-                                                document.getElementById('contentModal').style.display = 'none';
-                                            loadView('site_content', section);
-        }
+            if (item) {
+                document.getElementById('modalType').value = item.item_type;
+                if (item.item_type === 'image') {
+                    document.getElementById('modalImgUrl').value = item.content_value;
+                } else {
+                    document.getElementById('modalValue').value = item.content_value;
+                }
+            } else {
+                document.getElementById('modalType').value = 'text';
+                document.getElementById('modalValue').value = '';
+                document.getElementById('modalImgUrl').value = '';
+            }
+            toggleModalType();
         }
 
-                                            // --- GLOBAL SETTINGS ---
-                                            window.renderGlobalSettings = async function (container) {
-        // Fetch global scripts
-        const {data} = await supabaseClient.from('site_content').select('*').in('item_key', ['scripts_head',
-                                            'scripts_body', 'global_logo_url']);
-                                            const map = { };
-        (data || []).forEach(d => map[d.item_key] = d.content_value);
+        window.saveSiteContentFromModal = async function () {
+            const key = document.getElementById('modalKey').value;
+            const section = document.getElementById('modalSection').value;
+            const type = document.getElementById('modalType').value;
+            let val = type === 'image' ? document.getElementById('modalImgUrl').value :
+                document.getElementById('modalValue').value;
 
-                                            // Defaults
-                                            const headVal = map['scripts_head'] || '';
-                                            const bodyVal = map['scripts_body'] || '';
-                                            const logoVal = map['global_logo_url'] || '/images/test-logo.png'; // Default to test logo if new
+            const { error } = await supabaseClient.from('site_content').upsert({
+                item_key: key,
+                section: section,
+                item_type: type,
+                content_value: val
+            }, { onConflict: 'item_key' });
 
-                                            container.innerHTML = `
+            if (error) alert(error.message);
+            else {
+                document.getElementById('contentModal').style.display = 'none';
+                loadView('site_content', section);
+            }
+        }
+
+        // --- GLOBAL SETTINGS ---
+        window.renderGlobalSettings = async function (container) {
+            // Fetch global scripts
+            const { data } = await supabaseClient.from('site_content').select('*').in('item_key', ['scripts_head',
+                'scripts_body', 'global_logo_url']);
+            const map = {};
+            (data || []).forEach(d => map[d.item_key] = d.content_value);
+
+            // Defaults
+            const headVal = map['scripts_head'] || '';
+            const bodyVal = map['scripts_body'] || '';
+            const logoVal = map['global_logo_url'] || '/images/test-logo.png'; // Default to test logo if new
+
+            container.innerHTML = `
                                             <div class="content-header">
                                                 <h2>Scripts Globais & Rastreamento</h2>
                                                 <button class="btn btn-primary" onclick="saveGlobalSettings()">Salvar Configurações</button>
@@ -3060,37 +3064,37 @@
         }
 
         window.saveGlobalSettings = async function () {
-        const headScripts = document.getElementById('globalScriptsHead').value;
-        const bodyScripts = document.getElementById('globalScriptsBody').value;
-        const logoUrl = document.getElementById('globalLogo').value;
+            const headScripts = document.getElementById('globalScriptsHead').value;
+            const bodyScripts = document.getElementById('globalScriptsBody').value;
+            const logoUrl = document.getElementById('globalLogo').value;
 
-        const updates = [
-            { item_key: 'scripts_head', content_value: headScripts, section: 'global', item_type: 'code' },
-            { item_key: 'scripts_body', content_value: bodyScripts, section: 'global', item_type: 'code' },
-            { item_key: 'global_logo_url', content_value: logoUrl, section: 'global', item_type: 'image' }
-        ];
+            const updates = [
+                { item_key: 'scripts_head', content_value: headScripts, section: 'global', item_type: 'code' },
+                { item_key: 'scripts_body', content_value: bodyScripts, section: 'global', item_type: 'code' },
+                { item_key: 'global_logo_url', content_value: logoUrl, section: 'global', item_type: 'image' }
+            ];
 
-        const { error } = await supabaseClient.from('site_content').upsert(updates, { onConflict: 'item_key' });
+            const { error } = await supabaseClient.from('site_content').upsert(updates, { onConflict: 'item_key' });
 
-        if (error) {
-        alert('Erro ao salvar: ' + error.message);
-        } else {
-        alert('Configurações globais salvas com sucesso!');
-        }
+            if (error) {
+                alert('Erro ao salvar: ' + error.message);
+            } else {
+                alert('Configurações globais salvas com sucesso!');
+            }
         }
 
 
         async function initAdminLogo() {
             try {
-               const { data } = await supabaseClient.from('site_content').select('content_value').eq('item_key', 'global_logo_url').single();
-               if(data && data.content_value) {
-                   const logoUrl = data.content_value;
-                   const loginLogo = document.getElementById('adminLoginLogo');
-                   if(loginLogo) loginLogo.src = logoUrl;
-                   const sidebarLogo = document.getElementById('adminSidebarLogo');
-                   if(sidebarLogo) sidebarLogo.src = logoUrl;
-               }
-            } catch(e) { console.log('Logo load error', e); }
+                const { data } = await supabaseClient.from('site_content').select('content_value').eq('item_key', 'global_logo_url').single();
+                if (data && data.content_value) {
+                    const logoUrl = data.content_value;
+                    const loginLogo = document.getElementById('adminLoginLogo');
+                    if (loginLogo) loginLogo.src = logoUrl;
+                    const sidebarLogo = document.getElementById('adminSidebarLogo');
+                    if (sidebarLogo) sidebarLogo.src = logoUrl;
+                }
+            } catch (e) { console.log('Logo load error', e); }
         }
         window.addEventListener('load', initAdminLogo);
     </script>
