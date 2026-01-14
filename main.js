@@ -88,9 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
       let val = data[key];
 
       if (val && val !== '#' && val.trim() !== '') {
-        // Ensure Protocol (unless relative or anchor)
+        // Ensure Protocol
         if (!val.startsWith('http') && !val.startsWith('mailto:') && !val.startsWith('tel:') && !val.startsWith('/') && !val.startsWith('#')) {
-          val = 'https://' + val;
+          // If it has a dot, likely a domain (e.g. google.com) -> https://
+          if (val.includes('.')) {
+            val = 'https://' + val;
+          } else {
+            // Otherwise assume internal slug -> /slug
+            val = '/' + val;
+          }
         }
         el.href = val;
         el.style.display = 'inline-flex'; // Ensure visible if valid
