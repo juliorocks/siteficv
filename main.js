@@ -33,9 +33,26 @@ document.addEventListener('DOMContentLoaded', () => {
           contentMap[item.item_key] = item.content_value;
         });
         applyContent(contentMap);
+
+        // Inject Global Scripts
+        if (contentMap['scripts_head']) injectRawScript(contentMap['scripts_head'], document.head);
+        if (contentMap['scripts_body']) injectRawScript(contentMap['scripts_body'], document.body, true);
       }
     } catch (e) {
       console.log('CMS Offline', e);
+    }
+  }
+
+  function injectRawScript(html, target, prepend = false) {
+    if (!html || html.trim() === '') return;
+    try {
+      const range = document.createRange();
+      range.selectNode(target);
+      const fragment = range.createContextualFragment(html);
+      if (prepend) target.insertBefore(fragment, target.firstChild);
+      else target.appendChild(fragment);
+    } catch (e) {
+      console.error("Script Injection Error", e);
     }
   }
 

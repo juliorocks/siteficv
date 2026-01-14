@@ -484,6 +484,11 @@
                     </div>
                 </li>
                 <li>
+                    <div class="menu-item" onclick="loadView('global_settings')">
+                        <i class="fas fa-code"></i> Scripts Globais
+                    </div>
+                </li>
+                <li>
                     <div class="menu-item" onclick="loadView('profile')">
                         <i class="fas fa-user-circle"></i> Meu Perfil
                     </div>
@@ -757,6 +762,8 @@
                     await renderUsersList(container);
                 } else if (viewType === 'profile') {
                     await renderProfile(container);
+                } else if (viewType === 'global_settings') {
+                    await renderGlobalSettings(container);
                 }
             } catch (e) {
                 container.innerHTML = `<p style="color:red">Erro: ${e.message}</p>`;
@@ -1819,118 +1826,144 @@
                 <label>Código HTML do Formulário (Brevo)</label>
                 <textarea id="courseBrevoForm" rows="6" placeholder="Cole aqui o código <iframe...> ou <script...>">${course?.brevo_form_html || ''}</textarea>
             </div>
+
+            <h3 style="margin-top:40px; background: #1a1a1a; border-left: 4px solid #4caf50; padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Rastreamento (Pixel)</h3>
+            <p style="color:#666; font-size:0.85rem; margin-bottom:10px;">Insira aqui códigos de rastreamento específicos para esta página (ex: Pixel do Facebook). Será inserido no topo da página.</p>
+            <div class="form-group">
+                <label>Código HTML (Script)</label>
+                <textarea id="coursePixel" rows="6" placeholder="&lt;script&gt;...&lt;/script&gt;">${course?.pixel_code ||
+                ''}</textarea>
+    </div>
+    </div>
+
+    <h3
+        style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">
+        Conteúdo "Sobre"</h3>
+    <div class="form-group">
+        <label>Introdução (Texto Destacado abaixo do título 'Sobre')</label>
+        <textarea id="courseAboutIntro" rows="3">${course?.about_intro || ''}</textarea>
+    </div>
+    <div class="form-group">
+        <label>Conteúdo Principal (Editor Rico)</label>
+        <div id="course-about-editor" style="height: 300px; background: white; color: black;">${course?.about_content ||
+                ''}</div>
+    </div>
+    <div class="form-group">
+        <label>Lista "Por que escolher?" (Uma frase por linha)</label>
+        <textarea id="courseReasons" rows="5">${reasonsText}</textarea>
+    </div>
+
+    <h3
+        style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">
+        Coordenação & Preço</h3>
+    <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div>
+            <label>Nome Coordenador</label>
+            <input type="text" id="courseCoordName" value="${course?.coordinator_name || ''}">
         </div>
-
-            <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Conteúdo "Sobre"</h3>
-            <div class="form-group">
-                <label>Introdução (Texto Destacado abaixo do título 'Sobre')</label>
-                <textarea id="courseAboutIntro" rows="3">${course?.about_intro || ''}</textarea>
-            </div>
-            <div class="form-group">
-                <label>Conteúdo Principal (Editor Rico)</label>
-                <div id="course-about-editor" style="height: 300px; background: white; color: black;">${course?.about_content || ''}</div>
-            </div>
-            <div class="form-group">
-                <label>Lista "Por que escolher?" (Uma frase por linha)</label>
-                <textarea id="courseReasons" rows="5">${reasonsText}</textarea>
-            </div>
-
-            <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Coordenação & Preço</h3>
-            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div>
-                    <label>Nome Coordenador</label>
-                    <input type="text" id="courseCoordName" value="${course?.coordinator_name || ''}">
-                </div>
-                <div>
-                    <label>Cargo Coordenador</label>
-                    <input type="text" id="courseCoordRole" value="${course?.coordinator_role || ''}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Foto Coordenador (URL)</label>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <input type="text" id="courseCoordImg" value="${course?.coordinator_image || ''}"
-                        style="flex-grow:1">
-                    <input type="file" onchange="uploadFile(this, 'courseCoordImg')">
-                </div>
-            </div>
-            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div>
-                    <label>Preço "De" (R$)</label>
-                    <input type="text" id="coursePriceFull" value="${course?.price_full || ''}">
-                </div>
-                <div>
-                    <label>Preço "Por" (R$)</label>
-                    <input type="text" id="coursePriceMonthly" value="${course?.price_monthly || ''}">
-                </div>
-            </div>
-
-            <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Matriz Curricular</h3>
-            <div class="form-group">
-                <label>Módulos do Curso</label>
-                <div id="curriculum-modules-container" style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
-                    <!-- Modules injected here -->
-                </div>
-                <button type="button" class="btn btn-outline" onclick="addCurriculumModule()">+ Adicionar Módulo</button>
-            </div>
-
-            <!-- Professors Section -->
-             <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Professores do Curso</h3>
-             <div class="form-group">
-                 <label>Lista de Professores (Fotos)</label>
-                 <div id="professors-items-container" style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
-                     <!-- Professors injected here -->
-                 </div>
-                 <button type="button" class="btn btn-outline" onclick="addProfessorItem()">+ Adicionar Professor</button>
-             </div>
-
-            <!-- FAQ Section -->
-             <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Perguntas Frequentes (FAQ)</h3>
-             <div class="form-group">
-                 <label>Lista de Perguntas</label>
-                 <div id="faq-items-container" style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
-                     <!-- FAQs injected here -->
-                 </div>
-                 <button type="button" class="btn btn-outline" onclick="addFaqItem()">+ Adicionar Pergunta</button>
-             </div>
-        <!-- CTA Section -->
-            <h3 style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Configuração de Venda / CTA</h3>
-            <p style="color:#666; font-size:0.9rem;">Personalize a seção de chamada para ação no final da página do curso.</p>
-
-            <div class="form-group">
-                <label>Título do CTA</label>
-                <input type="text" id="ctaTitle" value="${course?.cta_title || 'Garanta sua vaga com condição especial!'}" placeholder="ex: Garanta sua vaga...">
-            </div>
-            <div class="form-group">
-                <label>Descrição do CTA</label>
-                <textarea id="ctaDesc" rows="2" placeholder="ex: Junte-se a uma comunidade...">${course?.cta_description || 'Junte-se a uma comunidade de líderes educadores e transforme sua visão pedagógica.'}</textarea>
-            </div>
-            <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div>
-                    <label>Texto do Botão</label>
-                    <input type="text" id="ctaBtnText" value="${course?.cta_button_text || 'QUERO ME MATRICULAR!'}" placeholder="ex: QUERO ME MATRICULAR!">
-                </div>
-                <div>
-                    <label>Link do Botão</label>
-                    <input type="text" id="ctaBtnLink" value="${course?.cta_button_link || '#'}" placeholder="ex: https://...">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Aviso Legal (Disclaimer)</label>
-                <input type="text" id="ctaDisclaimer" value="${course?.cta_disclaimer || '*Vagas limitadas. Condição promocional por tempo determinado.'}" placeholder="ex: *Vagas limitadas...">
-            </div>
+        <div>
+            <label>Cargo Coordenador</label>
+            <input type="text" id="courseCoordRole" value="${course?.coordinator_role || ''}">
         </div>
+    </div>
+    <div class="form-group">
+        <label>Foto Coordenador (URL)</label>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <input type="text" id="courseCoordImg" value="${course?.coordinator_image || ''}" style="flex-grow:1">
+            <input type="file" onchange="uploadFile(this, 'courseCoordImg')">
+        </div>
+    </div>
+    <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div>
+            <label>Preço "De" (R$)</label>
+            <input type="text" id="coursePriceFull" value="${course?.price_full || ''}">
+        </div>
+        <div>
+            <label>Preço "Por" (R$)</label>
+            <input type="text" id="coursePriceMonthly" value="${course?.price_monthly || ''}">
+        </div>
+    </div>
 
-        <button class="btn btn-primary" style="margin-top:20px; width:100%;"
-            onclick="${course ? `saveCourse(${course.id})` : 'saveCourse()'}">Salvar Curso Completo</button>
-        <div style="text-align:center; margin-top:10px;">
-            ${course && course.slug ? (() => {
+    <h3
+        style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">
+        Matriz Curricular</h3>
+    <div class="form-group">
+        <label>Módulos do Curso</label>
+        <div id="curriculum-modules-container"
+            style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
+            <!-- Modules injected here -->
+        </div>
+        <button type="button" class="btn btn-outline" onclick="addCurriculumModule()">+ Adicionar Módulo</button>
+    </div>
+
+    <!-- Professors Section -->
+    <h3
+        style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">
+        Professores do Curso</h3>
+    <div class="form-group">
+        <label>Lista de Professores (Fotos)</label>
+        <div id="professors-items-container" style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
+            <!-- Professors injected here -->
+        </div>
+        <button type="button" class="btn btn-outline" onclick="addProfessorItem()">+ Adicionar Professor</button>
+    </div>
+
+    <!-- FAQ Section -->
+    <h3
+        style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">
+        Perguntas Frequentes (FAQ)</h3>
+    <div class="form-group">
+        <label>Lista de Perguntas</label>
+        <div id="faq-items-container" style="display:flex; flex-direction:column; gap:25px; margin-bottom:25px;">
+            <!-- FAQs injected here -->
+        </div>
+        <button type="button" class="btn btn-outline" onclick="addFaqItem()">+ Adicionar Pergunta</button>
+    </div>
+    <!-- CTA Section -->
+    <h3
+        style="margin-top:60px; background: #1a1a1a; border-left: 4px solid var(--color-secondary); padding: 12px 15px; border-bottom: 1px solid #333; color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">
+        Configuração de Venda / CTA</h3>
+    <p style="color:#666; font-size:0.9rem;">Personalize a seção de chamada para ação no final da página do curso.</p>
+
+    <div class="form-group">
+        <label>Título do CTA</label>
+        <input type="text" id="ctaTitle" value="${course?.cta_title || 'Garanta sua vaga com condição especial!'}"
+            placeholder="ex: Garanta sua vaga...">
+    </div>
+    <div class="form-group">
+        <label>Descrição do CTA</label>
+        <textarea id="ctaDesc" rows="2"
+            placeholder="ex: Junte-se a uma comunidade...">${course?.cta_description || 'Junte-se a uma comunidade de líderes educadores e transforme sua visão pedagógica.'}</textarea>
+    </div>
+    <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div>
+            <label>Texto do Botão</label>
+            <input type="text" id="ctaBtnText" value="${course?.cta_button_text || 'QUERO ME MATRICULAR!'}"
+                placeholder="ex: QUERO ME MATRICULAR!">
+        </div>
+        <div>
+            <label>Link do Botão</label>
+            <input type="text" id="ctaBtnLink" value="${course?.cta_button_link || '#'}" placeholder="ex: https://...">
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Aviso Legal (Disclaimer)</label>
+        <input type="text" id="ctaDisclaimer"
+            value="${course?.cta_disclaimer || '*Vagas limitadas. Condição promocional por tempo determinado.'}"
+            placeholder="ex: *Vagas limitadas...">
+    </div>
+    </div>
+
+    <button class="btn btn-primary" style="margin-top:20px; width:100%;"
+        onclick="${course ? `saveCourse(${course.id})` : 'saveCourse()'}">Salvar Curso Completo</button>
+    <div style="text-align:center; margin-top:10px;">
+        ${course && course.slug ? (() => {
                     const lvl = (course.level || 'curso').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,
                         "").replace(/[^a-z0-9]+/g, "-");
                     return `<a href="/${lvl}/${course.slug}" target="_blank" style="color:var(--color-secondary);">Visualizar
-                Página</a>`;
+            Página</a>`;
                 })() : ''}
-        </div>
+    </div>
     </div>
     `;
 
@@ -1993,23 +2026,25 @@
             }
 
             div.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <h4 style="margin:0; color:#555;">Módulo</h4>
-                    <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;" onclick="this.parentElement.parentElement.remove()">Remover</button>
-                </div>
-                <div class="form-group">
-                    <label>Título do Módulo</label>
-                    <input type="text" class="mod-title" value="${title}" placeholder="Ex: Módulo 1 - Fundamentos">
-                </div>
-                <div class="form-group">
-                    <label>Ícone (FontAwesome)</label>
-                    <input type="text" class="mod-icon" value="${icon}" placeholder="fas fa-book">
-                </div>
-                <div class="form-group">
-                    <label>Conteúdo / Disciplinas (uma por linha)</label>
-                    <textarea class="mod-items" rows="5" placeholder="Disciplina 1&#10;Disciplina 2&#10;Disciplina 3">${desc}</textarea>
-                </div>
-            `;
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <h4 style="margin:0; color:#555;">Módulo</h4>
+        <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;"
+            onclick="this.parentElement.parentElement.remove()">Remover</button>
+    </div>
+    <div class="form-group">
+        <label>Título do Módulo</label>
+        <input type="text" class="mod-title" value="${title}" placeholder="Ex: Módulo 1 - Fundamentos">
+    </div>
+    <div class="form-group">
+        <label>Ícone (FontAwesome)</label>
+        <input type="text" class="mod-icon" value="${icon}" placeholder="fas fa-book">
+    </div>
+    <div class="form-group">
+        <label>Conteúdo / Disciplinas (uma por linha)</label>
+        <textarea class="mod-items" rows="5"
+            placeholder="Disciplina 1&#10;Disciplina 2&#10;Disciplina 3">${desc}</textarea>
+    </div>
+    `;
             container.appendChild(div);
         }
 
@@ -2028,19 +2063,20 @@
             const answer = data ? data.answer : '';
 
             div.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <h4 style="margin:0; color:#555;">Pergunta</h4>
-                    <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;" onclick="this.parentElement.parentElement.remove()">Remover</button>
-                </div>
-                <div class="form-group">
-                    <label>Pergunta</label>
-                    <input type="text" class="faq-question" value="${question}" placeholder="Ex: Qual a duração do curso?">
-                </div>
-                <div class="form-group">
-                    <label>Resposta</label>
-                    <textarea class="faq-answer" rows="3" placeholder="A duração é de...">${answer}</textarea>
-                </div>
-            `;
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <h4 style="margin:0; color:#555;">Pergunta</h4>
+        <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;"
+            onclick="this.parentElement.parentElement.remove()">Remover</button>
+    </div>
+    <div class="form-group">
+        <label>Pergunta</label>
+        <input type="text" class="faq-question" value="${question}" placeholder="Ex: Qual a duração do curso?">
+    </div>
+    <div class="form-group">
+        <label>Resposta</label>
+        <textarea class="faq-answer" rows="3" placeholder="A duração é de...">${answer}</textarea>
+    </div>
+    `;
             container.appendChild(div);
         }
 
@@ -2060,23 +2096,27 @@
             const rid = Math.random().toString(36).substr(2, 5);
 
             div.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <h4 style="margin:0; color:#555;">Professor</h4>
-                    <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;" onclick="this.parentElement.parentElement.remove()">Remover</button>
-                </div>
-                <div class="form-group">
-                    <label>Nome</label>
-                    <input type="text" class="prof-name" value="${name}" placeholder="Nome do Professor">
-                </div>
-                <div class="form-group">
-                    <label>Foto (URL)</label>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                         <img src="${image}" id="prev_${rid}" style="height:40px; width:40px; object-fit:cover; display:${image ? 'block' : 'none'}; border-radius:50%;">
-                        <input type="text" class="prof-img" id="img_${rid}" value="${image}" placeholder="https://..." style="flex-grow:1">
-                        <input type="file" onchange="uploadFile(this, 'img_${rid}'); document.getElementById('prev_${rid}').src = window.URL.createObjectURL(this.files[0]); document.getElementById('prev_${rid}').style.display='block';">
-                    </div>
-                </div>
-            `;
+    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+        <h4 style="margin:0; color:#555;">Professor</h4>
+        <button type="button" class="btn btn-danger" style="padding:2px 8px; font-size:0.8rem;"
+            onclick="this.parentElement.parentElement.remove()">Remover</button>
+    </div>
+    <div class="form-group">
+        <label>Nome</label>
+        <input type="text" class="prof-name" value="${name}" placeholder="Nome do Professor">
+    </div>
+    <div class="form-group">
+        <label>Foto (URL)</label>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <img src="${image}" id="prev_${rid}"
+                style="height:40px; width:40px; object-fit:cover; display:${image ? 'block' : 'none'}; border-radius:50%;">
+            <input type="text" class="prof-img" id="img_${rid}" value="${image}" placeholder="https://..."
+                style="flex-grow:1">
+            <input type="file"
+                onchange="uploadFile(this, 'img_${rid}'); document.getElementById('prev_${rid}').src = window.URL.createObjectURL(this.files[0]); document.getElementById('prev_${rid}').style.display='block';">
+        </div>
+    </div>
+    `;
             container.appendChild(div);
         }
 
@@ -2163,7 +2203,8 @@
                 cta_button_text: document.getElementById('ctaBtnText').value,
                 cta_button_link: document.getElementById('ctaBtnLink').value,
                 cta_disclaimer: document.getElementById('ctaDisclaimer').value,
-                brevo_form_html: document.getElementById('courseBrevoForm').value
+                brevo_form_html: document.getElementById('courseBrevoForm').value,
+                pixel_code: document.getElementById('coursePixel').value
             };
 
             let res;
@@ -2292,7 +2333,8 @@
                 <div style="display:flex; gap:10px; align-items:center;">
                     <img src="${newsItem?.header_image_url || ''}" id="preview_news_header_img"
                         style="height:60px; border-radius:4px; display:${newsItem?.header_image_url ? 'block' : 'none'}; border:1px solid #ddd; padding:2px;">
-                    <input type="text" id="newsHeaderImg" value="${newsItem?.header_image_url || ''}" style="flex-grow:1">
+                    <input type="text" id="newsHeaderImg" value="${newsItem?.header_image_url || ''}"
+                        style="flex-grow:1">
                     <input type="file"
                         onchange="uploadFile(this, 'newsHeaderImg'); document.getElementById('preview_news_header_img').src = window.URL.createObjectURL(this.files[0]); document.getElementById('preview_news_header_img').style.display='block';">
                 </div>
@@ -2365,7 +2407,8 @@
             }
         }
 
-        // Helper for Tabs (if not already global, but renderCourseForm used it, so it might be local there or I need to expose it)
+    // Helper for Tabs (if not already global, but renderCourseForm used it, so it might be local there or I need to
+    expose it)
         // Checking if showTab exists globally.
         if (!window.showTab) {
             window.showTab = function (tabId, btn) {
@@ -2427,38 +2470,40 @@
                 .order('created_at', { ascending: false });
 
             container.innerHTML = `
-            <div class="content-header">
-                <h2>Mensagens (Fale Conosco)</h2>
-                <button class="btn" onclick="loadView('messages_list')">Atualizar</button>
-            </div>
-            <div class="card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Assunto</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${(data || []).map(msg => `
-                        <tr style="${msg.is_read ? 'opacity:0.7' : 'font-weight:bold; background:rgba(62, 207, 142, 0.05);'}">
-                            <td>${new Date(msg.created_at).toLocaleDateString('pt-BR')} ${new Date(msg.created_at).toLocaleTimeString('pt-BR')}</td>
-                            <td>${msg.name}</td>
-                            <td><a href="mailto:${msg.email}">${msg.email}</a></td>
-                            <td>${msg.subject}</td>
-                            <td>
-                                <button class="btn btn-primary" onclick='viewMessage(${safeParam(msg)})'>Ver</button>
-                                <button class="btn btn-danger" onclick='deleteItem("contact_messages", "${msg.id}")'>Excluir</button>
-                            </td>
-                        </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-            `;
+    <div class="content-header">
+        <h2>Mensagens (Fale Conosco)</h2>
+        <button class="btn" onclick="loadView('messages_list')">Atualizar</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Assunto</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(msg => `
+                <tr style="${msg.is_read ? 'opacity:0.7' : 'font-weight:bold; background:rgba(62, 207, 142, 0.05);'}">
+                    <td>${new Date(msg.created_at).toLocaleDateString('pt-BR')} ${new
+                    Date(msg.created_at).toLocaleTimeString('pt-BR')}</td>
+                    <td>${msg.name}</td>
+                    <td><a href="mailto:${msg.email}">${msg.email}</a></td>
+                    <td>${msg.subject}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick='viewMessage(${safeParam(msg)})'>Ver</button>
+                        <button class="btn btn-danger"
+                            onclick='deleteItem("contact_messages", "${msg.id}")'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
         }
 
         window.viewMessage = async function (msg) {
@@ -2470,34 +2515,34 @@
             }
 
             container.innerHTML = `
-             <div class="content-header">
-                <h2>Visualizar Mensagem</h2>
-                <button class="btn" onclick="loadView('messages_list')">Voltar</button>
-             </div>
-             <div class="card">
-                <div class="form-group">
-                    <label>De:</label>
-                    <p><strong>${msg.name}</strong> (${msg.email})</p>
-                    ${msg.phone ? `<p>Telefone: ${msg.phone}</p>` : ''}
-                </div>
-                 <div class="form-group">
-                    <label>Data:</label>
-                    <p>${new Date(msg.created_at).toLocaleString('pt-BR')}</p>
-                </div>
-                <div class="form-group">
-                    <label>Assunto:</label>
-                    <p>${msg.subject}</p>
-                </div>
-                <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-                <div class="form-group">
-                    <label>Mensagem:</label>
-                    <p style="white-space: pre-wrap; font-size:1.1rem; line-height:1.6;">${msg.message}</p>
-                </div>
-                <div style="margin-top:30px;">
-                    <a href="mailto:${msg.email}?subject=Re: ${msg.subject}" class="btn btn-primary">Responder por Email</a>
-                </div>
-             </div>
-             `;
+    <div class="content-header">
+        <h2>Visualizar Mensagem</h2>
+        <button class="btn" onclick="loadView('messages_list')">Voltar</button>
+    </div>
+    <div class="card">
+        <div class="form-group">
+            <label>De:</label>
+            <p><strong>${msg.name}</strong> (${msg.email})</p>
+            ${msg.phone ? `<p>Telefone: ${msg.phone}</p>` : ''}
+        </div>
+        <div class="form-group">
+            <label>Data:</label>
+            <p>${new Date(msg.created_at).toLocaleString('pt-BR')}</p>
+        </div>
+        <div class="form-group">
+            <label>Assunto:</label>
+            <p>${msg.subject}</p>
+        </div>
+        <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+        <div class="form-group">
+            <label>Mensagem:</label>
+            <p style="white-space: pre-wrap; font-size:1.1rem; line-height:1.6;">${msg.message}</p>
+        </div>
+        <div style="margin-top:30px;">
+            <a href="mailto:${msg.email}?subject=Re: ${msg.subject}" class="btn btn-primary">Responder por Email</a>
+        </div>
+    </div>
+    `;
         }
 
         // --- USERS & PROFILE ---
@@ -2507,13 +2552,17 @@
             // Attempt to fetch profiles. If fails, show error about missing table.
             let { data, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false });
 
-            // Fallback: If no error but data is empty or my user is missing, and I'm logged in, try to "inject" myself to see if it fixes
+            // Fallback: If no error but data is empty or my user is missing, and I'm logged in, try to "inject" myself to see
+            if it fixes
             try {
                 const { data: { user } } = await supabaseClient.auth.getUser();
                 if (user) {
                     // Check if profiles table works at all
                     if (error && error.message.includes('relation "public.profiles" does not exist')) {
-                        container.innerHTML = `<div class="card"><p style="color:red">Erro: A tabela 'profiles' não existe no banco de dados.</p><p>Execute o script SQL fornecido para corrigir.</p></div>`;
+                        container.innerHTML = `<div class="card">
+        <p style="color:red">Erro: A tabela 'profiles' não existe no banco de dados.</p>
+        <p>Execute o script SQL fornecido para corrigir.</p>
+    </div>`;
                         return;
                     }
 
@@ -2533,44 +2582,53 @@
             } catch (e) { console.error(e); }
 
             if (error) {
-                container.innerHTML = `<div class="card"><p style="color:red">Erro ao carregar usuários. Verifique se a tabela 'profiles' existe e se você tem permissão.</p><p>${error.message}</p></div>`;
+                container.innerHTML = `<div class="card">
+        <p style="color:red">Erro ao carregar usuários. Verifique se a tabela 'profiles' existe e se você tem permissão.
+        </p>
+        <p>${error.message}</p>
+    </div>`;
                 return;
             }
 
             container.innerHTML = `
-            <div class="content-header">
-                <h2>Gerenciar Usuários</h2>
-                <button class="btn btn-primary" onclick="openUserModal()"><i class="fas fa-plus"></i> Novo Usuário</button>
-            </div>
-            <div class="card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Avatar</th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Função (Role)</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${(data || []).map(u => `
-                        <tr>
-                            <td><img src="${u.avatar_url || 'https://via.placeholder.com/40'}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;"></td>
-                            <td>${u.full_name || 'Sem nome'}</td>
-                            <td>${u.email}</td>
-                            <td><span class="status-badge" style="background:${getRoleColor(u.role)}; color:white; padding:4px 8px; border-radius:4px;">${u.role || 'user'}</span></td>
-                            <td>
-                                <button class="btn btn-primary" style="padding:5px 10px;" onclick='openUserModal(${safeParam(u)})'>Editar</button>
-                                <!-- Delete is tricky for auth users from client, mainly delete profile link -->
-                                <button class="btn btn-danger" style="padding:5px 10px;" onclick='deleteUser("${u.id}")'>Excluir</button>
-                            </td>
-                        </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-             </div>
-            `;
+    <div class="content-header">
+        <h2>Gerenciar Usuários</h2>
+        <button class="btn btn-primary" onclick="openUserModal()"><i class="fas fa-plus"></i> Novo Usuário</button>
+    </div>
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Avatar</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Função (Role)</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(data || []).map(u => `
+                <tr>
+                    <td><img src="${u.avatar_url || 'https://via.placeholder.com/40'}"
+                            style="width:40px; height:40px; border-radius:50%; object-fit:cover;"></td>
+                    <td>${u.full_name || 'Sem nome'}</td>
+                    <td>${u.email}</td>
+                    <td><span class="status-badge"
+                            style="background:${getRoleColor(u.role)}; color:white; padding:4px 8px; border-radius:4px;">${u.role
+                || 'user'}</span></td>
+                    <td>
+                        <button class="btn btn-primary" style="padding:5px 10px;"
+                            onclick='openUserModal(${safeParam(u)})'>Editar</button>
+                        <!-- Delete is tricky for auth users from client, mainly delete profile link -->
+                        <button class="btn btn-danger" style="padding:5px 10px;"
+                            onclick='deleteUser("${u.id}")'>Excluir</button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
         }
 
         function getRoleColor(role) {
@@ -2589,367 +2647,423 @@
             const isEdit = !!user;
 
             container.innerHTML = `
-             <div class="content-header">
-                <h2>${isEdit ? 'Editar Usuário' : 'Novo Usuário'}</h2>
-                <button class="btn" onclick="loadView('users_list')">Voltar</button>
-             </div>
-             <div class="card" style="max-width:600px; margin:0 auto;">
-                ${!isEdit ? `
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="userEmail" required>
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="userPass" required minlength="6">
-                </div>
-                ` : `
-                 <div class="form-group">
-                    <label>Email (Somente Leitura)</label>
-                    <input type="email" value="${user.email}" disabled style="background:#eee;">
-                </div>
-                `}
-                
-                <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="userFullName" value="${user?.full_name || ''}">
-                </div>
-                
-                 <div class="form-group">
-                    <label>Função</label>
-                    <select id="userRole">
-                        <option value="user" ${user?.role === 'user' ? 'selected' : ''}>Usuário</option>
-                        <option value="author" ${user?.role === 'author' ? 'selected' : ''}>Autor</option>
-                        <option value="editor" ${user?.role === 'editor' ? 'selected' : ''}>Editor</option>
-                        <option value="admin" ${user?.role === 'admin' ? 'selected' : ''}>Administrador</option>
-                    </select>
-                </div>
-                
-                <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="${isEdit ? `updateUserProfile('${user.id}')` : `createNewUser()`}">
-                    ${isEdit ? 'Salvar Alterações' : 'Criar Usuário'}
-                </button>
-                ${!isEdit ? '<p style="margin-top:10px; font-size:0.8rem; color:#888;">Nota: Criar um usuário via painel pode exigir confirmação de email.</p>' : ''}
-             </div>
-             `;
-        }
-
-        window.createNewUser = async function () {
-            const email = document.getElementById('userEmail').value;
-            const password = document.getElementById('userPass').value;
-            const fullName = document.getElementById('userFullName').value;
-            const role = document.getElementById('userRole').value;
-
-            if (!email || !password) return alert("Preencha email e senha");
-
-            try {
-                // 1. Create Auth User
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email, password,
-                    options: {
-                        data: { full_name: fullName } // Initial metadata
-                    }
-                });
-
-                if (error) throw error;
-
-                const newUserId = data.user?.id;
-
-                if (newUserId) {
-                    // 2. Create Profile Entry manually (if trigger didn't catch it or if we want to enforce specific fields immediately)
-                    // First check if profile exists (via trigger)
-                    const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', newUserId).single();
-
-                    if (prof) {
-                        await supabaseClient.from('profiles').update({ role, full_name: fullName, email: email }).eq('id', newUserId);
-                    } else {
-                        // Insert if not exists
-                        await supabaseClient.from('profiles').insert({ id: newUserId, email, role, full_name: fullName });
-                    }
-
-                    alert("Usuário criado com sucesso!");
-                    loadView('users_list');
-                } else {
-                    alert("Usuário criado, mas verifique se a confirmação de email é necessária.");
-                }
-
-            } catch (e) {
-                alert("Erro: " + e.message);
-                console.error(e);
-            }
-        }
-
-        window.updateUserProfile = async function (id) {
-            const fullName = document.getElementById('userFullName').value;
-            const role = document.getElementById('userRole').value;
-
-            const { error } = await supabaseClient.from('profiles').update({ full_name: fullName, role: role }).eq('id', id);
-
-            if (error) alert("Erro ao atualizar perfil: " + error.message);
-            else {
-                alert("Perfil atualizado!");
-                loadView('users_list');
-            }
-        }
-
-        window.deleteUser = async function (id) {
-            if (!confirm("Tem certeza? Isso removerá o perfil do sistema. O login de autenticação pode permanecer se não for removido manualmente.")) return;
-
-            const { error } = await supabaseClient.from('profiles').delete().eq('id', id);
-            if (error) alert("Erro: " + error.message);
-            else {
-                loadView('users_list');
-            }
-        }
-
-        // Render My Profile
-        async function renderProfile(container) {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            if (!user) return;
-
-            // Fetch profile data
-            let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
-            if (!profile) profile = { full_name: user.user_metadata?.full_name || '', avatar_url: '' };
-
-            const rid = Math.random().toString(36).substr(2, 5);
-
-            container.innerHTML = `
-             <div class="content-header">
-                <h2>Meu Perfil</h2>
-             </div>
-             <div class="card" style="max-width:600px;">
-                <h3 style="margin-top:0;">Dados Pessoais</h3>
-                
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="text" value="${user.email}" disabled style="background:#eee;">
-                </div>
-                 <div class="form-group">
-                    <label>Nome Completo</label>
-                    <input type="text" id="myFullName" value="${profile.full_name || ''}">
-                </div>
-                 <div class="form-group">
-                    <label>Foto de Perfil</label>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                         <img src="${profile.avatar_url || ''}" id="prev_${rid}" style="height:50px; width:50px; object-fit:cover; border-radius:50%; display:${profile.avatar_url ? 'block' : 'none'};">
-                        <input type="text" id="myAvatar" value="${profile.avatar_url || ''}" style="flex-grow:1">
-                        <input type="file" onchange="uploadFile(this, 'myAvatar'); document.getElementById('prev_${rid}').src = window.URL.createObjectURL(this.files[0]); document.getElementById('prev_${rid}').style.display='block';">
-                    </div>
-                </div>
-                
-                 <button class="btn btn-primary" onclick="saveMyProfile()">Salvar Dados</button>
-                 
-                 <hr style="margin: 30px 0; border:0; border-top:1px solid #eee;">
-                 
-                 <h3>Alterar Senha</h3>
-                 <div class="form-group">
-                    <label>Nova Senha</label>
-                    <input type="password" id="newPass" placeholder="Mínimo 6 caracteres">
-                </div>
-                 <div class="form-group">
-                    <label>Confirmar Nova Senha</label>
-                    <input type="password" id="confirmPass">
-                </div>
-                <button class="btn btn-danger" onclick="changeMyPassword()">Atualizar Senha</button>
-
-             </div>
-             `;
-        }
-
-        window.saveMyProfile = async function () {
-            const fullName = document.getElementById('myFullName').value;
-            const avatarUrl = document.getElementById('myAvatar').value;
-            const { data: { user } } = await supabaseClient.auth.getUser();
-
-            // Check if profile exists
-            const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
-
-            let error;
-            if (prof) {
-                const res = await supabaseClient.from('profiles').update({ full_name: fullName, avatar_url: avatarUrl }).eq('id', user.id);
-                error = res.error;
-            } else {
-                const res = await supabaseClient.from('profiles').insert({ id: user.id, full_name: fullName, avatar_url: avatarUrl, email: user.email });
-                error = res.error;
-            }
-
-            if (error) alert("Erro ao salvar: " + error.message);
-            else {
-                alert("Perfil atualizado!");
-                // Update metadata too for consistency
-                await supabaseClient.auth.updateUser({ data: { full_name: fullName } });
-            }
-        }
-
-        window.changeMyPassword = async function () {
-            const p1 = document.getElementById('newPass').value;
-            const p2 = document.getElementById('confirmPass').value;
-
-            if (!p1 || p1.length < 6) return alert("A senha deve ter pelo menos 6 caracteres.");
-            if (p1 !== p2) return alert("As senhas não coincidem.");
-
-            const { error } = await supabaseClient.auth.updateUser({ password: p1 });
-
-            if (error) alert("Erro ao mudar senha: " + error.message);
-            else {
-                alert("Senha alterada com sucesso!");
-                document.getElementById('newPass').value = '';
-                document.getElementById('confirmPass').value = '';
-            }
-        }
-
-        // 4. GENERIC TABLE (Categories/Formats)
-        async function renderGenericTable(container, table, title) {
-            const { data } = await supabaseClient.from(table).select('*').order('id');
-
-            container.innerHTML = `
     <div class="content-header">
-        <h2>${title}</h2>
-        <button class="btn btn-primary" onclick="addGenericItem('${table}')"><i class="fas fa-plus"></i> Adicionar
-            item</button>
-        <button class="btn" onclick="loadView('courses_list')">Voltar</button>
+        <h2>${isEdit ? 'Editar Usuário' : 'Novo Usuário'}</h2>
+        <button class="btn" onclick="loadView('users_list')">Voltar</button>
     </div>
-    <div class="card">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${(data || []).map(row => `
-                <tr>
-                    <td>${row.id}</td>
-                    <td>${row.name}</td>
-                    <td>
-                        <button class="btn btn-danger" onclick='deleteItem("${table}", ${row.id})'>Excluir</button>
-                    </td>
-                </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    </div>
-    `;
-        }
-
-        window.addGenericItem = async function (table) {
-            const name = prompt("Nome:");
-            if (name) {
-                await supabaseClient.from(table).insert({ name });
-                if (table === 'categories') loadView('categories_list');
-                else if (table === 'formats') loadView('formats_list');
-                else if (table === 'modalities') loadView('modalities_list');
-                else if (table === 'levels') loadView('levels_list');
-            }
-        }
-
-        // --- HELPER: FILE UPLOAD ---
-        window.uploadFile = async function (input, targetId) {
-            const file = input.files[0];
-            if (!file) return;
-
-            // Sanitize filename: remove accents, special chars, spaces
-            const cleanName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9.-]/g, "_");
-            const fileName = `uploads/${Date.now()}-${cleanName}`;
-
-            const { data, error } = await supabaseClient.storage.from('uploads').upload(fileName, file);
-            if (error) return alert(error.message);
-
-            const { data: publicData } = supabaseClient.storage.from('uploads').getPublicUrl(fileName);
-            document.getElementById(targetId).value = publicData.publicUrl;
-        }
-
-        // --- HELPER: SITE CONTENT MODAL ---
-        // Basic Overlay
-        const modalHtml = `
-    <div id="contentModal"
-        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
-        <div style="background:white; padding:30px; border-radius:8px; width:500px; position:relative;">
-            <h3 id="modalTitle">Editar Item</h3>
-            <input type="hidden" id="modalKey">
-            <input type="hidden" id="modalSection">
-
-            <div class="form-group">
-                <label>Chave</label>
-                <input type="text" id="modalKeyDisplay" disabled>
-            </div>
-
-            <div class="form-group">
-                <label>Tipo</label>
-                <select id="modalType" onchange="toggleModalType()">
-                    <option value="text">Texto</option>
-                    <option value="image">Imagem</option>
-                </select>
-            </div>
-
-            <div class="form-group" id="modalTextGroup">
-                <label>Valor</label>
-                <textarea id="modalValue" rows="4"></textarea>
-            </div>
-
-            <div class="form-group" id="modalImageGroup" style="display:none">
-                <label>Imagem</label>
-                <input type="file" id="modalFile" onchange="uploadFile(this, 'modalImgUrl')">
-                <input type="text" id="modalImgUrl" placeholder="URL da imagem">
-            </div>
-
-            <div style="text-align:right; margin-top:20px;">
-                <button class="btn" style="background:#ccc"
-                    onclick="document.getElementById('contentModal').style.display='none'">Cancelar</button>
-                <button class="btn btn-primary" onclick="saveSiteContentFromModal()">Salvar</button>
-            </div>
+    <div class="card" style="max-width:600px; margin:0 auto;">
+        ${!isEdit ? `
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="userEmail" required>
         </div>
-    </div>
-    `;
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="userPass" required minlength="6">
+        </div>
+        ` : `
+        <div class="form-group">
+            <label>Email (Somente Leitura)</label>
+            <input type="email" value="${user.email}" disabled style="background:#eee;">
+        </div>
+        `}
 
-        window.toggleModalType = function () {
-            const t = document.getElementById('modalType').value;
-            document.getElementById('modalTextGroup').style.display = t === 'image' ? 'none' : 'block';
-            document.getElementById('modalImageGroup').style.display = t === 'image' ? 'block' : 'none';
+        <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" id="userFullName" value="${user?.full_name || ''}">
+        </div>
+
+        <div class="form-group">
+            <label>Função</label>
+            <select id="userRole">
+                <option value="user" ${user?.role === 'user' ? 'selected' : ''}>Usuário</option>
+                <option value="author" ${user?.role === 'author' ? 'selected' : ''}>Autor</option>
+                <option value="editor" ${user?.role === 'editor' ? 'selected' : ''}>Editor</option>
+                <option value="admin" ${user?.role === 'admin' ? 'selected' : ''}>Administrador</option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%; margin-top:20px;"
+            onclick="${isEdit ? `updateUserProfile('${user.id}')` : `createNewUser()`}">
+            ${isEdit ? 'Salvar Alterações' : 'Criar Usuário'}
+        </button>
+        ${!isEdit ? '<p style="margin-top:10px; font-size:0.8rem; color:#888;">Nota: Criar um usuário via painel pode
+            exigir confirmação de email.</p > ' : ''}
+    </div >
+                `;
+    }
+
+    window.createNewUser = async function () {
+    const email = document.getElementById('userEmail').value;
+    const password = document.getElementById('userPass').value;
+    const fullName = document.getElementById('userFullName').value;
+    const role = document.getElementById('userRole').value;
+
+    if (!email || !password) return alert("Preencha email e senha");
+
+    try {
+    // 1. Create Auth User
+    const { data, error } = await supabaseClient.auth.signUp({
+    email, password,
+    options: {
+    data: { full_name: fullName } // Initial metadata
+    }
+    });
+
+    if (error) throw error;
+
+    const newUserId = data.user?.id;
+
+    if (newUserId) {
+    // 2. Create Profile Entry manually (if trigger didn't catch it or if we want to enforce specific fields
+    immediately)
+    // First check if profile exists (via trigger)
+    const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', newUserId).single();
+
+    if (prof) {
+    await supabaseClient.from('profiles').update({ role, full_name: fullName, email: email }).eq('id', newUserId);
+    } else {
+    // Insert if not exists
+    await supabaseClient.from('profiles').insert({ id: newUserId, email, role, full_name: fullName });
+    }
+
+    alert("Usuário criado com sucesso!");
+    loadView('users_list');
+    } else {
+    alert("Usuário criado, mas verifique se a confirmação de email é necessária.");
+    }
+
+    } catch (e) {
+    alert("Erro: " + e.message);
+    console.error(e);
+    }
+    }
+
+    window.updateUserProfile = async function (id) {
+    const fullName = document.getElementById('userFullName').value;
+    const role = document.getElementById('userRole').value;
+
+    const { error } = await supabaseClient.from('profiles').update({ full_name: fullName, role: role }).eq('id', id);
+
+    if (error) alert("Erro ao atualizar perfil: " + error.message);
+    else {
+    alert("Perfil atualizado!");
+    loadView('users_list');
+    }
+    }
+
+    window.deleteUser = async function (id) {
+    if (!confirm("Tem certeza? Isso removerá o perfil do sistema. O login de autenticação pode permanecer se não for
+    removido manualmente.")) return;
+
+    const { error } = await supabaseClient.from('profiles').delete().eq('id', id);
+    if (error) alert("Erro: " + error.message);
+    else {
+    loadView('users_list');
+    }
+    }
+
+    // Render My Profile
+    async function renderProfile(container) {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+
+    // Fetch profile data
+    let { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+    if (!profile) profile = { full_name: user.user_metadata?.full_name || '', avatar_url: '' };
+
+    const rid = Math.random().toString(36).substr(2, 5);
+
+    container.innerHTML = `
+                < div class="content-header" >
+                    <h2>Meu Perfil</h2>
+    </div >
+                <div class="card" style="max-width:600px;">
+                    <h3 style="margin-top:0;">Dados Pessoais</h3>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" value="${user.email}" disabled style="background:#eee;">
+                    </div>
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" id="myFullName" value="${profile.full_name || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Foto de Perfil</label>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <img src="${profile.avatar_url || ''}" id="prev_${rid}"
+                                style="height:50px; width:50px; object-fit:cover; border-radius:50%; display:${profile.avatar_url ? 'block' : 'none'};">
+                                <input type="text" id="myAvatar" value="${profile.avatar_url || ''}" style="flex-grow:1">
+                                    <input type="file"
+                                        onchange="uploadFile(this, 'myAvatar'); document.getElementById('prev_${rid}').src = window.URL.createObjectURL(this.files[0]); document.getElementById('prev_${rid}').style.display='block';">
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary" onclick="saveMyProfile()">Salvar Dados</button>
+
+                                <hr style="margin: 30px 0; border:0; border-top:1px solid #eee;">
+
+                                    <h3>Alterar Senha</h3>
+                                    <div class="form-group">
+                                        <label>Nova Senha</label>
+                                        <input type="password" id="newPass" placeholder="Mínimo 6 caracteres">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Confirmar Nova Senha</label>
+                                        <input type="password" id="confirmPass">
+                                    </div>
+                                    <button class="btn btn-danger" onclick="changeMyPassword()">Atualizar Senha</button>
+
+                                </div>
+                                `;
+    }
+
+                                window.saveMyProfile = async function () {
+    const fullName = document.getElementById('myFullName').value;
+                                const avatarUrl = document.getElementById('myAvatar').value;
+                                const {data: {user} } = await supabaseClient.auth.getUser();
+
+                                // Check if profile exists
+                                const {data: prof } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+
+                                let error;
+                                if (prof) {
+    const res = await supabaseClient.from('profiles').update({full_name: fullName, avatar_url: avatarUrl }).eq('id',
+                                user.id);
+                                error = res.error;
+    } else {
+    const res = await supabaseClient.from('profiles').insert({id: user.id, full_name: fullName, avatar_url: avatarUrl,
+    email: user.email });
+                                error = res.error;
+    }
+
+                                if (error) alert("Erro ao salvar: " + error.message);
+                                else {
+                                    alert("Perfil atualizado!");
+                                // Update metadata too for consistency
+                                await supabaseClient.auth.updateUser({data: {full_name: fullName } });
+    }
+    }
+
+                                window.changeMyPassword = async function () {
+    const p1 = document.getElementById('newPass').value;
+                                const p2 = document.getElementById('confirmPass').value;
+
+                                if (!p1 || p1.length < 6) return alert("A senha deve ter pelo menos 6 caracteres."); if (p1 !==p2) return alert("As
+                                senhas não coincidem."); const {error}=await supabaseClient.auth.updateUser({password: p1 }); if (error)
+                                alert("Erro ao mudar senha: " + error.message);
+                                else {
+                                    alert(" Senha alterada com sucesso!"); document.getElementById('newPass').value='' ;
+        document.getElementById('confirmPass').value='' ; } } // 4. GENERIC TABLE (Categories/Formats) async function
+                                renderGenericTable(container, table, title) { const {data}=await
+                                supabaseClient.from(table).select('*').order('id'); container.innerHTML=` <div class="content-header">
+                                    <h2>${title}</h2>
+                                    <button class="btn btn-primary" onclick="addGenericItem('${table}')"><i class="fas fa-plus"></i> Adicionar
+                                        item</button>
+                                    <button class="btn" onclick="loadView('courses_list')">Voltar</button>
+                                </div>
+                                <div class="card">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nome</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${(data || []).map(row => `
+                    <tr>
+                        <td>${row.id}</td>
+                        <td>${row.name}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick='deleteItem("${table}", ${row.id})'>Excluir</button>
+                        </td>
+                    </tr>
+                    `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                `;
         }
 
-        window.showGenericModal = function (item, key, section) {
-            document.getElementById('contentModal').style.display = 'flex';
-            document.getElementById('modalKey').value = key;
-            document.getElementById('modalKeyDisplay').value = key;
-            document.getElementById('modalSection').value = section;
-
-            if (item) {
-                document.getElementById('modalType').value = item.item_type;
-                if (item.item_type === 'image') {
-                    document.getElementById('modalImgUrl').value = item.content_value;
-                } else {
-                    document.getElementById('modalValue').value = item.content_value;
-                }
-            } else {
-                document.getElementById('modalType').value = 'text';
-                document.getElementById('modalValue').value = '';
-                document.getElementById('modalImgUrl').value = '';
-            }
-            toggleModalType();
+                                window.addGenericItem = async function (table) {
+        const name = prompt("Nome:");
+                                if (name) {
+                                    await supabaseClient.from(table).insert({ name });
+                                if (table === 'categories') loadView('categories_list');
+                                else if (table === 'formats') loadView('formats_list');
+                                else if (table === 'modalities') loadView('modalities_list');
+                                else if (table === 'levels') loadView('levels_list');
+        }
         }
 
-        window.saveSiteContentFromModal = async function () {
-            const key = document.getElementById('modalKey').value;
-            const section = document.getElementById('modalSection').value;
-            const type = document.getElementById('modalType').value;
-            let val = type === 'image' ? document.getElementById('modalImgUrl').value :
-                document.getElementById('modalValue').value;
+                                // --- HELPER: FILE UPLOAD ---
+                                window.uploadFile = async function (input, targetId) {
+        const file = input.files[0];
+                                if (!file) return;
 
-            const { error } = await supabaseClient.from('site_content').upsert({
-                item_key: key,
-                section: section,
-                item_type: type,
-                content_value: val
-            }, { onConflict: 'item_key' });
+                                // Sanitize filename: remove accents, special chars, spaces
+                                const cleanName = file.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9.-]/g, "_");
+                                const fileName = `uploads/${Date.now()}-${cleanName}`;
 
-            if (error) alert(error.message);
-            else {
-                document.getElementById('contentModal').style.display = 'none';
-                loadView('site_content', section);
-            }
+                                const {data, error} = await supabaseClient.storage.from('uploads').upload(fileName, file);
+                                if (error) return alert(error.message);
+
+                                const {data: publicData } = supabaseClient.storage.from('uploads').getPublicUrl(fileName);
+                                document.getElementById(targetId).value = publicData.publicUrl;
+        }
+
+                                // --- HELPER: SITE CONTENT MODAL ---
+                                // Basic Overlay
+                                const modalHtml = `
+                                <div id="contentModal"
+                                    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; justify-content:center; align-items:center;">
+                                    <div style="background:white; padding:30px; border-radius:8px; width:500px; position:relative;">
+                                        <h3 id="modalTitle">Editar Item</h3>
+                                        <input type="hidden" id="modalKey">
+                                            <input type="hidden" id="modalSection">
+
+                                                <div class="form-group">
+                                                    <label>Chave</label>
+                                                    <input type="text" id="modalKeyDisplay" disabled>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Tipo</label>
+                                                    <select id="modalType" onchange="toggleModalType()">
+                                                        <option value="text">Texto</option>
+                                                        <option value="image">Imagem</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group" id="modalTextGroup">
+                                                    <label>Valor</label>
+                                                    <textarea id="modalValue" rows="4"></textarea>
+                                                </div>
+
+                                                <div class="form-group" id="modalImageGroup" style="display:none">
+                                                    <label>Imagem</label>
+                                                    <input type="file" id="modalFile" onchange="uploadFile(this, 'modalImgUrl')">
+                                                        <input type="text" id="modalImgUrl" placeholder="URL da imagem">
+                                                        </div>
+
+                                                        <div style="text-align:right; margin-top:20px;">
+                                                            <button class="btn" style="background:#ccc"
+                                                                onclick="document.getElementById('contentModal').style.display='none'">Cancelar</button>
+                                                            <button class="btn btn-primary" onclick="saveSiteContentFromModal()">Salvar</button>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                            `;
+                                            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                                            window.toggleModalType = function () {
+        const t = document.getElementById('modalType').value;
+                                            document.getElementById('modalTextGroup').style.display = t === 'image' ? 'none' : 'block';
+                                            document.getElementById('modalImageGroup').style.display = t === 'image' ? 'block' : 'none';
+        }
+
+                                            window.showGenericModal = function (item, key, section) {
+                                                document.getElementById('contentModal').style.display = 'flex';
+                                            document.getElementById('modalKey').value = key;
+                                            document.getElementById('modalKeyDisplay').value = key;
+                                            document.getElementById('modalSection').value = section;
+
+                                            if (item) {
+                                                document.getElementById('modalType').value = item.item_type;
+                                            if (item.item_type === 'image') {
+                                                document.getElementById('modalImgUrl').value = item.content_value;
+        } else {
+                                                document.getElementById('modalValue').value = item.content_value;
+        }
+        } else {
+                                                document.getElementById('modalType').value = 'text';
+                                            document.getElementById('modalValue').value = '';
+                                            document.getElementById('modalImgUrl').value = '';
+        }
+                                            toggleModalType();
+        }
+
+                                            window.saveSiteContentFromModal = async function () {
+        const key = document.getElementById('modalKey').value;
+                                            const section = document.getElementById('modalSection').value;
+                                            const type = document.getElementById('modalType').value;
+                                            let val = type === 'image' ? document.getElementById('modalImgUrl').value :
+                                            document.getElementById('modalValue').value;
+
+                                            const {error} = await supabaseClient.from('site_content').upsert({
+                                                item_key: key,
+                                            section: section,
+                                            item_type: type,
+                                            content_value: val
+        }, {onConflict: 'item_key' });
+
+                                            if (error) alert(error.message);
+                                            else {
+                                                document.getElementById('contentModal').style.display = 'none';
+                                            loadView('site_content', section);
+        }
+        }
+
+                                            // --- GLOBAL SETTINGS ---
+                                            window.renderGlobalSettings = async function (container) {
+        // Fetch global scripts
+        const {data} = await supabaseClient.from('site_content').select('*').in('item_key', ['scripts_head',
+                                            'scripts_body']);
+                                            const map = { };
+        (data || []).forEach(d => map[d.item_key] = d.content_value);
+
+                                            // Defaults
+                                            const headVal = map['scripts_head'] || '';
+                                            const bodyVal = map['scripts_body'] || '';
+
+                                            container.innerHTML = `
+                                            <div class="content-header">
+                                                <h2>Scripts Globais & Rastreamento</h2>
+                                                <button class="btn btn-primary" onclick="saveGlobalSettings()">Salvar Configurações</button>
+                                            </div>
+                                            <div class="card dark-card" style="background:#222; color:#fff; border:1px solid #444;">
+                                                <p style="color:#ccc; margin-bottom:20px;">
+                                                    Insira abaixo códigos de rastreamento (Pixel, Analytics, GTM) que devem ser carregados em
+                                                    <strong>TODAS</strong> as páginas do site (Início, Cursos, Blog, etc).
+                                                </p>
+
+                                                <div class="form-group">
+                                                    <label style="color:#fff;">Scripts do Cabeçalho (&lt;head&gt;)</label>
+                                                    <textarea id="globalScriptsHead" rows="10" placeholder="&lt;script&gt;...&lt;/script&gt;"
+                                                        style="font-family:monospace; font-size:12px; background:#111; color:#0f0; border:1px solid #555;">${headVal}</textarea>
+                                                    <small style="color:#888;">Carregados antes do fechamento do &lt;/head&gt;.</small>
+                                                </div>
+
+                                                <div class="form-group" style="margin-top:20px;">
+                                                    <label style="color:#fff;">Scripts do Corpo (&lt;body&gt;)</label>
+                                                    <textarea id="globalScriptsBody" rows="10" placeholder="&lt;script&gt;...&lt;/script&gt; or &lt;iframe&gt;..."
+                                                        style="font-family:monospace; font-size:12px; background:#111; color:#0f0; border:1px solid #555;">${bodyVal}</textarea>
+                                                    <small style="color:#888;">Carregados logo após a abertura do &lt;body&gt; ou antes do fechamento
+                                                        (dependendo da implementação).</small>
+                                                </div>
+                                            </div>
+        `;
+        }
+
+        window.saveGlobalSettings = async function () {
+        const headScripts = document.getElementById('globalScriptsHead').value;
+        const bodyScripts = document.getElementById('globalScriptsBody').value;
+
+        const updates = [
+        { item_key: 'scripts_head', content_value: headScripts, section: 'global', item_type: 'code' },
+        { item_key: 'scripts_body', content_value: bodyScripts, section: 'global', item_type: 'code' }
+        ];
+
+        const { error } = await supabaseClient.from('site_content').upsert(updates, { onConflict: 'item_key' });
+
+        if (error) {
+        alert('Erro ao salvar: ' + error.message);
+        } else {
+        alert('Configurações globais salvas com sucesso!');
+        }
         }
 
     </script>

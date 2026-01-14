@@ -564,6 +564,18 @@
                     document.getElementById('reasons-list').innerHTML = reasonsHtml;
                 }
 
+                // --- PIXEL / TRACKING ---
+                if (c.pixel_code && c.pixel_code.trim().length > 0) {
+                    try {
+                        const range = document.createRange();
+                        range.selectNode(document.head);
+                        const fragment = range.createContextualFragment(c.pixel_code);
+                        document.head.appendChild(fragment);
+                    } catch (err) {
+                        console.error("Error injecting pixel code", err);
+                    }
+                }
+
                 // --- SIDEBAR ---
                 if (c.coordinator_name) {
                     document.getElementById('coord-widget').style.display = 'block';
@@ -614,6 +626,36 @@
                         </div>
                     `).join('');
                     document.getElementById('course-professors-list').innerHTML = profsHtml + profsHtml + profsHtml + profsHtml;
+
+                    // Start Marquee Animation
+                    startMarquee('#course-professors-list', 1.0);
+                }
+
+                function startMarquee(selector, speed) {
+                    const el = document.querySelector(selector);
+                    if (!el) return;
+                    let pos = 0;
+                    let lastTime = 0;
+                    function animate(time) {
+                        if (!lastTime) lastTime = time;
+                        const dt = time - lastTime;
+                        if (el.scrollWidth > el.clientWidth) {
+                            pos += speed * (dt / 16);
+                            if (pos >= el.scrollWidth / 4) { // /4 because we triplicated (quadrupled actually?) content above
+                                // Actually logic above did profsHtml * 4. So resetting at 1/4 is safe if it's seamless.
+                                // Let's simpler logic: reset when half way if duplicated enough?
+                                // The logic in main.js was pos >= el.scrollWidth / 2.
+                                // Here we concatenated 4 times. So logic of resetting at 1/4 or just simple infinite scroll logic.
+                                // Let safely reset at 1/4 (one full set length).
+                                // To be safe and seamless, we need to know the width of one set.
+                                pos = 0;
+                            }
+                            el.scrollLeft = pos;
+                        }
+                        lastTime = time;
+                        requestAnimationFrame(animate);
+                    }
+                    requestAnimationFrame(animate);
                 }
 
                 // --- FAQ ---
@@ -736,6 +778,32 @@
         window.toggleFaq = function (el) {
             el.classList.toggle('active');
         }
+
+        // --- GLOBAL SCRIPTS ---
+        async function loadGlobalScripts() {
+            try {
+                const { data } = await supabase.from('site_content').select('*').in('item_key', ['scripts_head', 'scripts_body']);
+                if (data) {
+                    data.forEach(item => {
+                        if (item.item_key === 'scripts_head') injectHtml(item.content_value, document.head);
+                        if (item.item_key === 'scripts_body') injectHtml(item.content_value, document.body, true);
+                    });
+                }
+            } catch (e) { console.error("Global scripts error", e); }
+        }
+
+        function injectHtml(html, target, prepend = false) {
+            if (!html) return;
+            try {
+                const range = document.createRange();
+                range.selectNode(document.body);
+                const frag = range.createContextualFragment(html);
+                if (prepend) target.insertBefore(frag, target.firstChild);
+                else target.appendChild(frag);
+            } catch (e) { console.error(e); }
+        }
+
+        loadGlobalScripts();
 
     </script>
     <style>
