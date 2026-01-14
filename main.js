@@ -100,6 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (data['color_primary']) document.documentElement.style.setProperty('--color-primary', data['color_primary']);
     if (data['color_secondary']) document.documentElement.style.setProperty('--color-secondary', data['color_secondary']);
+
+    // Special: Global Logo
+    const logoUrl = data['global_logo_url'] || '/images/test-logo.png';
+    const logoImgs = document.querySelectorAll('.logo img');
+    if (logoImgs.length > 0) {
+      logoImgs.forEach(img => img.src = logoUrl);
+    }
+
+    // Also update footer logo
+    const footerLogos = document.querySelectorAll('.footer-col-logo img');
+    if (footerLogos.length > 0) footerLogos.forEach(img => img.src = logoUrl);
   }
 
   loadCMSContent();
@@ -798,6 +809,16 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Specific data override for PB (example)
+
+  // --- Dynamic Year Update ---
+  function updateCopyrightYear() {
+    const el = document.getElementById('footer-copyright');
+    if (el) {
+      const year = new Date().getFullYear();
+      el.innerHTML = el.innerHTML.replace('2025', year).replace('2024', year);
+    }
+  }
+  updateCopyrightYear();
   polosData['pb'] = {
     name: "Paraíba",
     cities: [

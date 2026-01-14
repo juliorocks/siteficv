@@ -2743,12 +2743,13 @@
     const fullName = document.getElementById('userFullName').value;
     const role = document.getElementById('userRole').value;
 
-    const { error } = await supabaseClient.from('profiles').update({ full_name: fullName, role: role }).eq('id', id);
+    const { data, error } = await supabaseClient.from('profiles').update({ full_name: fullName, role: role }).eq('id', id).select();
 
     if (error) alert("Erro ao atualizar perfil: " + error.message);
+    else if (!data || data.length === 0) alert("Nenhuma alteração feita. Verifique se você tem permissão (RLS) ou se o usuário existe.");
     else {
-    alert("Perfil atualizado!");
-    loadView('users_list');
+        alert("Perfil atualizado!");
+        loadView('users_list');
     }
     }
 
@@ -3011,13 +3012,14 @@
                                             window.renderGlobalSettings = async function (container) {
         // Fetch global scripts
         const {data} = await supabaseClient.from('site_content').select('*').in('item_key', ['scripts_head',
-                                            'scripts_body']);
+                                            'scripts_body', 'global_logo_url']);
                                             const map = { };
         (data || []).forEach(d => map[d.item_key] = d.content_value);
 
                                             // Defaults
                                             const headVal = map['scripts_head'] || '';
                                             const bodyVal = map['scripts_body'] || '';
+                                            const logoVal = map['global_logo_url'] || '/images/test-logo.png'; // Default to test logo if new
 
                                             container.innerHTML = `
                                             <div class="content-header">
@@ -3025,36 +3027,47 @@
                                                 <button class="btn btn-primary" onclick="saveGlobalSettings()">Salvar Configurações</button>
                                             </div>
                                             <div class="card dark-card" style="background:#222; color:#fff; border:1px solid #444;">
-                                                <p style="color:#ccc; margin-bottom:20px;">
-                                                    Insira abaixo códigos de rastreamento (Pixel, Analytics, GTM) que devem ser carregados em
-                                                    <strong>TODAS</strong> as páginas do site (Início, Cursos, Blog, etc).
-                                                </p>
-
                                                 <div class="form-group">
-                                                    <label style="color:#fff;">Scripts do Cabeçalho (&lt;head&gt;)</label>
-                                                    <textarea id="globalScriptsHead" rows="10" placeholder="&lt;script&gt;...&lt;/script&gt;"
-                                                        style="font-family:monospace; font-size:12px; background:#111; color:#0f0; border:1px solid #555;">${headVal}</textarea>
-                                                    <small style="color:#888;">Carregados antes do fechamento do &lt;/head&gt;.</small>
-                                                </div>
+                                                    <label style="color:#fff;">URL do Logo do Site</label>
+                                                    <div style="display:flex; gap:10px; align-items:center;">
+                                                        <img src="${logoVal}" id="preview_logo_global" style="height:50px; background:#fff; padding:5px; border-radius:4px;">
+                                                            <input type="text" id="globalLogo" value="${logoVal}" style="flex-grow:1; background:#111; color:#fff; border:1px solid #555;">
+                                                                <input type="file" onchange="uploadFile(this, 'globalLogo'); document.getElementById('preview_logo_global').src = window.URL.createObjectURL(this.files[0]);">
+                                                                </div>
+                                                            </div>
 
-                                                <div class="form-group" style="margin-top:20px;">
-                                                    <label style="color:#fff;">Scripts do Corpo (&lt;body&gt;)</label>
-                                                    <textarea id="globalScriptsBody" rows="10" placeholder="&lt;script&gt;...&lt;/script&gt; or &lt;iframe&gt;..."
-                                                        style="font-family:monospace; font-size:12px; background:#111; color:#0f0; border:1px solid #555;">${bodyVal}</textarea>
-                                                    <small style="color:#888;">Carregados logo após a abertura do &lt;body&gt; ou antes do fechamento
-                                                        (dependendo da implementação).</small>
-                                                </div>
-                                            </div>
+                                                            <p style="color:#ccc; margin-bottom:20px; border-top:1px solid #444; padding-top:20px;">
+                                                                Insira abaixo códigos de rastreamento (Pixel, Analytics, GTM) que devem ser carregados em
+                                                                <strong>TODAS</strong> as páginas do site (Início, Cursos, Blog, etc).
+                                                            </p>
+
+                                                            <div class="form-group">
+                                                                <label style="color:#fff;">Scripts do Cabeçalho (&lt;head&gt;)</label>
+                                                                <textarea id="globalScriptsHead" rows="10" placeholder="&lt;script&gt;...&lt;/script&gt;"
+                                                                    style="font-family:monospace; font-size:12px; background:#111; color:#0f0; border:1px solid #555;">${headVal}</textarea>
+                                                                <small style="color:#888;">Carregados antes do fechamento do &lt;/head&gt;.</small>
+                                                            </div>
+
+                                                            <div class="form-group" style="margin-top:20px;">
+                                                                <label style="color:#fff;">Scripts do Corpo (&lt;body&gt;)</label>
+                                                                <textarea id="globalScriptsBody" rows="10" placeholder="&lt;script&gt;...&lt;/script&gt; or &lt;iframe&gt;..."
+                                                                    style="font-family:monospace; font-size:12px; background:#111; color:#0f0; border:1px solid #555;">${bodyVal}</textarea>
+                                                                <small style="color:#888;">Carregados logo após a abertura do &lt;body&gt; ou antes do fechamento
+                                                                    (dependendo da implementação).</small>
+                                                            </div>
+                                                    </div>
         `;
         }
 
         window.saveGlobalSettings = async function () {
         const headScripts = document.getElementById('globalScriptsHead').value;
         const bodyScripts = document.getElementById('globalScriptsBody').value;
+        const logoUrl = document.getElementById('globalLogo').value;
 
         const updates = [
-        { item_key: 'scripts_head', content_value: headScripts, section: 'global', item_type: 'code' },
-        { item_key: 'scripts_body', content_value: bodyScripts, section: 'global', item_type: 'code' }
+            { item_key: 'scripts_head', content_value: headScripts, section: 'global', item_type: 'code' },
+            { item_key: 'scripts_body', content_value: bodyScripts, section: 'global', item_type: 'code' },
+            { item_key: 'global_logo_url', content_value: logoUrl, section: 'global', item_type: 'image' }
         ];
 
         const { error } = await supabaseClient.from('site_content').upsert(updates, { onConflict: 'item_key' });
