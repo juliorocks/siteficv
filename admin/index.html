@@ -532,8 +532,27 @@
                 }
                 console.log("Supabase Initialized");
 
+                // Listen for Auth Changes (specifically Password Recovery)
+                let isRecovery = false;
+                supabaseClient.auth.onAuthStateChange((event, session) => {
+                    console.log("Auth Event:", event);
+                    if (event === 'PASSWORD_RECOVERY') {
+                        isRecovery = true;
+                        console.log("Recovery Event Detected");
+                        // force show profile if session is active
+                        if (session) {
+                            setTimeout(() => {
+                                if (!document.getElementById('admin-wrapper').classList.contains('hidden')) {
+                                    loadView('profile');
+                                    alert("Modo de Recuperação: Por favor, crie uma nova senha agora.");
+                                }
+                            }, 500);
+                        }
+                    }
+                });
+
                 // If session already exists check
-                initApp();
+                initApp(isRecovery);
 
             } catch (err) {
                 console.error(err);
@@ -575,13 +594,19 @@
             if (forgotBtn) {
                 forgotBtn.addEventListener('click', async (e) => {
                     e.preventDefault();
-                    const email = document.getElementById('email').value;
+                    let email = document.getElementById('email').value;
                     const msg = document.getElementById('loginMsg');
 
                     if (!email) {
-                        msg.innerText = "Digite seu e-mail acima para recuperar a senha.";
-                        msg.style.color = "#d9534f"; // Red
-                        return;
+                        const p = prompt("Digite seu e-mail para envio do link de recuperação:");
+                        if (p) {
+                            email = p.trim();
+                            document.getElementById('email').value = email;
+                        } else {
+                            msg.innerText = "É necessário informar o e-mail para recuperar a senha.";
+                            msg.style.color = "#d9534f"; // Red
+                            return;
+                        }
                     }
 
                     if (!confirm(`Enviar link de recuperação para: ${email}?`)) return;
@@ -591,7 +616,7 @@
 
                     try {
                         const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-                            redirectTo: window.location.href, // Redirect back here after clicking email link
+                            redirectTo: window.location.origin + '/admin/', // Robust absolute path
                         });
 
                         if (error) {
@@ -610,8 +635,8 @@
         }
 
 
-        async function initApp() {
-            console.log("initApp running...");
+        async function initApp(isRecovery = false) {
+            console.log("initApp running... recovery mode:", isRecovery);
             try {
                 const { data } = await supabaseClient.auth.getSession();
                 console.log("Session data:", data);
@@ -630,6 +655,10 @@
 
                     adminWrapper.classList.remove('hidden');
                     adminWrapper.style.display = 'flex'; // Force show
+
+                    if (isRecovery) {
+                        loadView('profile');
+                    }
 
                     // Update Welcome Message with Name and Time
                     const user = data.session.user;
@@ -2714,8 +2743,8 @@
                 const newUserId = data.user?.id;
 
                 if (newUserId) {
-    // 2. Create Profile Entry manually (if trigger didn't catch it or if we want to enforce specific fields
-    immediately)
+                    // 2. Create Profile Entry manually (if trigger didn't catch it or if we want to enforce specific fields
+                    // immediately)
                     // First check if profile exists (via trigger)
                     const { data: prof } = await supabaseClient.from('profiles').select('*').eq('id', newUserId).single();
 

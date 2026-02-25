@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('FICV Main JS Running');
 
   // --- CMS INTEGRATION (Supabase) ---
+
+  // Handle Auth redirection (e.g. Password Recovery landing on home)
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      console.log('Recovery detected on home, redirecting to admin...');
+      const hash = window.location.hash;
+      window.location.href = '/admin/' + hash;
+    }
+  });
+
   async function loadCMSContent() {
     try {
       const { data, error } = await supabase.from('site_content').select('item_key, content_value');
